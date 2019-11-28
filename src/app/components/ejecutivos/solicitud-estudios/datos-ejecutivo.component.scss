@@ -1,0 +1,108 @@
+*{
+    box-sizing: border-box;
+    font-family: 'Noto Sans KR', Arial;
+}
+
+.table-container {
+    position: relative;
+    height: auto;
+    overflow: auto;
+    width: 85%;
+    margin: 0 auto;
+}
+
+.mat-form-field {
+    width: 100%;
+}
+
+
+.content {
+    width: 100%;
+    margin-bottom: 3%;
+}
+
+table {
+    width: 100%;
+    margin: 0 auto;
+}
+mat-paginator {
+    width: 95%;
+    margin: 0 auto;
+}
+
+// Ancho y alto de cada columna
+td.mat-cell, td.mat-footer-cell, th.mat-header-cell {
+    padding: 12px !important;
+}
+
+
+.solicitar-btn {
+    background-color: black;
+    color: white;
+    height: 70%;
+    width: auto;
+}
+
+.buscar-btn {
+    color: #fff;
+    background-color: tomato;
+    height: 70%;
+    width: auto;
+}
+
+.periodo {
+    width: 85%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 4fr(auto);
+    grid-template-rows: 4fr(auto);
+    grid-gap: 20px;
+    align-content: center;
+}
+
+.title-periodo {
+    grid-column: 1/4;
+    grid-row: 1 / 2;
+    color: tomato;
+}
+
+.ultimo-mes {
+    grid-column: 0 / 1;
+    grid-row: 2 / 3;
+}
+
+.fecha-inicio {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;  
+}
+
+.fecha-termino {
+    grid-column: 3 / 4;
+    grid-row: 2 / 3;    
+}
+
+.solicitar-btn {
+    grid-column: 4 / 5;
+    grid-row: 2 / 3;
+}
+
+.title-solicitudes {
+    grid-column: 1 / 4;
+    grid-row: 3 / 4;
+    color: tomato;
+}
+
+.nombre-encuestado {
+    grid-column: 1 / 2;
+    grid-row: 4 / 5;
+}
+
+.nombre-solicitante {
+    grid-column: 2 / 4;
+    grid-row: 4 / 5;   
+}
+
+.buscar-btn {
+    grid-column: 4 / 5;
+    grid-row: 4 / 5;    
+}
