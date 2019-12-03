@@ -1,62 +1,81 @@
-<div class="mat-elevation-z8 container-full">
+<div class="container">
     <div class="title">
         <p>SOLICITUD DE ESTUDIOS</p>
     </div>
 
-    <div class="content">
-        <div class="periodo">
-
-            <p class="title-periodo">Búsqueda por periodo</p>
+    <div class="header">
+        <span>Búsqueda por periodo</span>
+        <div class="row col-12">
             <!-- ultimo mes -->
-            <mat-form-field class="ultimo-mes">
-                <mat-label>Último mes</mat-label>
-                <mat-select>
-                    <mat-option *ngFor="let food of foods" [value]="food.value">
-                        {{food.viewValue}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+            <div class="form-group col-3">
+
+                <mat-form-field>
+                    <mat-label>Último mes</mat-label>
+                    <mat-select>
+                        <mat-option *ngFor="let food of foods" [value]="food.value">
+                            {{food.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
 
             <!-- Fecha inicio -->
-            <mat-form-field class="fecha-inicio">
-                <input matInput [matDatepicker]="fechaInicio" placeholder="Fecha de inicio">
-                <mat-datepicker-toggle matSuffix [for]="fechaInicio"></mat-datepicker-toggle>
-                <mat-datepicker #fechaInicio></mat-datepicker>
-            </mat-form-field>
+            <div class="form-group col-3">
+                <mat-form-field>
+                    <input matInput [matDatepicker]="fechaInicio" placeholder="Fecha de inicio">
+                    <mat-datepicker-toggle matSuffix [for]="fechaInicio"></mat-datepicker-toggle>
+                    <mat-datepicker #fechaInicio></mat-datepicker>
+                </mat-form-field>
+            </div>
 
             <!-- Fecha termino -->
-            <mat-form-field class="fecha-termino">
-                <input matInput [matDatepicker]="fechaFin" placeholder="Fecha de termino">
-                <mat-datepicker-toggle matSuffix [for]="fechaFin"></mat-datepicker-toggle>
-                <mat-datepicker #fechaFin></mat-datepicker>
-            </mat-form-field>
+            <div class="form-group col-3">
+                <mat-form-field>
+                    <input matInput [matDatepicker]="fechaFin" placeholder="Fecha de termino">
+                    <mat-datepicker-toggle matSuffix [for]="fechaFin"></mat-datepicker-toggle>
+                    <mat-datepicker #fechaFin></mat-datepicker>
+                </mat-form-field>
+            </div>
 
-            <button class="solicitar-btn" mat-raised-button> SOLICITAR ESTUDIO</button>
+            <div class="form-group col-3">
+                <button mat-icon-button color="primary" [disableRipple]="true" class="find">
+                    <mat-icon >find_in_page</mat-icon>
+                </button>
+            </div>
+        </div>
 
-            <p class="title-solicitudes">Solicitudes de estudios</p>
-
+        <span>Solicitudes de estudios</span>
+        <div class="row col-12">
             <!-- nombre encuestado -->
-            <mat-form-field class="nombre-encuestado">
-                <input matInput placeholder="Nombre del encuestado" value="">
-            </mat-form-field>
+            <div class="form-group col-4">
+                <mat-form-field class="nombre-encuestado">
+                    <input matInput placeholder="Nombre del encuestado" value="">
+                </mat-form-field>
+            </div>
 
             <!-- nombre solicitante -->
-            <mat-form-field class="nombre-solicitante">
-                <mat-label>Nombre del solicitante</mat-label>
-                <mat-select>
-                    <mat-option *ngFor="let food of foods" [value]="food.value">
-                        {{food.viewValue}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+            <div class="form-group col-4">
+                <mat-form-field class="nombre-solicitante">
+                    <mat-label>Nombre del solicitante</mat-label>
+                    <mat-select>
+                        <mat-option *ngFor="let food of foods" [value]="food.value">
+                            {{food.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
 
-            <button class="buscar-btn" mat-raised-button> BUSCAR </button>
+            <div class="form-group col-4 align-right">
+                <button mat-raised-button color="primary" [routerLink]="['/ejecutivo/solicitar-estudio']" > 
+                    SOLICITAR ESTUDIO 
+                </button>
+            </div>
         </div>
     </div>
 
     <!-- TABLA -->
-    <div class="table-container">
-        
+    <div class="table-container mat-elevation-z15 mt-4">
+
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
             <ng-container matColumnDef="folio">
                 <th mat-header-cell *matHeaderCellDef> FOLIO </th>

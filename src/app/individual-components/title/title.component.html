@@ -1,0 +1,12 @@
+<div class="container d-flex justify-content-center align-items-center">
+    <div class="col-3">
+        <div icon class="regresar d-flex align-items-center" *ngIf="regresar" routerLink="/{{ruta}}">
+            <mat-icon>keyboard_arrow_left</mat-icon>
+            <span>Regresar</span>
+        </div>
+    </div>
+    <div class="titulo col-6 text-center">
+        <span>{{titulo}}</span>
+    </div>
+    <div class="col-3"></div>
+</div>

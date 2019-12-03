@@ -1,0 +1,47 @@
+.table-container {
+  position: relative;
+  height: 100%;
+  overflow: auto;
+  width: 100%;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+table {
+  width: 100%;
+}
+mat-paginator {
+  width: 100%;
+}
+
+// Ancho y alto de cada columna
+td.mat-cell,
+td.mat-footer-cell,
+th.mat-header-cell {
+  padding: 12px !important;
+}
+
+.header {
+  .row {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.header span {
+  margin: 0 16px;
+}
+
+.btn-search {
+  width: 20px;
+}
+
+.find mat-icon {
+  font-size: 30px !important;
+}
+
+.find {
+    width: auto;
+}

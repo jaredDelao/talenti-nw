@@ -1,0 +1,81 @@
+<div class="container-full">
+    <form [formGroup]="form">
+        <div class="title">
+            <p class="text-center">{{idEmpleado !== null ? 'EDITAR' : 'REGISTRAR'}} EMPLEADO</p>
+        </div>
+
+        <div class="container">
+
+            <!-- row 1 -->
+            <div class="row col-12">
+
+                <div class="form-group col-lg-3 col-md-4">
+                    <mat-form-field>
+                        <mat-label>Usuario</mat-label>
+                        <input matInput type="text" formControlName="usuario">
+                        <mat-hint *ngIf="!form.controls.usuario.valid && form.controls.usuario.touched ">Apellidos
+                            requerido</mat-hint>
+                    </mat-form-field>
+                </div>
+
+                <div class="form-group col-lg-3 col-md-4">
+                    <mat-form-field>
+                        <mat-label>Contraseña</mat-label>
+                        <input matInput type="password" formControlName="password">
+                        <mat-hint *ngIf="!form.controls.password.valid && form.controls.password.touched ">Contraseña
+                            requerida</mat-hint>
+                    </mat-form-field>
+                </div>
+
+                <div class="form-group col-lg-3 col-md-4">
+                    <mat-form-field>
+                        <mat-label>Nombre</mat-label>
+                        <input matInput type="email" formControlName="nombre">
+                        <mat-hint *ngIf="!form.controls.nombre.valid && form.controls.nombre.touched ">Email requerido
+                        </mat-hint>
+                    </mat-form-field>
+                </div>
+                <div class="form-group col-lg-3 col-md-4">
+                    <mat-form-field>
+                        <mat-label>Apellidos</mat-label>
+                        <input matInput type="email" formControlName="apellidos">
+                        <mat-hint *ngIf="!form.controls.apellidos.valid && form.controls.apellidos.touched ">Email
+                            requerido
+                        </mat-hint>
+                    </mat-form-field>
+                </div>
+
+                <div class="form-group col-lg-3 col-md-4">
+                    <mat-form-field>
+                        <mat-label>Correo</mat-label>
+                        <input matInput type="email" formControlName="email">
+                        <mat-hint *ngIf="!form.controls.email.valid && form.controls.email.touched ">Email requerido
+                        </mat-hint>
+                    </mat-form-field>
+                </div>
+
+                <div class="form-group col-lg-3 col-md-4">
+                    <mat-form-field>
+                        <mat-label>Tipo empleado</mat-label>
+                        <mat-select formControlName="empleado">
+                            <mat-option *ngFor="let food of foods" [value]="food.value">
+                                {{food.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-hint *ngIf="!form.controls.empleado.valid && form.controls.empleado.touched">Ejecutivo
+                            requerido</mat-hint>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <!-- FOOTER -->
+            <div class="actions col-12 mt-4 mb-4 d-flex justify-content-center">
+                <div class="buttons col-5 d-flex justify-content-around">
+                    <button mat-raised-button color="warn" [routerLink]="['/coordinador/empleados']">CANCELAR</button>
+                    <button mat-raised-button color="primary" (click)="guardar()"
+                        [disabled]="form.invalid">GUARDAR</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
