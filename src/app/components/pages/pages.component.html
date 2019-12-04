@@ -1,0 +1,49 @@
+<div class="flex mat-elevation-z8">
+    <mat-toolbar color="primary">
+        <mat-toolbar-row>
+            <mat-icon class="example-icon" aria-hidden="false" (click)="drawer.toggle()">menu</mat-icon>
+            <!-- <span class="ml-2">Menu</span> -->
+            <span class="example-spacer"></span>
+
+            <mat-icon class="perfil" [matMenuTriggerFor]="menu">person_pin</mat-icon>
+            <mat-menu #menu="matMenu">
+                <div class="imagen"></div>
+                <button mat-menu-item>Ver perfil</button>
+                <button mat-menu-item>Ayuda</button>
+                <button mat-menu-item>Cerrar sesión</button>
+            </mat-menu>
+
+        </mat-toolbar-row>
+    </mat-toolbar>
+
+    <mat-drawer-container hasBackdrop="true" autosize>
+        <mat-drawer #drawer mode="over">
+
+            <mat-accordion>
+                <mat-expansion-panel *ngFor="let item of menuList">
+
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            {{item.titulo}}
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <mat-nav-list>
+                        <ng-container *ngFor="let el of item.list">
+                            <mat-list-item style="color: gray;" routerLink="/{{el.link}}" routerLinkActive="active"
+                                (click)="drawer.close()">
+                                {{el.title}}
+                            </mat-list-item>
+                            <mat-divider></mat-divider>
+                        </ng-container>
+                    </mat-nav-list>
+
+                </mat-expansion-panel>
+            </mat-accordion>
+
+        </mat-drawer>
+        <mat-drawer-content>
+            <router-outlet></router-outlet>
+        </mat-drawer-content>
+    </mat-drawer-container>
+</div>

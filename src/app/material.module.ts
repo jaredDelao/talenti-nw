@@ -21,7 +21,8 @@ import {
   MatToolbarModule,
   MatExpansionModule,
   MatDividerModule,
-  MatTreeModule
+  MatTreeModule,
+  MatMenuModule,
 } from "@angular/material";
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -51,7 +52,8 @@ import { MatNativeDateModule } from '@angular/material';
     MatToolbarModule,
     MatExpansionModule,
     MatDividerModule,
-    MatTreeModule
+    MatTreeModule,
+    MatMenuModule,
   ],
   exports: [
     MatSliderModule,
@@ -76,7 +78,8 @@ import { MatNativeDateModule } from '@angular/material';
     MatDividerModule,
     MatTreeModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatMenuModule,
   ]
 })
 export class MaterialModule {}

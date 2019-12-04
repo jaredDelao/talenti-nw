@@ -8,60 +8,94 @@ import { ClientesComponent } from "./components/talenti/coordinador/clientes/cli
 import { EmpresasComponent } from "./components/talenti/coordinador/empresas/empresas.component";
 import { EmpleadosComponent } from "./components/talenti/coordinador/empleados/empleados.component";
 import { RegistroEmpleadoComponent } from "./components/talenti/coordinador/empleados/registro-empleado/registro-empleado.component";
-import { MenuEjecutivoComponent } from './components/talenti/ejecutivo/menu/menu.component';
-import { SolicitarEstudioComponent } from './components/talenti/ejecutivo/solicitar-estudio/solicitar-estudio.component';
-import { SolicitudCancelacionComponent } from './components/talenti/ejecutivo/solicitud-cancelacion/solicitud-cancelacion.component';
-import { NuevaAgendaComponent } from './components/talenti/analista/nueva-agenda/nueva-agenda.component';
-import { CancelarSolicitudComponent } from './components/talenti/analista/cancelar-solicitud/cancelar-solicitud.component';
+import { MenuEjecutivoComponent } from "./components/talenti/ejecutivo/menu/menu.component";
+import { SolicitarEstudioComponent } from "./components/talenti/ejecutivo/solicitar-estudio/solicitar-estudio.component";
+import { SolicitudCancelacionComponent } from "./components/talenti/ejecutivo/solicitud-cancelacion/solicitud-cancelacion.component";
+import { NuevaAgendaComponent } from "./components/talenti/analista/nueva-agenda/nueva-agenda.component";
+import { CancelarSolicitudComponent } from "./components/talenti/analista/cancelar-solicitud/cancelar-solicitud.component";
+import { PagesComponent } from "./components/pages/pages.component";
+import { LoginComponent } from "./components/login/login.component";
+import { DetalleEstudioClienteComponent } from './components/cliente/detalle-estudio-cliente/detalle-estudio-cliente.component';
+import { SolicitudEstudioClienteComponent } from './components/cliente/solicitud-estudio-cliente/solicitud-estudio-cliente.component';
 
 const routes: Routes = [
-  { path: "", component: MenuCoordinadorComponent, pathMatch: "full" },
-  { path: "coordinador",
+  // { path: "", component: MenuCoordinadorComponent, pathMatch: "full" },
+  { path: "login", component: LoginComponent },
+  {
+    path: "",
+    component: PagesComponent,
     children: [
-      // { path: "", component: MenuCoordinadorComponent },
-      { path: "clientes",
+      {
+        path: "coordinador",
         children: [
-          { path: "", component: ClientesComponent },
-          { path: "registro-cliente", component: RegistrarNuevoClienteComponent },
-          { path: "editar-cliente/:id", component: RegistrarNuevoClienteComponent }
+          // { path: "", component: MenuCoordinadorComponent },
+          {
+            path: "clientes",
+            children: [
+              { path: "", component: ClientesComponent },
+              {
+                path: "registro-cliente",
+                component: RegistrarNuevoClienteComponent
+              },
+              {
+                path: "editar-cliente/:id",
+                component: RegistrarNuevoClienteComponent
+              }
+            ]
+          },
+          {
+            path: "empresas",
+            children: [
+              { path: "", component: EmpresasComponent },
+              { path: "registro-empresa", component: RegistroEmpresaComponent },
+              {
+                path: "editar-empresa/:id",
+                component: RegistroEmpresaComponent
+              }
+            ]
+          },
+          {
+            path: "empleados",
+            children: [
+              { path: "", component: EmpleadosComponent },
+              {
+                path: "registro-empleado",
+                component: RegistroEmpleadoComponent
+              },
+              {
+                path: "editar-empleado/:id",
+                component: RegistroEmpleadoComponent
+              }
+            ]
+          }
         ]
       },
-      { path: "empresas",
+      {
+        path: "ejecutivo",
         children: [
-          { path: "", component: EmpresasComponent },
-          { path: "registro-empresa", component: RegistroEmpresaComponent },
-          { path: "editar-empresa/:id", component: RegistroEmpresaComponent }
+          { path: "solicitud-estudios", component: DatosEjecutivoComponent },
+          { path: "solicitar-estudio", component: SolicitarEstudioComponent },
+          { path: "solicitud-cancelacion", component: SolicitudCancelacionComponent }
         ]
       },
-      { path: "empleados",
+      {
+        path: "analista",
         children: [
-          { path: "", component: EmpleadosComponent },
-          { path: "registro-empleado", component: RegistroEmpleadoComponent },
-          { path: "editar-empleado/:id", component: RegistroEmpleadoComponent }
+          // { path: '', component: MenuEjecutivoComponent },
+          { path: "nueva-agenda", component: NuevaAgendaComponent },
+          { path: "cancelar-solicitud", component: CancelarSolicitudComponent }
         ]
-      }
+      },
+      {
+        path: "cliente",
+        children: [         
+          { path: "detalle-estudio", component: DetalleEstudioClienteComponent },
+          { path: "solicitud-estudio", component: SolicitudEstudioClienteComponent }
+        ]
+      },
+      { path: "**", component: MenuCoordinadorComponent }
     ]
-  },
-  { path: 'ejecutivo',
-    children: [
-      // { path: '', component: MenuEjecutivoComponent },
-      { path: "solicitud-estudios", component: DatosEjecutivoComponent },
-      { path: 'solicitar-estudio', component: SolicitarEstudioComponent },
-      // { path: 'validar-estudios', component: MenuEjecutivoComponent },
-      // { path: 'publicar-estudios', component: MenuEjecutivoComponent },
-      { path: 'solicitud-cancelacion', component: SolicitudCancelacionComponent },
-      // { path: 'solicitar-calidad', component: MenuEjecutivoComponent },
-    ]
-  },
-  { path: 'analista',
-    children: [
-      // { path: '', component: MenuEjecutivoComponent },
-      { path: 'nueva-agenda', component: NuevaAgendaComponent },
-      { path: 'cancelar-solicitud', component: CancelarSolicitudComponent },
-    ]
-  },
-  
-  { path: "**", component: MenuCoordinadorComponent }
+  }
 ];
 
 @NgModule({

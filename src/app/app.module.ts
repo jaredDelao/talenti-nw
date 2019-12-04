@@ -23,6 +23,11 @@ import { SolicitudCancelacionComponent } from './components/talenti/ejecutivo/so
 import { NuevaAgendaComponent } from './components/talenti/analista/nueva-agenda/nueva-agenda.component';
 import { CancelarSolicitudComponent } from './components/talenti/analista/cancelar-solicitud/cancelar-solicitud.component';
 import { MaterialModule } from './material.module';
+import { PagesComponent } from './components/pages/pages.component';
+import { LoginComponent } from './components/login/login.component';
+import { DetalleEstudioClienteComponent } from './components/cliente/detalle-estudio-cliente/detalle-estudio-cliente.component';
+import { CancelarSolicitudClienteComponent } from './components/cliente/modals/cancelar-solicitud-cliente/cancelar-solicitud-cliente.component';
+import { SolicitudEstudioClienteComponent } from './components/cliente/solicitud-estudio-cliente/solicitud-estudio-cliente.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +45,12 @@ import { MaterialModule } from './material.module';
     TitleComponent,
     SolicitudCancelacionComponent,
     NuevaAgendaComponent,
-    CancelarSolicitudComponent
+    CancelarSolicitudComponent,
+    PagesComponent,
+    LoginComponent,
+    DetalleEstudioClienteComponent,
+    CancelarSolicitudClienteComponent,
+    SolicitudEstudioClienteComponent
   ],
   imports: [
     ReactiveFormsModule,
@@ -56,6 +66,9 @@ import { MaterialModule } from './material.module';
   ],
   providers: [
     DatosEjecutivoService,
+  ],
+  entryComponents: [
+    CancelarSolicitudClienteComponent,
   ],
   bootstrap: [AppComponent]
 })
