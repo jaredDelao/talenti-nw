@@ -17,6 +17,7 @@ import { PagesComponent } from "./components/pages/pages.component";
 import { LoginComponent } from "./components/login/login.component";
 import { DetalleEstudioClienteComponent } from './components/cliente/detalle-estudio-cliente/detalle-estudio-cliente.component';
 import { SolicitudEstudioClienteComponent } from './components/cliente/solicitud-estudio-cliente/solicitud-estudio-cliente.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 const routes: Routes = [
   // { path: "", component: MenuCoordinadorComponent, pathMatch: "full" },
@@ -25,22 +26,19 @@ const routes: Routes = [
     path: "",
     component: PagesComponent,
     children: [
+      { path: '', redirectTo: '/dashboard', pathMatch: 'full'},
+      { path: "dashboard", component: DashboardComponent},
       {
         path: "coordinador",
         children: [
-          // { path: "", component: MenuCoordinadorComponent },
+          { path: '', redirectTo: '/dashboard', pathMatch: 'full'},
+          { path: 'registro-empresa', component: RegistroEmpresaComponent},
           {
             path: "clientes",
             children: [
               { path: "", component: ClientesComponent },
-              {
-                path: "registro-cliente",
-                component: RegistrarNuevoClienteComponent
-              },
-              {
-                path: "editar-cliente/:id",
-                component: RegistrarNuevoClienteComponent
-              }
+              { path: "registro-cliente", component: RegistrarNuevoClienteComponent },
+              { path: "editar-cliente/:id", component: RegistrarNuevoClienteComponent }
             ]
           },
           {
@@ -48,24 +46,15 @@ const routes: Routes = [
             children: [
               { path: "", component: EmpresasComponent },
               { path: "registro-empresa", component: RegistroEmpresaComponent },
-              {
-                path: "editar-empresa/:id",
-                component: RegistroEmpresaComponent
-              }
+              { path: "editar-empresa/:id", component: RegistroEmpresaComponent }
             ]
           },
           {
             path: "empleados",
             children: [
               { path: "", component: EmpleadosComponent },
-              {
-                path: "registro-empleado",
-                component: RegistroEmpleadoComponent
-              },
-              {
-                path: "editar-empleado/:id",
-                component: RegistroEmpleadoComponent
-              }
+              { path: "registro-empleado", component: RegistroEmpleadoComponent },
+              { path: "editar-empleado/:id", component: RegistroEmpleadoComponent }
             ]
           }
         ]
@@ -73,7 +62,8 @@ const routes: Routes = [
       {
         path: "ejecutivo",
         children: [
-          { path: "solicitud-estudios", component: DatosEjecutivoComponent },
+          { path: '', redirectTo: '/dashboard', pathMatch: 'full'},
+          { path: "estudios", component: DatosEjecutivoComponent },
           { path: "solicitar-estudio", component: SolicitarEstudioComponent },
           { path: "solicitud-cancelacion", component: SolicitudCancelacionComponent }
         ]
@@ -81,19 +71,19 @@ const routes: Routes = [
       {
         path: "analista",
         children: [
-          // { path: '', component: MenuEjecutivoComponent },
+          { path: '', redirectTo: '/dashboard', pathMatch: 'full'},
           { path: "nueva-agenda", component: NuevaAgendaComponent },
           { path: "cancelar-solicitud", component: CancelarSolicitudComponent }
         ]
       },
       {
         path: "cliente",
-        children: [         
+        children: [
           { path: "detalle-estudio", component: DetalleEstudioClienteComponent },
           { path: "solicitud-estudio", component: SolicitudEstudioClienteComponent }
         ]
       },
-      { path: "**", component: MenuCoordinadorComponent }
+      { path: "**", redirectTo: '/dashboard' }
     ]
   }
 ];
@@ -102,4 +92,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

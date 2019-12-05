@@ -54,12 +54,12 @@
 
             <ng-container matColumnDef="descripcion">
                 <th mat-header-cell *matHeaderCellDef> PERMISOS PARA ESTUDIOS </th>
-                <td mat-cell *matCellDef="let element"> {{element.descripcion}} </td>
+                <td mat-cell *matCellDef="let element" (click)="stop($event)"> {{element.descripcion}} </td>
             </ng-container>
 
             <ng-container matColumnDef="costoReal">
                 <th mat-header-cell *matHeaderCellDef> COSTO DE ESTUDIO </th>
-                <td mat-cell *matCellDef="let element">
+                <td mat-cell *matCellDef="let element" (click)="stop($event)">
                     <mat-form-field>
                         <mat-icon matPrefix>attach_money</mat-icon>
                         <input matInput type="number" [(ngModel)]="element.costoReal">
@@ -69,7 +69,7 @@
 
             <ng-container matColumnDef="costoCancelado">
                 <th mat-header-cell *matHeaderCellDef> COSTO ESTUDIO CANCELADO </th>
-                <td mat-cell *matCellDef="let element">
+                <td mat-cell *matCellDef="let element" (click)="stop($event)">
                     <mat-form-field>
                         <mat-icon matPrefix>attach_money</mat-icon>
                         <input matInput type="number" [(ngModel)]="element.costoCancelado">

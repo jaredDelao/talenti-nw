@@ -1,11 +1,11 @@
 import { Component, ViewChild, OnInit } from "@angular/core";
 import { MatDrawer } from "@angular/material";
 
-const menu: Array<any> = [
+const menu: Array<Object> = [
   {
     titulo: "EJECUTIVO",
     list: [
-      { title: "Solicitud de estudio", link: "ejecutivo/solicitud-estudios" },
+      { title: "Solicitud de estudio", link: "ejecutivo/estudios" },
       { title: "Solicitud de cancelación", link: "ejecutivo/solicitud-cancelacion" }
     ]
   },
@@ -33,7 +33,7 @@ const menu: Array<any> = [
 export class PagesComponent implements OnInit {
 
   @ViewChild("drawer", { static: false }) menu: MatDrawer;
-  menuList: Array<any> = menu;
+  menuList: Array<Object> = menu;
   permiso: String = "analista";
   
   constructor() {}
