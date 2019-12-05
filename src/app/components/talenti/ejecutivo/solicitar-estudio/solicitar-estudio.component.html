@@ -1,0 +1,141 @@
+<app-title titulo="SOLICITUD ESTUDIO"></app-title>
+<div class="container">
+
+    <form [formGroup]="form">
+
+        <div class="box-container row d-flex justify-content-center">
+            <div class="left col-5">
+                <p>Tipo de estudio:</p>
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-label>Tipo de estudio</mat-label>
+                        <mat-select formControlName="tipoEstudio">
+                            <mat-option *ngFor="let estudio of estudiosData" [value]="estudio">
+                                {{estudio.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <!-- Mostrar solo gnp -->
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-label>Folio</mat-label>
+                        <input matInput type="text" formControlName="folio" />
+                    </mat-form-field>
+                </div>
+                <div class="form-group">
+                    <label class="mr-3">Preliminar:</label>
+                    <mat-radio-group aria-label="Preliminar" formControlName="preliminar">
+                        <mat-radio-button class="mr-3" value="1">Si</mat-radio-button>
+                        <mat-radio-button value="0">No</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+                <!-- Mostrar solo al validar estudios -->
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-label>Analista</mat-label>
+                        <mat-select formControlName="analista">
+                            <mat-option *ngFor="let estudio of estudiosData" [value]="estudio">
+                                {{estudio.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-label>Comentarios</mat-label>
+                        <textarea matInput cdkTextareaAutosize formControlName="comentarios"></textarea>
+                    </mat-form-field>
+                </div>
+                <div class="form-group">
+                    <label>Adjuntar CV</label>
+                    <input type="file" placeholder="Examinar" formControlName="archivo" />
+                </div>
+
+            </div>
+
+            <div class="right col-5">
+                <p>Datos para el estudio:</p>
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-label>Nombres</mat-label>
+                        <input matInput type="text" formControlName="nombre">
+                    </mat-form-field>
+                </div>
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-label>Apellidos</mat-label>
+                        <input matInput type="text" formControlName="apellidos">
+                    </mat-form-field>
+                </div>
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-label>Puesto</mat-label>
+                        <input matInput type="text" formControlName="puesto">
+                    </mat-form-field>
+                </div>
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-label>Teléfono</mat-label>
+                        <input matInput type="text" formControlName="telefono">
+                    </mat-form-field>
+                </div>
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-label>NSS</mat-label>
+                        <input matInput type="text" formControlName="nss">
+                    </mat-form-field>
+                </div>
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-label>CURP</mat-label>
+                        <input matInput type="text" formControlName="curp">
+                    </mat-form-field>
+                </div>
+                <!-- container show/hide -->
+                <div *ngIf="form.get('tipoEstudio').value.id === (1 || 3 || 4 || 5 || 7 || 10 || 11 || 12) ">
+                    <div class="form-group">
+                        <mat-form-field>
+                            <mat-label>Calle y número</mat-label>
+                            <input matInput type="text" formControlName="calle">
+                        </mat-form-field>
+                    </div>
+                    <div class="form-group">
+                        <mat-form-field>
+                            <mat-label>Colonia</mat-label>
+                            <input matInput type="text" formControlName="colonia">
+                        </mat-form-field>
+                    </div>
+                    <div class="form-group">
+                        <mat-form-field>
+                            <mat-label>CP</mat-label>
+                            <input matInput type="text" formControlName="cp">
+                        </mat-form-field>
+                    </div>
+                    <div class="form-group">
+                        <mat-form-field>
+                            <mat-label>Alcaldía / Municipio</mat-label>
+                            <input matInput type="text" formControlName="municipio">
+                        </mat-form-field>
+                    </div>
+                    <div class="form-group">
+                        <mat-form-field>
+                            <mat-label>Estado</mat-label>
+                            <input matInput type="text" formControlName="estado">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions d-flex justify-content-center">
+            <div class="buttons d-flex flex-column col-3">
+                <button mat-raised-button color="primary" (click)="validar()">VALIDAR</button>
+                <button mat-raised-button color="warn">DECLINAR</button>
+                <button mat-raised-button color="tomato" [routerLink]="['/ejecutivo/solicitud-estudios']" >REGRESAR</button>
+            </div>
+        </div>
+
+    </form>
+
+</div>

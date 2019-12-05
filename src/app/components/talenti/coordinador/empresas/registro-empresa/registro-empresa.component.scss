@@ -1,0 +1,43 @@
+[type="file"] {
+    height: 0;
+    overflow: hidden;
+    width: 0;
+  }
+  
+  [type="file"] + label {      
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        cursor: pointer;
+        display: inline-block;
+        font-family: 'Poppins', sans-serif;
+        font-size: inherit;
+        font-weight: 500;
+        margin-bottom: 1rem;
+        outline: none;
+        padding: .5rem 25px;
+        position: relative;
+        transition: all 0.3s;
+        vertical-align: middle;
+
+    &.btn-3 {
+        background-color:#45B39D ;
+        border-radius: 0;
+        overflow: hidden;
+    
+    span {
+        display: inline-block;
+        height: 100%;
+        transition: all 0.3s;
+        width: 100%;
+    }
+      &:hover {
+        background-color: #117A65;    
+        
+      }
+    }
+}
+
+table {
+    width: 100%;
+}

@@ -1,0 +1,56 @@
+<app-title titulo="SOLICITUD CANCELACIÓN"></app-title>
+
+<div class="container">
+    <div class="box d-flex justify-content-center row">
+
+        <div class="left col-5">
+            <div class="form-group">
+                <mat-form-field>
+                    <mat-label>Tipo de cancelación</mat-label>
+                    <mat-select>
+                        <mat-option *ngFor="let tipo of estudiosData" [value]="tipo">
+                            {{estudio.nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="form-group">
+                <mat-form-field>
+                    <mat-label>Solicitante</mat-label>
+                    <input matInput type="text">
+                </mat-form-field>
+            </div>
+            <div class="form-group">
+                <mat-form-field>
+                    <mat-label>Costo</mat-label>
+                    <mat-select>
+                        <mat-option *ngFor="let tipo of estudiosData" [value]="tipo">
+                            {{estudio.nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="right col-5">
+            <div class="form-group">
+                <mat-form-field>
+                    <mat-label>Comentarios</mat-label>
+                    <textarea matInput cdkTextareaAutosize></textarea>
+                </mat-form-field>
+            </div>
+            <div class="form-group">
+                <p><label>Subir evidencia</label></p>
+                <input type="file" />
+            </div>
+        </div>
+    </div>
+    <div class="actions d-flex justify-content-center">
+        <div class="buttons d-flex flex-column col-3">
+            <button mat-raised-button color="primary">VALIDAR</button>
+            <button mat-raised-button color="warn">DECLINAR</button>
+            <button mat-raised-button color="tomato">REGRESAR</button>
+        </div>
+    </div>
+
+</div>

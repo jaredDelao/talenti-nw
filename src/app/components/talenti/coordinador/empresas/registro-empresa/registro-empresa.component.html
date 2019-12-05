@@ -1,0 +1,94 @@
+<div class="container">
+    <div class="title">
+        <p>{{idEmpresa !== null ? 'EDITAR' : 'REGISTRAR'}} EMPRESA</p>
+    </div>
+
+    <div class="row col-12">
+        <div class="formg-group col-3">
+            <mat-form-field>
+                <mat-label>Nombre de la empresa</mat-label>
+                <input matInput type="text" [(ngModel)]="empresa.nombre" >
+            </mat-form-field>
+        </div>
+
+        <div class="form-group col-3">
+            <mat-form-field>
+                <mat-label>Tipo folio</mat-label>
+                <mat-select [(ngModel)]="empresa.tipo_folio">
+                    <mat-option *ngFor="let folio of dataFolio" [value]="folio">
+                        {{folio.descripcion}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="form-group col-3">
+            <input type="file" id="file" [(ngModel)]="empresa.imagen" />
+            <label for="file" class="btn-3"><span>SUBIR IMAGEN</span></label>
+        </div>
+
+        <div class="form-group col-3">
+            <!-- imagen -->
+        </div>
+
+    </div>
+
+    <div class="col-12">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z15">
+
+            <!-- Checkbox Column -->
+            <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()" color="primary"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()">
+                    </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let row">
+                    <mat-checkbox (click)="$event.stopPropagation()" color="primary"
+                        (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)"
+                        (change)="$event ? getData(dataSource) : null">
+                    </mat-checkbox>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="descripcion">
+                <th mat-header-cell *matHeaderCellDef> PERMISOS PARA ESTUDIOS </th>
+                <td mat-cell *matCellDef="let element"> {{element.descripcion}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="costoReal">
+                <th mat-header-cell *matHeaderCellDef> COSTO DE ESTUDIO </th>
+                <td mat-cell *matCellDef="let element">
+                    <mat-form-field>
+                        <mat-icon matPrefix>attach_money</mat-icon>
+                        <input matInput type="number" [(ngModel)]="element.costoReal">
+                    </mat-form-field>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="costoCancelado">
+                <th mat-header-cell *matHeaderCellDef> COSTO ESTUDIO CANCELADO </th>
+                <td mat-cell *matCellDef="let element">
+                    <mat-form-field>
+                        <mat-icon matPrefix>attach_money</mat-icon>
+                        <input matInput type="number" [(ngModel)]="element.costoCancelado">
+                    </mat-form-field>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
+            </tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="actions col-12 mt-4 mb-4 d-flex justify-content-center">
+        <div class="buttons col-6 d-flex justify-content-around">
+            <button mat-raised-button color="warn">CANCELAR</button>            
+            <button mat-raised-button color="primary" (click)="enviar()">GUARDAR</button>
+        </div>
+    </div>
+</div>
