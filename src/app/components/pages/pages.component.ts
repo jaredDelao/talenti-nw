@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from "@angular/core";
+import { Component, ViewChild, OnInit, AfterContentInit, DoCheck } from "@angular/core";
 import { MatDrawer } from "@angular/material";
 import { Router } from '@angular/router';
 
@@ -32,18 +32,23 @@ const menu: Array<Object> = [
   templateUrl: "./pages.component.html",
   styleUrls: ["./pages.component.scss"]
 })
-export class PagesComponent implements OnInit {
+export class PagesComponent implements OnInit, DoCheck {
 
   @ViewChild("drawer", { static: false }) menu: MatDrawer;
   menuList: Array<Object> = menu;
   permiso: String = "analista";
   colorT: string = 'primary';
-  
-  constructor(private router: Router) {}
+
+  constructor(private router: Router) { }
 
   ngOnInit() {
+
+  }
+
+  ngDoCheck() {
     this.router.url === '/dashboard'
       ? this.colorT = 'white'
       : this.colorT = 'primary';
+
   }
 }
