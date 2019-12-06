@@ -1,26 +1,28 @@
-import { Component, ViewChild, OnInit } from "@angular/core";
+import { Component, ViewChild, OnInit, AfterContentInit, DoCheck } from "@angular/core";
 import { MatDrawer } from "@angular/material";
+import { Router } from '@angular/router';
 
-const menu: Array<any> = [
+const menu: Array<Object> = [
   {
     titulo: "EJECUTIVO",
     list: [
-      { title: "Solicitud de estudio", link: "solicitud-estudio" },
-      { title: "Solicitud de cancelación", link: "solicitud-cancelacion" }
+      { title: "Estudios", link: "ejecutivo/estudios" },
+      { title: "Solicitud de cancelación", link: "ejecutivo/solicitud-cancelacion" }
     ]
   },
   {
     titulo: "COORDINADOR",
     list: [
-      { title: "Clientes", link: "clientes" },
-      { title: "Empleados", link: "empleados" }
+      { title: "Clientes", link: "coordinador/clientes" },
+      { title: "Empleados", link: "coordinador/empleados" },
+      { title: "Empresas", link: "coordinador/empresas" },
     ]
   },
   {
     titulo: "ANALISTA",
     list: [
-      { title: "Nueva agenda", link: "nueva-agenda" },
-      { title: "Cancelar solicitud", link: "cancelar-solicitud" }
+      { title: "Nueva agenda", link: "analista/nueva-agenda" },
+      { title: "Cancelar solicitud", link: "analista/cancelar-solicitud" }
     ]
   }
 ];
@@ -30,13 +32,23 @@ const menu: Array<any> = [
   templateUrl: "./pages.component.html",
   styleUrls: ["./pages.component.scss"]
 })
-export class PagesComponent implements OnInit {
+export class PagesComponent implements OnInit, DoCheck {
 
   @ViewChild("drawer", { static: false }) menu: MatDrawer;
-  menuList: Array<any> = menu;
+  menuList: Array<Object> = menu;
   permiso: String = "analista";
-  
-  constructor() {}
+  colorT: string = 'primary';
 
-  ngOnInit() {}
+  constructor(private router: Router) { }
+
+  ngOnInit() {
+
+  }
+
+  ngDoCheck() {
+    this.router.url === '/dashboard'
+      ? this.colorT = 'white'
+      : this.colorT = 'primary';
+
+  }
 }

@@ -28,6 +28,8 @@ import { LoginComponent } from './components/login/login.component';
 import { DetalleEstudioClienteComponent } from './components/cliente/detalle-estudio-cliente/detalle-estudio-cliente.component';
 import { CancelarSolicitudClienteComponent } from './components/cliente/modals/cancelar-solicitud-cliente/cancelar-solicitud-cliente.component';
 import { SolicitudEstudioClienteComponent } from './components/cliente/solicitud-estudio-cliente/solicitud-estudio-cliente.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { MAT_DATE_LOCALE } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -50,7 +52,8 @@ import { SolicitudEstudioClienteComponent } from './components/cliente/solicitud
     LoginComponent,
     DetalleEstudioClienteComponent,
     CancelarSolicitudClienteComponent,
-    SolicitudEstudioClienteComponent
+    SolicitudEstudioClienteComponent,
+    DashboardComponent
   ],
   imports: [
     ReactiveFormsModule,
@@ -66,6 +69,7 @@ import { SolicitudEstudioClienteComponent } from './components/cliente/solicitud
   ],
   providers: [
     DatosEjecutivoService,
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB'}
   ],
   entryComponents: [
     CancelarSolicitudClienteComponent,

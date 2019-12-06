@@ -1,76 +1,80 @@
+<app-title titulo="ESTUDIOS"></app-title>
 <div class="container">
-    <div class="title">
-        <p>SOLICITUD DE ESTUDIOS</p>
-    </div>
-
     <div class="header">
-        <span>Búsqueda por periodo</span>
-        <div class="row col-12">
-            <!-- ultimo mes -->
-            <div class="form-group col-3">
+        <form [formGroup]="form">
+            <span>Búsqueda por periodo</span>
+            <div class="row col-12">
+                <!-- ultimo mes -->
+                <div class="form-group col-3">
 
-                <mat-form-field>
-                    <mat-label>Último mes</mat-label>
-                    <mat-select>
-                        <mat-option *ngFor="let food of foods" [value]="food.value">
-                            {{food.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Último mes</mat-label>
+                        <mat-select>
+                            <mat-option *ngFor="let food of foods" [value]="food.value">
+                                {{food.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <!-- Fecha inicio -->
+                <div class="form-group col-3">
+                    <mat-form-field>
+                        <input matInput #fechaI disabled [matDatepicker]="fechaInicio" formControlName="fechaInicioForm"
+                            placeholder="Fecha de inicio">
+                        <mat-datepicker-toggle matSuffix [for]="fechaInicio"></mat-datepicker-toggle>
+                        <mat-datepicker #fechaInicio disabled="false" startView="year"></mat-datepicker>
+                    </mat-form-field>
+                </div>
+
+                <!-- Fecha termino -->
+                <div class="form-group col-3">
+                    <mat-form-field>
+                        <input matInput #fechaF disabled [matDatepicker]="fechaFinal"
+                            [min]="form.get('fechaInicioForm').value" formControlName="fechaFinalForm"
+                            placeholder="Fecha de termino">
+                        <mat-datepicker-toggle matSuffix [for]="fechaFinal"></mat-datepicker-toggle>
+                        <mat-datepicker startView="year" #fechaFinal
+                            [disabled]="form.get('fechaInicioForm').value === ''">
+                        </mat-datepicker>
+                    </mat-form-field>
+                </div>
+
+                <div class="form-group col-3">
+                    <button mat-icon-button color="primary" [disableRipple]="true" class="find">
+                        <mat-icon>find_in_page</mat-icon>
+                    </button>
+                </div>
             </div>
 
-            <!-- Fecha inicio -->
-            <div class="form-group col-3">
-                <mat-form-field>
-                    <input matInput [matDatepicker]="fechaInicio" placeholder="Fecha de inicio">
-                    <mat-datepicker-toggle matSuffix [for]="fechaInicio"></mat-datepicker-toggle>
-                    <mat-datepicker #fechaInicio></mat-datepicker>
-                </mat-form-field>
-            </div>
+            <span>Solicitudes de estudios</span>
+            <div class="row col-12">
+                <!-- nombre encuestado -->
+                <div class="form-group col-4">
+                    <mat-form-field class="nombre-encuestado">
+                        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscar">
+                    </mat-form-field>
+                </div>
 
-            <!-- Fecha termino -->
-            <div class="form-group col-3">
-                <mat-form-field>
-                    <input matInput [matDatepicker]="fechaFin" placeholder="Fecha de termino">
-                    <mat-datepicker-toggle matSuffix [for]="fechaFin"></mat-datepicker-toggle>
-                    <mat-datepicker #fechaFin></mat-datepicker>
-                </mat-form-field>
-            </div>
+                <!-- nombre solicitante -->
+                <div class="form-group col-4">
+                    <mat-form-field class="nombre-solicitante">
+                        <mat-label>Nombre del solicitante</mat-label>
+                        <mat-select>
+                            <mat-option *ngFor="let food of foods" [value]="food.value">
+                                {{food.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
 
-            <div class="form-group col-3">
-                <button mat-icon-button color="primary" [disableRipple]="true" class="find">
-                    <mat-icon >find_in_page</mat-icon>
-                </button>
+                <div class="form-group col-4 align-right">
+                    <button mat-raised-button color="primary" [routerLink]="['/ejecutivo/solicitar-estudio']">
+                        SOLICITAR ESTUDIO
+                    </button>
+                </div>
             </div>
-        </div>
-
-        <span>Solicitudes de estudios</span>
-        <div class="row col-12">
-            <!-- nombre encuestado -->
-            <div class="form-group col-4">
-                <mat-form-field class="nombre-encuestado">
-                    <input matInput placeholder="Nombre del encuestado" value="">
-                </mat-form-field>
-            </div>
-
-            <!-- nombre solicitante -->
-            <div class="form-group col-4">
-                <mat-form-field class="nombre-solicitante">
-                    <mat-label>Nombre del solicitante</mat-label>
-                    <mat-select>
-                        <mat-option *ngFor="let food of foods" [value]="food.value">
-                            {{food.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-
-            <div class="form-group col-4 align-right">
-                <button mat-raised-button color="primary" [routerLink]="['/ejecutivo/solicitar-estudio']" > 
-                    SOLICITAR ESTUDIO 
-                </button>
-            </div>
-        </div>
+        </form>
     </div>
 
     <!-- TABLA -->

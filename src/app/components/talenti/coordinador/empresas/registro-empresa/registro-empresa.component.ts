@@ -132,6 +132,10 @@ export class RegistroEmpresaComponent implements OnInit {
     // console.log(this.selection.selected);
   }
 
+  stop(e) {
+    event.stopPropagation();
+  }
+
   enviar() {
     const selection = this.selection.selected;
 
