@@ -5,7 +5,7 @@ const menu: Array<Object> = [
   {
     titulo: "EJECUTIVO",
     list: [
-      { title: "Solicitud de estudio", link: "ejecutivo/estudios" },
+      { title: "Estudios", link: "ejecutivo/estudios" },
       { title: "Solicitud de cancelación", link: "ejecutivo/solicitud-cancelacion" }
     ]
   },
@@ -13,7 +13,8 @@ const menu: Array<Object> = [
     titulo: "COORDINADOR",
     list: [
       { title: "Clientes", link: "coordinador/clientes" },
-      { title: "Empleados", link: "coordinador/empleados" }
+      { title: "Empleados", link: "coordinador/empleados" },
+      { title: "Empresas", link: "coordinador/empresas" },
     ]
   },
   {

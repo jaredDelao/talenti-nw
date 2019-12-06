@@ -29,6 +29,7 @@ import { DetalleEstudioClienteComponent } from './components/cliente/detalle-est
 import { CancelarSolicitudClienteComponent } from './components/cliente/modals/cancelar-solicitud-cliente/cancelar-solicitud-cliente.component';
 import { SolicitudEstudioClienteComponent } from './components/cliente/solicitud-estudio-cliente/solicitud-estudio-cliente.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { MAT_DATE_LOCALE } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -68,6 +69,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
   ],
   providers: [
     DatosEjecutivoService,
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB'}
   ],
   entryComponents: [
     CancelarSolicitudClienteComponent,

@@ -7,7 +7,7 @@
         <div class="formg-group col-3">
             <mat-form-field>
                 <mat-label>Nombre de la empresa</mat-label>
-                <input matInput type="text" [(ngModel)]="empresa.nombre" >
+                <input matInput type="text" [(ngModel)]="empresa.nombre">
             </mat-form-field>
         </div>
 
@@ -87,8 +87,9 @@
     <!-- FOOTER -->
     <div class="actions col-12 mt-4 mb-4 d-flex justify-content-center">
         <div class="buttons col-6 d-flex justify-content-around">
-            <button mat-raised-button color="warn">CANCELAR</button>            
-            <button mat-raised-button color="primary" (click)="enviar()">GUARDAR</button>
+            <button mat-raised-button color="warn" [routerLink]="['/coordinador/empresas']"
+                routerLinkActive="router-link-active">CANCELAR</button>
+            <button mat-raised-button color="primary" (click)="enviar()">REGISTRAR</button>
         </div>
     </div>
 </div>
