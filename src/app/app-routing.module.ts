@@ -18,6 +18,7 @@ import { LoginComponent } from "./components/login/login.component";
 import { DetalleEstudioClienteComponent } from './components/cliente/detalle-estudio-cliente/detalle-estudio-cliente.component';
 import { SolicitudEstudioClienteComponent } from './components/cliente/solicitud-estudio-cliente/solicitud-estudio-cliente.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { LoginGuard } from './guards/login.guard';
 
 const routes: Routes = [
   // { path: "", component: MenuCoordinadorComponent, pathMatch: "full" },
@@ -25,8 +26,9 @@ const routes: Routes = [
   {
     path: "",
     component: PagesComponent,
+    canActivate: [LoginGuard],
     children: [
-      { path: '', redirectTo: '/dashboard', pathMatch: 'full'},
+      // { path: 'dashboard', redirectTo: '/dashboard', pathMatch: 'full'},
       { path: "dashboard", component: DashboardComponent},
       {
         path: "coordinador",

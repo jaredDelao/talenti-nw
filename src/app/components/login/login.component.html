@@ -27,7 +27,7 @@
                     <mat-checkbox formControlName="recordar">Recordar usuario</mat-checkbox>
                 </div>
                 <div class="form-group">
-                    <button mat-raised-button color="primary" (click)="login()">ENTRAR</button>
+                    <button mat-raised-button color="primary" [routerLink]="['/dashboard']"  (click)="login()">ENTRAR</button>
                 </div>
             </form>
         </div>
