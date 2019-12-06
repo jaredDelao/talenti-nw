@@ -1,5 +1,6 @@
 import { Component, ViewChild, OnInit } from "@angular/core";
 import { MatDrawer } from "@angular/material";
+import { Router } from '@angular/router';
 
 const menu: Array<Object> = [
   {
@@ -36,8 +37,13 @@ export class PagesComponent implements OnInit {
   @ViewChild("drawer", { static: false }) menu: MatDrawer;
   menuList: Array<Object> = menu;
   permiso: String = "analista";
+  colorT: string = 'primary';
   
-  constructor() {}
+  constructor(private router: Router) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.router.url === '/dashboard'
+      ? this.colorT = 'white'
+      : this.colorT = 'primary';
+  }
 }
