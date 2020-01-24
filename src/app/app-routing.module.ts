@@ -26,7 +26,7 @@ const routes: Routes = [
   {
     path: "",
     component: PagesComponent,
-    canActivate: [LoginGuard],
+    // canActivate: [LoginGuard],
     children: [
       // { path: 'dashboard', redirectTo: '/dashboard', pathMatch: 'full'},
       { path: "dashboard", component: DashboardComponent},

@@ -1,0 +1,7 @@
+{
+    "/bkService.php/*": {
+        "target": "http://34.234.225.159",
+        "secure": false,
+        "changeOrigin": true
+    }
+}

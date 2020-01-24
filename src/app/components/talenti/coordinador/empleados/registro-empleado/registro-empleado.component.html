@@ -55,7 +55,7 @@
                 </div>
 
                 <div class="form-group col-lg-3 col-md-4">
-                    <mat-form-field>
+                    <!-- <mat-form-field>
                         <mat-label>Tipo empleado</mat-label>
                         <mat-select formControlName="empleado">
                             <mat-option *ngFor="let food of foods" [value]="food.value">
@@ -64,7 +64,7 @@
                         </mat-select>
                         <mat-hint *ngIf="!form.controls.empleado.valid && form.controls.empleado.touched">Ejecutivo
                             requerido</mat-hint>
-                    </mat-form-field>
+                    </mat-form-field> -->
                 </div>
             </div>
 
@@ -72,8 +72,8 @@
             <div class="actions col-12 mt-4 mb-4 d-flex justify-content-center">
                 <div class="buttons col-5 d-flex justify-content-around">
                     <button mat-raised-button color="warn" [routerLink]="['/coordinador/empleados']">CANCELAR</button>
-                    <button mat-raised-button color="primary" (click)="guardar()"
-                        [disabled]="form.invalid">GUARDAR</button>
+                    <!-- <button mat-raised-button color="primary" (click)="guardar()"
+                        [disabled]="form.invalid">GUARDAR</button> -->
                 </div>
             </div>
         </div>

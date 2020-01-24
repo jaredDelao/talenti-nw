@@ -5,6 +5,8 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+
 import { DatosEjecutivoComponent } from './components/talenti/ejecutivo/solicitud-estudios/datos-ejecutivo.component';
 import { HttpClientModule } from '@angular/common/http';
 import { DatosEjecutivoService } from './services/datos-ejecutivo.service';
@@ -30,6 +32,7 @@ import { CancelarSolicitudClienteComponent } from './components/cliente/modals/c
 import { SolicitudEstudioClienteComponent } from './components/cliente/solicitud-estudio-cliente/solicitud-estudio-cliente.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { MAT_DATE_LOCALE } from '@angular/material';
+import { EmpresasService } from './services/coordinador/empresas.service';
 
 @NgModule({
   declarations: [
@@ -69,7 +72,9 @@ import { MAT_DATE_LOCALE } from '@angular/material';
   ],
   providers: [
     DatosEjecutivoService,
-    { provide: MAT_DATE_LOCALE, useValue: 'en-GB'}
+    {provide: LocationStrategy, useClass: HashLocationStrategy},
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
+    EmpresasService
   ],
   entryComponents: [
     CancelarSolicitudClienteComponent,

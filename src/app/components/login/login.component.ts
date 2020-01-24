@@ -39,11 +39,11 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  // login() {
-  //   this._loginService.login().subscribe(res => console.log(res));
-  // }
-
   login() {
-    localStorage.setItem('token', '21434234');
+    this._loginService.login().subscribe(res => console.log(res));
   }
+
+  // login() {
+  //   localStorage.setItem('token', '21434234');
+  // }
 }

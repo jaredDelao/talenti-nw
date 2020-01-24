@@ -23,9 +23,8 @@ export class LoginService {
   
   login() {
     // const header = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-    // let body = new HttpParams();
-    // body = body.set('sService', 'login');
-    // return this._http.post('http://34.234.225.159/bkService.php', body, {headers: header});
-
+    let body = new HttpParams();
+    body = body.set('sService', 'login');
+    return this._http.post('/bkService.php', body);
   }
 }
