@@ -1,12 +1,8 @@
 import { Component, OnInit } from "@angular/core";
-import {
-  FormGroup,
-  FormBuilder,
-  FormControl,
-  Validators
-} from "@angular/forms";
+import { FormGroup, FormBuilder, FormControl, Validators} from "@angular/forms";
 import { Router } from "@angular/router";
 import { LoginService } from "../../services/login.service";
+import * as bcryptjs from 'bcryptjs';
 
 @Component({
   selector: "app-login",
@@ -40,10 +36,19 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    this._loginService.login().subscribe(res => console.log(res));
-  }
+    this._loginService.login().subscribe(res => {
+      console.log(res);
+      const { token, perfil, idPerfil, status }:any = res;
+      if (token) {
+        localStorage.setItem('token', token);
+      }
+      if (perfil && idPerfil) {
+        bcryptjs.hash(perfil, 10, (err, res) => {
+          if (err) console.log('No se pudo encriptar el perfil', err);
+          console.log(res);
+        })
+      }
 
-  // login() {
-  //   localStorage.setItem('token', '21434234');
-  // }
+    });
+  }
 }
