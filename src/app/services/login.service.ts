@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -7,24 +8,12 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 export class LoginService {
 
   constructor(private _http: HttpClient) { }
-
-  cargarStorage() {
-    if (localStorage.getItem('token')) {
-      if (localStorage.getItem('token').length > 0) {
-        return true
-      } else {
-        return false;
-      }
-
-    } else {
-      return false;
-    }
-  }
   
   login() {
     // const header = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     let body = new HttpParams();
     body = body.set('sService', 'login');
-    return this._http.post('/bkService.php', body);
+    return this._http.post(environment.urlGet, body);
   }
+
 }

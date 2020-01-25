@@ -1,7 +1,7 @@
 <div class="container-full">
     <form [formGroup]="form">
         <div class="title">
-            <p class="text-center">{{idCliente !== null ? 'EDITAR' : 'REGISTRAR'}} CLIENTE</p>
+            <p class="text-center">{{idTipo == 2 ? 'EDITAR' : 'REGISTRAR'}} CLIENTE</p>
         </div>
 
         <div class="container">
@@ -43,50 +43,50 @@
                     <mat-form-field>
                         <mat-icon matSuffix>vpn_key</mat-icon>
                         <mat-label>Contraseña</mat-label>
-                        <input matInput type="password" formControlName="password">
+                        <input matInput type="text" formControlName="password">
                         <mat-hint *ngIf="!form.controls.password.valid && form.controls.password.touched ">Contraseña
                             requerida</mat-hint>
                     </mat-form-field>
                 </div>
 
                 <div class="form-group col-lg-3 col-md-4">
-                    <!-- <mat-form-field>
+                    <mat-form-field>
                         <mat-label>Tipo de cliente</mat-label>
                         <mat-select formControlName="tipoCliente">
-                            <mat-option *ngFor="let food of foods" [value]="food.value">
-                                {{food.viewValue}}
+                            <mat-option *ngFor="let usuario of listaTipoUsuarios" [value]="usuario">
+                                {{usuario.desc}}
                             </mat-option>
                         </mat-select>
                         <mat-hint *ngIf="!form.controls.tipoCliente.valid && form.controls.tipoCliente.touched ">Tipo
                             cliente requerido</mat-hint>
-                    </mat-form-field> -->
+                    </mat-form-field>
                 </div>
 
                 <div class="form-group col-lg-3 col-md-4">
-                    <!-- <mat-form-field>
+                    <mat-form-field>
                         <mat-label>Empresa</mat-label>
                         <mat-select formControlName="empresa">
-                            <mat-option *ngFor="let food of foods" [value]="food.value">
-                                {{food.viewValue}}
+                            <mat-option *ngFor="let empresa of listaEmpresas" [value]="empresa">
+                                {{empresa.nombre}}
                             </mat-option>
                         </mat-select>
                         <mat-hint *ngIf="!form.controls.empresa.valid && form.controls.empresa.touched ">Empresa
                             requerida</mat-hint>
 
-                    </mat-form-field> -->
+                    </mat-form-field>
                 </div>
 
                 <div class="form-group col-lg-3 col-md-4">
-                    <!-- <mat-form-field>
+                    <mat-form-field>
                         <mat-label>Ejecutivo</mat-label>
                         <mat-select formControlName="ejecutivo">
-                            <mat-option *ngFor="let food of foods" [value]="food.value">
-                                {{food.viewValue}}
+                            <mat-option *ngFor="let ejecutivo of listaEjecutivos" [value]="ejecutivo">
+                                {{ejecutivo.nombre}}
                             </mat-option>
                         </mat-select>
                         <mat-hint *ngIf="!form.controls.ejecutivo.valid && form.controls.ejecutivo.touched">Ejecutivo
                             requerido</mat-hint>
-                    </mat-form-field> -->
+                    </mat-form-field>
                 </div>
             </div>
 
@@ -95,7 +95,7 @@
                 <div class="buttons col-5 d-flex justify-content-around">
                     <button mat-raised-button color="warn" [routerLink]="['/coordinador/clientes']">CANCELAR</button>
                     <button mat-raised-button color="primary" (click)="guardar()"
-                        [disabled]="form.invalid">GUARDAR</button>
+                        [disabled]="form.invalid">{{idTipo == 2 ? 'EDITAR' : 'GUARDAR'}}</button>
                 </div>
             </div>
         </div>

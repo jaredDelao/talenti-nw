@@ -9,11 +9,14 @@ import { Router } from '@angular/router';
 export class DashboardComponent implements OnInit {
 
   url: any;
+  nombre: string;
 
   constructor(private router: Router) { }
 
   ngOnInit() {
     this.url = this.router.url;
+    this.nombre = localStorage.getItem('nombre');
+
   }
 
 }

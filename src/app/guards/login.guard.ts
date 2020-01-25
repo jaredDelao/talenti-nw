@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
+import { Injectable, AfterContentInit, OnInit } from '@angular/core';
+import { CanActivate, Router } from '@angular/router';
 import { LoginService } from '../services/login.service';
 
 @Injectable({
@@ -7,17 +7,18 @@ import { LoginService } from '../services/login.service';
 })
 export class LoginGuard implements CanActivate {
 
-  constructor(private _loginService: LoginService, private _router: Router){}
+  constructor(private router: Router){
+  }
   
   canActivate() {
-    console.log('paso por guard')
-    let logged = this._loginService.cargarStorage();
-    if (logged) {
-      return true
-    } else {
-      this._router.navigate(['/login']);
-      return false;
+
+    let token = localStorage.getItem('token');
+    if (token && token.length > 0) {
+      return true;
     }
+
+    this.router.navigate(['/login']);
+    return false;
   }
 
   

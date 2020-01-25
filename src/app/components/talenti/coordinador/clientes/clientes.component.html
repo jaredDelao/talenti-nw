@@ -6,7 +6,7 @@
 
     <div class="tabla col-12">
         <button class="btn-create mt-4 mb-4" mat-raised-button color="primary"
-            [routerLink]="['/coordinador/clientes/registro-cliente']">NUEVO
+            (click)="crear()">NUEVO
             CLIENTE</button>
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
             <!-- Empresa Column -->
@@ -34,9 +34,10 @@
             <ng-container matColumnDef="editar">
                 <th mat-header-cell *matHeaderCellDef> EDITAR </th>
                 <td mat-cell *matCellDef="let element">
-                    <mat-icon [routerLink]="['/coordinador/clientes/editar-cliente', element.id]">edit</mat-icon>
+                    <mat-icon (click)="editar(element.id)">edit</mat-icon>
                 </td>
             </ng-container>
+            <!-- [routerLink]="['/coordinador/clientes/editar-cliente', element.id]" -->
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

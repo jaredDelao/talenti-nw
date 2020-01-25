@@ -1,5 +1,9 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, OnDestroy } from "@angular/core";
 import { MatPaginator, MatTableDataSource } from "@angular/material";
+import { ClientesService } from 'src/app/services/coordinador/clientes.service';
+import { Clientes } from 'src/app/interfaces/talenti/coordinador/clientes';
+import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 const ELEMENT_DATA = [
   {
@@ -44,20 +48,36 @@ const ELEMENT_DATA = [
   templateUrl: "./clientes.component.html",
   styleUrls: ["./clientes.component.scss"]
 })
-export class ClientesComponent implements OnInit {
-  displayedColumns: string[] = [
-    "empresa",
-    "usuario",
-    "nombre",
-    "ejecutivo",
-    "editar"
-  ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+export class ClientesComponent implements OnInit, OnDestroy {
+  displayedColumns: string[] = ["empresa", "usuario", "nombre", "ejecutivo", "editar"];
+  dataSource;
+  subscription: Subscription;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
-  constructor() {}
+  constructor(private clientesService: ClientesService, private router: Router) {}
 
   ngOnInit() {
-    this.dataSource.paginator = this.paginator;
+    this.getClientes();
+  }
+
+  getClientes() {
+    this.subscription = this.clientesService.getClientes().subscribe((resClientes: Clientes) => {
+      this.dataSource = new MatTableDataSource(resClientes.clientes);
+      this.dataSource.paginator = this.paginator;
+    })
+  }
+
+  crear() {
+    this.clientesService.idTipoSubject.next(1);
+    this.router.navigate(['/coordinador/clientes/registro-cliente']);
+  }
+
+  editar(id) {
+    this.clientesService.idTipoSubject.next(2);
+    this.router.navigate(['/coordinador/clientes/editar-cliente', id]);
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

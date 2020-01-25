@@ -49,6 +49,11 @@ export class PagesComponent implements OnInit, DoCheck {
     this.router.url === '/dashboard'
       ? this.colorT = 'white'
       : this.colorT = 'primary';
-
   }
+
+  cerrarSesion() {
+    localStorage.clear();
+    this.router.navigate(['/login']);
+  }
+
 }
