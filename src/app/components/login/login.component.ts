@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
 
   login() {
     this._loginService.login().subscribe(res => {
-      console.log(res);
+      // console.log(res);
       const { token, perfil, idPerfil, status, Nombre }:any = res;
 
       // Token

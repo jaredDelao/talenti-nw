@@ -30,7 +30,7 @@ const estudios: Array<Object> = [
   styleUrls: ["./solicitar-estudio.component.scss"]
 })
 export class SolicitarEstudioComponent implements OnInit {
-  private estudiosData: Array<Object> = estudios;
+  public estudiosData: Array<Object> = estudios;
   form: FormGroup;
 
   constructor(private fb: FormBuilder) {}

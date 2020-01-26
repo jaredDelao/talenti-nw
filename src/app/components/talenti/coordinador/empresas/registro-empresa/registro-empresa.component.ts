@@ -4,64 +4,9 @@ import { SelectionModel } from "@angular/cdk/collections";
 import { MatPaginator } from "@angular/material/paginator";
 import Swal from "sweetalert2";
 import { ActivatedRoute } from '@angular/router';
+import { EmpresasService } from 'src/app/services/coordinador/empresas.service';
+import { CatalogoEstudios, CatalogoEstudio } from 'src/app/interfaces/talenti/coordinador/catalogo-estudios';
 
-export interface Precios {
-  descripcion: string;
-  costoReal: number;
-  costoCancelado: number;
-}
-const ELEMENT_DATA: Precios[] = [
-  {
-    descripcion: "Estudio Socioeconómico",
-    costoReal: 1200,
-    costoCancelado: 1.0079
-  },
-  {
-    descripcion: "Estudio Socioeconómico",
-    costoReal: 1200,
-    costoCancelado: 4.0026
-  },
-  {
-    descripcion: "Estudio Socioeconómico",
-    costoReal: 1200,
-    costoCancelado: 6.941
-  },
-  {
-    descripcion: "Estudio Socioeconómico",
-    costoReal: 1200,
-    costoCancelado: 9.0122
-  },
-  {
-    descripcion: "Estudio Socioeconómico",
-    costoReal: 1200,
-    costoCancelado: 10.811
-  },
-  {
-    descripcion: "Estudio Socioeconómico",
-    costoReal: 1200,
-    costoCancelado: 12.0107
-  },
-  {
-    descripcion: "Estudio Socioeconómico",
-    costoReal: 1200,
-    costoCancelado: 14.0067
-  },
-  {
-    descripcion: "Estudio Socioeconómico",
-    costoReal: 1200,
-    costoCancelado: 15.9994
-  },
-  {
-    descripcion: "Estudio Socioeconómico",
-    costoReal: 1200,
-    costoCancelado: 18.9984
-  },
-  {
-    descripcion: "Estudio Socioeconómico",
-    costoReal: 1200,
-    costoCancelado: 20.1797
-  }
-];
 @Component({
   selector: "app-registro-empresa",
   templateUrl: "./registro-empresa.component.html",
@@ -72,6 +17,10 @@ export class RegistroEmpresaComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   validEstudios: Boolean = false;
   idEmpresa: any;
+  displayedColumns: string[] = ["select","descripcion","costoReal","costoCancelado"];
+  selection = new SelectionModel<CatalogoEstudios>(true, []);
+  catalogoEstudios: Array<CatalogoEstudio>;
+  dataSource: MatTableDataSource<CatalogoEstudio>;
 
   public empresa = {
     nombre: null,
@@ -85,22 +34,17 @@ export class RegistroEmpresaComponent implements OnInit {
     { id: 2, descripcion: "Folio Fijo" }
   ];
 
-  constructor(private _route: ActivatedRoute) {}
+  constructor(private _route: ActivatedRoute, private empresasService: EmpresasService) {}
 
   ngOnInit() {
     this.idEmpresa = this._route.snapshot.paramMap.get('id');
-    console.log(this.idEmpresa)
+    this.getCatalogoEstudios();
+  }
+  
+  InitMatTable() {
+    this.dataSource = new MatTableDataSource<CatalogoEstudio>(this.catalogoEstudios);
     this.dataSource.paginator = this.paginator;
   }
-
-  displayedColumns: string[] = [
-    "select",
-    "descripcion",
-    "costoReal",
-    "costoCancelado"
-  ];
-  dataSource = new MatTableDataSource<Precios>(ELEMENT_DATA);
-  selection = new SelectionModel<Precios>(true, []);
 
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
@@ -113,7 +57,7 @@ export class RegistroEmpresaComponent implements OnInit {
   masterToggle() {
     this.isAllSelected()
       ? this.selection.clear()
-      : this.dataSource.data.forEach(row => this.selection.select(row));
+      : this.dataSource.data.forEach((row: any) => this.selection.select(row));
   }
 
   /** The label for the checkbox on the passed row */
@@ -128,23 +72,24 @@ export class RegistroEmpresaComponent implements OnInit {
   //   console.log(this.selection)
   // }
 
-  getData(e) {
-    // console.log(this.selection.selected);
+  getCatalogoEstudios() {
+    this.empresasService.getCatalogoEstudios().subscribe((estudios: CatalogoEstudios) => {
+      this.catalogoEstudios = estudios.estudios;
+      this.InitMatTable();
+    });
   }
 
-  stop(e) {
+  stop() {
     event.stopPropagation();
   }
 
   enviar() {
     const selection = this.selection.selected;
 
+    // Validar campos vacios
     if (selection.length > 0) {
       for (let i = 0; i < selection.length; i++) {
-        if (
-          selection[i].costoReal !== null &&
-          selection[i].costoCancelado !== null
-        ) {
+        if (selection[i].costoEstudio !== null && selection[i].costoCancelado !== null) {
           this.validEstudios = true;
         } else {
           this.validEstudios = false;
@@ -170,6 +115,7 @@ export class RegistroEmpresaComponent implements OnInit {
       });
     }
 
+    // Request
     this.empresa.permisos = this.selection.selected;
     console.log(this.empresa);
   }

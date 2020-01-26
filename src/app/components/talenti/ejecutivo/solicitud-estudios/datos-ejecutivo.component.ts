@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild, DoCheck, Output, EventEmitter } from "@angular/core";
-import { DatosEjecutivoService } from "../../../../services/datos-ejecutivo.service";
 import { DatosEjecutivo } from "../../../../interfaces/datos-ejecutivo";
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from "@angular/material/table";
 import { MatDatepicker, MatDatepickerInputEvent } from '@angular/material';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { EstudiosService } from 'src/app/services/ejecutivo/estudios.service';
+import { Estudios, Estudio } from 'src/app/interfaces/talenti/ejecutivo/estudios';
 
 @Component({
   selector: "app-datos-ejecutivo",
@@ -12,13 +13,13 @@ import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
   styleUrls: ["./datos-ejecutivo.component.scss"]
 })
 export class DatosEjecutivoComponent implements OnInit {
+
   displayedColumns: string[] = [
     'folio', 'estudio', 'nombre', 'estado', 'municipio', 'fecha_solicitud', 'hora_solicitud', 'agendado',
     'fecha_agenda', 'preliminar', 'fecha_aplicacion', 'estatus', 'publicacion', 'dictamen', 'descarga',
     'solicitar_calidad', 'solicitud_calidad', 'certificado_calidad'
   ];
-  datos: DatosEjecutivo[] = [];
-  dataSource: MatTableDataSource<DatosEjecutivo>;
+  dataSource: MatTableDataSource<Estudio>;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild('fechaI', { static: false }) fechaI: MatDatepicker<any>;
@@ -28,17 +29,11 @@ export class DatosEjecutivoComponent implements OnInit {
   // @Output() fechaFinEvent: EventEmitter<MatDatepickerInputEvent<any>>; (dateChange)="fechaFinEvent($event)"
   fechaInicio: Date;
   fechaFin: Date;
-
+  estudiosList: Array<Estudio>;
   form: FormGroup;
 
-  constructor(private datosService: DatosEjecutivoService, private fb: FormBuilder) {
-
-    this.datosService.getUsers().subscribe(res => {
-      this.datos = res;
-      // console.log(this.datos)
-      this.dataSource = new MatTableDataSource<DatosEjecutivo>(this.datos);
-      this.dataSource.paginator = this.paginator;
-    });
+  constructor(private estudiosService: EstudiosService, private fb: FormBuilder) {
+    this.getEstudios();
   }
 
   ngOnInit() {
@@ -54,6 +49,17 @@ export class DatosEjecutivoComponent implements OnInit {
 
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  getEstudios() {
+    this.estudiosService.getEstudios().subscribe((estudiosList: Estudios)=> {
+      this.estudiosList = estudiosList.estudios;
+      this.dataSource = new MatTableDataSource(this.estudiosList);
+      this.dataSource.paginator = this.paginator;
+
+      console.log(this.estudiosList);
+      
+    })
   }
 
 

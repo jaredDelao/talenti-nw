@@ -76,44 +76,46 @@
             </div>
         </form>
     </div>
+</div>
 
+<div class="container-full">
     <!-- TABLA -->
     <div class="table-container mat-elevation-z15 mt-4">
 
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
             <ng-container matColumnDef="folio">
                 <th mat-header-cell *matHeaderCellDef> FOLIO </th>
-                <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.folio}} </td>
             </ng-container>
 
             <ng-container matColumnDef="estudio">
                 <th mat-header-cell *matHeaderCellDef> ESTUDIO </th>
-                <td mat-cell *matCellDef="let element"> {{element.first_name}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.estudio}} </td>
             </ng-container>
 
             <ng-container matColumnDef="nombre">
                 <th mat-header-cell *matHeaderCellDef> NOMBRE </th>
-                <td mat-cell *matCellDef="let element"> {{element.last_name}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
             </ng-container>
 
             <ng-container matColumnDef="estado">
                 <th mat-header-cell *matHeaderCellDef> ESTADO </th>
-                <td mat-cell *matCellDef="let element"> {{element.avatar}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.estado}} </td>
             </ng-container>
 
             <ng-container matColumnDef="municipio">
                 <th mat-header-cell *matHeaderCellDef> MUNICIPIO </th>
-                <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.municipio}} </td>
             </ng-container>
 
             <ng-container matColumnDef="fecha_solicitud">
                 <th mat-header-cell *matHeaderCellDef> FECHA SOLICITUD </th>
-                <td mat-cell *matCellDef="let element"> {{element.fecha_solicitud}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.fechasolicitud}} </td>
             </ng-container>
 
             <ng-container matColumnDef="hora_solicitud">
                 <th mat-header-cell *matHeaderCellDef> HORA SOLICITUD </th>
-                <td mat-cell *matCellDef="let element"> {{element.hora_solicitud}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.horasolicitud}} </td>
             </ng-container>
 
             <ng-container matColumnDef="agendado">
@@ -123,7 +125,7 @@
 
             <ng-container matColumnDef="fecha_agenda">
                 <th mat-header-cell *matHeaderCellDef> FECHA AGENDADO </th>
-                <td mat-cell *matCellDef="let element"> {{element.fecha_agendado}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.fechaagenda}} </td>
             </ng-container>
 
             <ng-container matColumnDef="preliminar">
@@ -133,7 +135,7 @@
 
             <ng-container matColumnDef="fecha_aplicacion">
                 <th mat-header-cell *matHeaderCellDef> FECHA APLICACION </th>
-                <td mat-cell *matCellDef="let element"> {{element.fehca_aplicacion}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.fechaaplicacion}} </td>
             </ng-container>
 
             <ng-container matColumnDef="estatus">
@@ -158,24 +160,23 @@
 
             <ng-container matColumnDef="solicitar_calidad">
                 <th mat-header-cell *matHeaderCellDef> SOLICITAR CALIDAD </th>
-                <td mat-cell *matCellDef="let element"> {{element.solicitar_calidad}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.solicitarcalidad}} </td>
             </ng-container>
 
             <ng-container matColumnDef="solicitud_calidad">
                 <th mat-header-cell *matHeaderCellDef> SOLICITUD CALIDAD </th>
-                <td mat-cell *matCellDef="let element"> {{element.solicitud_calidad}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.solicitudcalidad}} </td>
             </ng-container>
 
             <ng-container matColumnDef="certificado_calidad">
                 <th mat-header-cell *matHeaderCellDef> CERTIFICADO CALIDAD </th>
-                <td mat-cell *matCellDef="let element"> {{element.certificado}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.certificadocalidad}} </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
-
+        
+        <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 50 ]"> </mat-paginator>
     </div>
-
-    <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 50 ]"> </mat-paginator>
 </div>

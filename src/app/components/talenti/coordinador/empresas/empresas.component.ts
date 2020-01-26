@@ -1,14 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { EmpresasService } from '../../../../services/coordinador/empresas.service';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { Empresas, TipoEmpresa } from 'src/app/interfaces/talenti/coordinador/empresas';
+import { MatTableDataSource } from '@angular/material';
 
-// const ELEMENT_DATA = [
-//   { name: "Hydrogen", id: 1 },
-//   { name: "Helium", id: 2 },
-//   { name: "Lithium", id: 3 },
-//   { name: "Beryllium", id: 4 },
-//   { name: "Boron", id: 5 }
-// ];
 @Component({
   selector: "app-empresas",
   templateUrl: "./empresas.component.html",
@@ -16,13 +10,19 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dial
 })
 export class EmpresasComponent implements OnInit {
   displayedColumns: string[] = ["empresa", "editar"];
-  dataSource: any;
+  dataSource: MatTableDataSource<TipoEmpresa>;
+  listEmpresas: Array<TipoEmpresa>;
 
-  constructor(public dialog: MatDialog, private empresasService: EmpresasService) {}
+  constructor(private empresasService: EmpresasService) {}
 
   ngOnInit() {
-    this.empresasService.getEmpresas().subscribe((data: any) => {
-      this.dataSource = data.empresas;
+    this.getEmpresas();
+  }
+  
+  getEmpresas() {
+    this.empresasService.getEmpresas().subscribe((empresa: Empresas) => {
+      this.listEmpresas = empresa.empresas;
+      this.dataSource = new MatTableDataSource(this.listEmpresas);
     })
   }
 

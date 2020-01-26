@@ -4,9 +4,6 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-
-import { HashLocationStrategy, LocationStrategy } from '@angular/common';
-
 import { DatosEjecutivoComponent } from './components/talenti/ejecutivo/solicitud-estudios/datos-ejecutivo.component';
 import { HttpClientModule } from '@angular/common/http';
 import { DatosEjecutivoService } from './services/datos-ejecutivo.service';
@@ -72,7 +69,6 @@ import { EmpresasService } from './services/coordinador/empresas.service';
   ],
   providers: [
     DatosEjecutivoService,
-    {provide: LocationStrategy, useClass: HashLocationStrategy},
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
     EmpresasService
   ],
