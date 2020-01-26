@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  urlGet: '/bkService.php'
+  urlGet: 'http://34.234.225.159/bkService.php'
 };
 
 /*
