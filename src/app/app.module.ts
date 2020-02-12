@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -30,6 +30,10 @@ import { SolicitudEstudioClienteComponent } from './components/cliente/solicitud
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { MAT_DATE_LOCALE } from '@angular/material';
 import { EmpresasService } from './services/coordinador/empresas.service';
+import { LoadingComponent } from './components/loading/loading.component';
+import localEs from '@angular/common/locales/es';
+import { registerLocaleData } from '@angular/common';
+registerLocaleData(localEs, 'es');
 
 @NgModule({
   declarations: [
@@ -53,7 +57,8 @@ import { EmpresasService } from './services/coordinador/empresas.service';
     DetalleEstudioClienteComponent,
     CancelarSolicitudClienteComponent,
     SolicitudEstudioClienteComponent,
-    DashboardComponent
+    DashboardComponent,
+    LoadingComponent
   ],
   imports: [
     ReactiveFormsModule,
@@ -70,6 +75,7 @@ import { EmpresasService } from './services/coordinador/empresas.service';
   providers: [
     DatosEjecutivoService,
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
+    { provide: LOCALE_ID, useValue: 'es'},
     EmpresasService
   ],
   entryComponents: [

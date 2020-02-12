@@ -1,3 +1,4 @@
+<app-loading *ngIf="loader"></app-loading>
 <div class="container-full">
     <form [formGroup]="form">
         <div class="title">
@@ -13,8 +14,8 @@
                     <mat-form-field>
                         <mat-icon matSuffix>person</mat-icon>
                         <mat-label>Nombre</mat-label>
-                        <input matInput type="text" formControlName="nombre">
-                        <mat-hint *ngIf="!form.controls.nombre.valid && form.controls.nombre.touched ">Nombre requerido
+                        <input matInput type="text" formControlName="nombres">
+                        <mat-hint *ngIf="!form.controls.nombres.valid && form.controls.nombres.touched ">Nombre requerido
                         </mat-hint>
                     </mat-form-field>
                 </div>
@@ -32,9 +33,9 @@
                 <div class="form-group col-lg-3 col-md-4">
                     <mat-form-field>
                         <mat-icon matSuffix>mail</mat-icon>
-                        <mat-label>Email</mat-label>
-                        <input matInput type="email" formControlName="email">
-                        <mat-hint *ngIf="!form.controls.email.valid && form.controls.email.touched ">Email requerido
+                        <mat-label>Correo</mat-label>
+                        <input matInput type="email" formControlName="correoelectronico">
+                        <mat-hint *ngIf="!form.controls.correoelectronico.valid && form.controls.correoelectronico.touched ">Email requerido
                         </mat-hint>
                     </mat-form-field>
                 </div>
@@ -43,8 +44,8 @@
                     <mat-form-field>
                         <mat-icon matSuffix>vpn_key</mat-icon>
                         <mat-label>Contraseña</mat-label>
-                        <input matInput type="text" formControlName="password">
-                        <mat-hint *ngIf="!form.controls.password.valid && form.controls.password.touched ">Contraseña
+                        <input matInput type="password" formControlName="md5pass" #password>
+                        <mat-hint *ngIf="!form.controls.md5pass.valid && form.controls.md5pass.touched ">Contraseña
                             requerida</mat-hint>
                     </mat-form-field>
                 </div>
@@ -52,12 +53,12 @@
                 <div class="form-group col-lg-3 col-md-4">
                     <mat-form-field>
                         <mat-label>Tipo de cliente</mat-label>
-                        <mat-select formControlName="tipoCliente">
-                            <mat-option *ngFor="let usuario of listaTipoUsuarios" [value]="usuario">
-                                {{usuario.desc}}
+                        <mat-select formControlName="iIdRol">
+                            <mat-option *ngFor="let usuario of tipoUsuariosList" [value]="usuario.iIdRol">
+                                {{usuario.sDescripcion}}
                             </mat-option>
                         </mat-select>
-                        <mat-hint *ngIf="!form.controls.tipoCliente.valid && form.controls.tipoCliente.touched ">Tipo
+                        <mat-hint *ngIf="!form.controls.iIdRol.valid && form.controls.iIdRol.touched ">Tipo
                             cliente requerido</mat-hint>
                     </mat-form-field>
                 </div>
@@ -65,12 +66,12 @@
                 <div class="form-group col-lg-3 col-md-4">
                     <mat-form-field>
                         <mat-label>Empresa</mat-label>
-                        <mat-select formControlName="empresa">
-                            <mat-option *ngFor="let empresa of listaEmpresas" [value]="empresa">
-                                {{empresa.nombre}}
+                        <mat-select formControlName="iIdEmpresa">
+                            <mat-option *ngFor="let empresa of listaEmpresas" [value]="empresa.iIdEmpresa">
+                                {{empresa.sNombreEmpresa}}
                             </mat-option>
                         </mat-select>
-                        <mat-hint *ngIf="!form.controls.empresa.valid && form.controls.empresa.touched ">Empresa
+                        <mat-hint *ngIf="!form.controls.iIdEmpresa.valid && form.controls.iIdEmpresa.touched ">Empresa
                             requerida</mat-hint>
 
                     </mat-form-field>
@@ -79,12 +80,12 @@
                 <div class="form-group col-lg-3 col-md-4">
                     <mat-form-field>
                         <mat-label>Ejecutivo</mat-label>
-                        <mat-select formControlName="ejecutivo">
-                            <mat-option *ngFor="let ejecutivo of listaEjecutivos" [value]="ejecutivo">
-                                {{ejecutivo.nombre}}
+                        <mat-select formControlName="idejecutivo">
+                            <mat-option *ngFor="let ejecutivo of listaEjecutivos" [value]="ejecutivo.iIdEmpleado">
+                                {{ejecutivo.sNombres + ' ' + ejecutivo.sApellidos}}
                             </mat-option>
                         </mat-select>
-                        <mat-hint *ngIf="!form.controls.ejecutivo.valid && form.controls.ejecutivo.touched">Ejecutivo
+                        <mat-hint *ngIf="!form.controls.idejecutivo.valid && form.controls.idejecutivo.touched">Ejecutivo
                             requerido</mat-hint>
                     </mat-form-field>
                 </div>
@@ -94,8 +95,9 @@
             <div class="actions col-12 mt-4 mb-4 d-flex justify-content-center">
                 <div class="buttons col-5 d-flex justify-content-around">
                     <button mat-raised-button color="warn" [routerLink]="['/coordinador/clientes']">CANCELAR</button>
-                    <button mat-raised-button color="primary" (click)="guardar()"
-                        [disabled]="form.invalid">{{idTipo == 2 ? 'EDITAR' : 'GUARDAR'}}</button>
+                    <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="guardar()" >
+                        {{idTipo == 2 ? 'EDITAR' : 'GUARDAR'}}
+                    </button>
                 </div>
             </div>
         </div>

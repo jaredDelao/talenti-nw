@@ -1,3 +1,5 @@
+<app-loading *ngIf="loader"></app-loading>
+
 <div class="container-full row">
     <div class="left col-lg-8 col-sm-6 col-xs-0">
 
@@ -5,29 +7,29 @@
 
     <div class="right col-lg-4 col-sm-6 col-xs-12 d-flex align-items-center">
         <div class="principal form-group col-12">
+
+            
             <form [formGroup]="form">
                 <div class="title text-center mb-5">
                     <h3>INICIAR SESIÓN</h3>
                 </div>
                 <div class="form-group">
                     <mat-form-field>
-                        <mat-label>USUARIO</mat-label>
-                        <input matInput formControlName="user" />
-                        <mat-hint *ngIf="form.controls.user.invalid && form.controls.user.touched">Usuario requerido
+                        <mat-label>CORREO</mat-label>
+                        <input matInput formControlName="correo" />
+                        <mat-hint *ngIf="form.controls.correo.invalid && form.controls.correo.touched">Correo requerido
                         </mat-hint>
                     </mat-form-field>
                 </div>
                 <div class="form-group">
                     <mat-form-field>
                         <mat-label>CONTRASEÑA</mat-label>
-                        <input matInput type="password" formControlName="password" />
+                        <input matInput type="password" formControlName="md5pass" />
                     </mat-form-field>
                 </div>
-                <div class="form-group text-left mb-5">
-                    <mat-checkbox color="primary" formControlName="recordar">Recordar usuario</mat-checkbox>
-                </div>
+
                 <div class="form-group">
-                    <button mat-raised-button color="primary" (click)="login()">ENTRAR</button>
+                    <button mat-raised-button [disabled]="form.invalid" color="primary" (click)="login()">ENTRAR</button>
                 </div>
             </form>
         </div>

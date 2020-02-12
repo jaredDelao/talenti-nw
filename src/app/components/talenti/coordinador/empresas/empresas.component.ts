@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { EmpresasService } from '../../../../services/coordinador/empresas.service';
 import { Empresas, TipoEmpresa } from 'src/app/interfaces/talenti/coordinador/empresas';
 import { MatTableDataSource } from '@angular/material';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: "app-empresas",
@@ -20,10 +21,10 @@ export class EmpresasComponent implements OnInit {
   }
   
   getEmpresas() {
-    this.empresasService.getEmpresas().subscribe((empresa: Empresas) => {
-      this.listEmpresas = empresa.empresas;
+    this.empresasService.getEmpresas().subscribe((empresa: any) => {
+      this.listEmpresas = empresa;
       this.dataSource = new MatTableDataSource(this.listEmpresas);
-    })
+    }, (err) => Swal.fire('Error al cargar las empresas', '', 'warning'));
   }
 
   openDialog(d): void {}

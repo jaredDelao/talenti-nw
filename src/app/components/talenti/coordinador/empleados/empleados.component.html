@@ -5,36 +5,37 @@
     </div>
 
     <div class="tabla col-12">
-        <button class="btn-create mt-4 mb-4" mat-raised-button color="primary"
-            [routerLink]="['/coordinador/empleados/registro-empleado']">CREAR
-            EMPLEADO</button>
+        <button class="btn-create mt-4 mb-4" mat-raised-button color="primary" (click)="registrar()">
+            CREAR EMPLEADO
+        </button>
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
             <!-- Empresa Column -->
             <ng-container matColumnDef="puesto">
                 <th mat-header-cell *matHeaderCellDef> PUESTO </th>
-                <td mat-cell *matCellDef="let element"> {{element.puesto}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.sRol}} </td>
             </ng-container>
             <!-- Empresa Column -->
             <ng-container matColumnDef="nombre">
                 <th mat-header-cell *matHeaderCellDef> NOMBRE </th>
-                <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.sNombres}} </td>
             </ng-container>
             <!-- Empresa Column -->
             <ng-container matColumnDef="apellidos">
                 <th mat-header-cell *matHeaderCellDef> APELLIDOS </th>
-                <td mat-cell *matCellDef="let element"> {{element.apellidos}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.sApellidos}} </td>
             </ng-container>
             <!-- Empresa Column -->
-            <ng-container matColumnDef="correo">
+            <!-- <ng-container matColumnDef="correo">
                 <th mat-header-cell *matHeaderCellDef> CORREO </th>
                 <td mat-cell *matCellDef="let element"> {{element.correo}} </td>
-            </ng-container>
+            </ng-container> -->
 
             <!-- Action Column -->
             <ng-container matColumnDef="editar">
                 <th mat-header-cell *matHeaderCellDef> EDITAR </th>
                 <td mat-cell *matCellDef="let element">
-                    <mat-icon [routerLink]="['/coordinador/empleados/editar-empleado', element.id]">edit
+                    <mat-icon (click)="editar(element.iIdEmpleado)">
+                        edit
                     </mat-icon>
                 </td>
             </ng-container>

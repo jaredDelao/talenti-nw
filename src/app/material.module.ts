@@ -23,6 +23,7 @@ import {
   MatDividerModule,
   MatTreeModule,
   MatMenuModule,
+  MatProgressSpinnerModule,
 } from "@angular/material";
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -54,6 +55,7 @@ import { MatNativeDateModule } from '@angular/material';
     MatDividerModule,
     MatTreeModule,
     MatMenuModule,
+    MatProgressSpinnerModule,
   ],
   exports: [
     MatSliderModule,
@@ -80,6 +82,7 @@ import { MatNativeDateModule } from '@angular/material';
     MatDatepickerModule,
     MatNativeDateModule,
     MatMenuModule,
+    MatProgressSpinnerModule,
   ]
 })
 export class MaterialModule {}

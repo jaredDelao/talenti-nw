@@ -15,11 +15,18 @@ import { Estudios, Estudio } from 'src/app/interfaces/talenti/ejecutivo/estudios
 export class DatosEjecutivoComponent implements OnInit {
 
   displayedColumns: string[] = [
-    'folio', 'estudio', 'nombre', 'estado', 'municipio', 'fecha_solicitud', 'hora_solicitud', 'agendado',
-    'fecha_agenda', 'preliminar', 'fecha_aplicacion', 'estatus', 'publicacion', 'dictamen', 'descarga',
-    'solicitar_calidad', 'solicitud_calidad', 'certificado_calidad'
+    'folio', 'estudio', 'nombre', 'estado', 'municipio', 'fecha_solicitud', 'hora_solicitud', 'estatus_solicitud', 
+    'estatus_agendado', 'fecha_agenda', 'estatus_aplicacion', 'fecha_aplicacion', 'preliminar', 'publicacion_preliminar', 
+    'estatus_preliminar', 'publicacion_estudio', 'descarga',  'publicacion_dictamen', 'estatus_dictamen',
+    'solicitar_calidad', 'certificado_calidad', 'solicitud_cancelacion', 'tipo_cancelacion', 'aprobar_cancelacion',
+    'evidencia', 'comentarios'
   ];
   dataSource: MatTableDataSource<Estudio>;
+
+  req = {
+    sService: 'getSolicitudesEjecutivo',
+    iIdEjecutivo: '1'
+  }
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild('fechaI', { static: false }) fechaI: MatDatepicker<any>;
@@ -29,7 +36,7 @@ export class DatosEjecutivoComponent implements OnInit {
   // @Output() fechaFinEvent: EventEmitter<MatDatepickerInputEvent<any>>; (dateChange)="fechaFinEvent($event)"
   fechaInicio: Date;
   fechaFin: Date;
-  estudiosList: Array<Estudio>;
+  estudiosList: Array<any>;
   form: FormGroup;
 
   constructor(private estudiosService: EstudiosService, private fb: FormBuilder) {
@@ -52,12 +59,16 @@ export class DatosEjecutivoComponent implements OnInit {
   }
 
   getEstudios() {
-    this.estudiosService.getEstudios().subscribe((estudiosList: Estudios)=> {
-      this.estudiosList = estudiosList.estudios;
+    this.estudiosService.getEstudios(this.req).subscribe((estudiosList: any)=> {
+      console.log(estudiosList);
+
+      const {resultado} = estudiosList;
+      this.estudiosList = resultado;
       this.dataSource = new MatTableDataSource(this.estudiosList);
       this.dataSource.paginator = this.paginator;
 
-      console.log(this.estudiosList);
+      console.log(this.dataSource);
+      
       
     })
   }

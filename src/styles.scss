@@ -1,6 +1,83 @@
 /* You can add global styles to this file, and also import other style files */
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+// @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 @import "~bootstrap/dist/css/bootstrap.css";
+@import "~@angular/material/theming";
+
+$mat-red: (
+  50: #ffebee,
+  100: #ffcdd2,
+  200: #ef9a9a,
+  300: #e57373,
+  400: #ef5350,
+  500: #f44336,
+  600: #e53935,
+  700: #d32f2f,
+  800: #c62828,
+  900: #b71c1c,
+  A100: #ff8a80,
+  A200: #ff5252,
+  A400: #ff1744,
+  A700: #d50000,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white,
+    600: white,
+    700: white,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+);
+
+$mat-blue: (
+  50: #E1F5FE,
+  100: #B3E5FC,
+  200: #81D4FA,
+  300: #4FC3F7,
+  400: #29B6F6,
+  500: #03A9F4,
+  600: #039BE5,
+  700: #0288D1,
+  800: #0277BD,
+  900: #01579B,
+  A100: #80D8FF,
+  A200: #40C4FF,
+  A400: #00B0FF,
+  A700: #0091EA,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white,
+    600: white,
+    700: white,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+);
+
+@include mat-core();
+
+$primary: mat-palette($mat-teal);
+$accent:  mat-palette($mat-red);
+$theme: mat-light-theme($primary, $accent);
+
+// Include theme styles for Angular Material components.
+@include angular-material-theme($theme);
+
 
 * {
   font-family: 'Open Sans';
@@ -48,4 +125,8 @@ button:focus {
 html,
 body {
   height: 100%;
+}
+
+mat-hint {
+  color: tomato !important;
 }

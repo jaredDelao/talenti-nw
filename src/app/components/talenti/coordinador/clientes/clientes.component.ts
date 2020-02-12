@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild, OnDestroy } from "@angular/core";
 import { MatPaginator, MatTableDataSource } from "@angular/material";
 import { ClientesService } from 'src/app/services/coordinador/clientes.service';
-import { Clientes } from 'src/app/interfaces/talenti/coordinador/clientes';
+import { Clientes, ClientesList } from 'src/app/interfaces/talenti/coordinador/clientes';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { map } from 'rxjs/operators';
+import { TipoEmpresa } from 'src/app/interfaces/talenti/coordinador/empresas';
 
 const ELEMENT_DATA = [
   {
@@ -51,6 +53,7 @@ const ELEMENT_DATA = [
 export class ClientesComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ["empresa", "usuario", "nombre", "ejecutivo", "editar"];
   dataSource;
+  listaEmpresas: Array<TipoEmpresa>;
   subscription: Subscription;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
@@ -61,8 +64,11 @@ export class ClientesComponent implements OnInit, OnDestroy {
   }
 
   getClientes() {
-    this.subscription = this.clientesService.getClientes().subscribe((resClientes: Clientes) => {
-      this.dataSource = new MatTableDataSource(resClientes.clientes);
+    this.subscription = this.clientesService.getClientes().pipe(
+      map(clientes => clientes.Clientes)
+    )
+    .subscribe((clientesList) => {
+      this.dataSource = new MatTableDataSource(clientesList);
       this.dataSource.paginator = this.paginator;
     })
   }

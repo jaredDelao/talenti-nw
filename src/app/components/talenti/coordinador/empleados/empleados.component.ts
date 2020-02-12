@@ -1,44 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material';
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatTableDataSource } from "@angular/material";
+import { EmpleadosService } from "src/app/services/coordinador/empleados.service";
 
-const ELEMENT_DATA = [
-  {
-    id: 1,
-    puesto: "Hydrogen",
-    nombre: "Hydrogen",
-    apellidos: "Hydrogen",
-    correo: "Hydrogen"
-  },
-  {
-    id: 2,
-    puesto: "Helium",
-    nombre: "Helium",
-    apellidos: "Helium",
-    correo: "Helium"
-  },
-  {
-    id: 3,
-    puesto: "Lithium",
-    nombre: "Lithium",
-    apellidos: "Lithium",
-    correo: "Lithium"
-  },
-  {
-    id: 4,
-    puesto: "Beryllium",
-    nombre: "Beryllium",
-    apellidos: "Beryllium",
-    correo: "Beryllium"
-  },
-  {
-    id: 5,
-    puesto: "Boron",
-    nombre: "Boron",
-    apellidos: "Boron",
-    correo: "Boron"
-  }
-];
+import { map } from "rxjs/operators";
+import { Empleados, Empleado } from "src/app/interfaces/talenti/coordinador/empleados";
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: "app-empleados",
@@ -46,20 +14,34 @@ const ELEMENT_DATA = [
   styleUrls: ["./empleados.component.scss"]
 })
 export class EmpleadosComponent implements OnInit {
-  displayedColumns: string[] = [
-    "puesto",
-    "nombre",
-    "apellidos",
-    "correo",
-    "editar"
-  ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  displayedColumns: string[] = [ "puesto", "nombre", "apellidos", "editar"];
+  dataSource;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
-  constructor() {}
+  constructor(public empleadosService: EmpleadosService, private router: Router) {}
 
   ngOnInit() {
-    this.dataSource.paginator = this.paginator;
+    
+    this.getEmpleados();
+  }
 
+  getEmpleados() {
+    this.empleadosService
+      .getEmpleados()
+      .pipe(map((empleado: Empleados) => empleado.Empleados))
+      .subscribe((empleados: Array<Empleado>) => {
+        this.dataSource = new MatTableDataSource(empleados)
+        this.dataSource.paginator = this.paginator;        
+      });
+  }
+
+  registrar() {
+    this.empleadosService.idTipo.next(1);
+    this.router.navigate(['/coordinador/empleados/registro-empleado']);
+  }
+
+  editar(id) {
+    this.empleadosService.idTipo.next(2);
+    this.router.navigate(['/coordinador/empleados/editar-empleado', id]);
   }
 }

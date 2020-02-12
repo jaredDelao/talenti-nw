@@ -9,11 +9,15 @@ export class LoginService {
 
   constructor(private _http: HttpClient) { }
   
-  login() {
-    // const header = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-    let body = new HttpParams();
-    body = body.set('sService', 'login');
-    return this._http.post(environment.urlGet, body);
+  login(body) {
+    let params = new HttpParams({fromObject:body});
+    return this._http.post(environment.urlProd, params);
+  }
+
+  assembly() {
+    let params = new HttpParams()
+    params = params.set('sService','gettest')
+    return this._http.post(environment.urlProd,params)
   }
 
 }

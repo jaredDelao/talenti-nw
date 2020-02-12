@@ -1,0 +1,14 @@
+.loader {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: 999;
+    background-color: rgba($color: #000000, $alpha: 0.7);
+  }
+  
+  mat-progress-spinner {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }

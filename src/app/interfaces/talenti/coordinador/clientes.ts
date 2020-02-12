@@ -1,5 +1,12 @@
 export interface Clientes {
-    status: string;
-    resultado: string;
-    clientes: Array<Object>;
+  status: string;
+  Clientes: Array<ClientesList>;
+}
+
+export interface ClientesList {
+  iIdCliente: string;
+  sNombres: string;
+  sApellidos: string;
+  iIdRol: string;
+  sRol: string;
 }

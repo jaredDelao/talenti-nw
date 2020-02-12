@@ -4,7 +4,9 @@
 
 export const environment = {
   production: false,
-  urlGet: 'http://34.234.225.159/bkService.php'
+  urlGet: '/bkService.php',
+  urlProd: '/requestsrvrTalenti.php'
+
 };
 
 /*

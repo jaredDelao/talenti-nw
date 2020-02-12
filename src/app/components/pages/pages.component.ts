@@ -1,8 +1,12 @@
 import { Component, ViewChild, OnInit, AfterContentInit, DoCheck } from "@angular/core";
 import { MatDrawer } from "@angular/material";
 import { Router } from '@angular/router';
+import * as bcryptjs from 'bcryptjs';
+import Swal from 'sweetalert2';
 
-const menu: Array<Object> = [
+// const menuEjecutivo: Array<Object>;
+
+const menuAdmin: Array<Object> = [
   {
     titulo: "EJECUTIVO",
     list: [
@@ -27,6 +31,16 @@ const menu: Array<Object> = [
   }
 ];
 
+const menuEjecutivo: Array<Object> = [
+  {
+    titulo: "EJECUTIVO",
+    list: [
+      { title: "Estudios", link: "ejecutivo/estudios" },
+      { title: "Solicitud de cancelación", link: "ejecutivo/solicitud-cancelacion" }
+    ]
+  },
+];
+
 @Component({
   selector: "app-pages",
   templateUrl: "./pages.component.html",
@@ -35,14 +49,14 @@ const menu: Array<Object> = [
 export class PagesComponent implements OnInit, DoCheck {
 
   @ViewChild("drawer", { static: false }) menu: MatDrawer;
-  menuList: Array<Object> = menu;
+  menuList: Array<Object>;
   permiso: String = "analista";
   colorT: string = 'primary';
 
   constructor(private router: Router) { }
 
   ngOnInit() {
-
+    this.getLocalStorage();
   }
 
   ngDoCheck() {
@@ -54,6 +68,23 @@ export class PagesComponent implements OnInit, DoCheck {
   cerrarSesion() {
     localStorage.clear();
     this.router.navigate(['/login']);
+  }
+
+  getLocalStorage() {
+    let perfil = localStorage.getItem('perfil');
+    console.log(perfil)
+        
+    bcryptjs.compare('Admin', perfil, (err, res) => {
+      res ? this.menuList = menuAdmin : '';
+    });
+    bcryptjs.compare('Ejecutivo', perfil, (err, res) => {
+      res ? this.menuList = menuEjecutivo : '';
+    });
+
+  }
+
+  open() {
+    this.menu.toggle();
   }
 
 }

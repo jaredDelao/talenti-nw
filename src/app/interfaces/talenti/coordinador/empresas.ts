@@ -1,10 +1,9 @@
 export interface Empresas {
     status: string;
-    resultado: string;
-    empresas: Array<TipoEmpresa>
+    Empresas: Array<TipoEmpresa>
 }
 
 export interface TipoEmpresa {
-    id: string;
-    nombre: string;
+    sNombreEmpresa: string;
+    sLogotipo: string;
 }
