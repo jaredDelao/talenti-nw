@@ -24,6 +24,7 @@ import {
   MatTreeModule,
   MatMenuModule,
   MatProgressSpinnerModule,
+  MatButtonToggleModule,
 } from "@angular/material";
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -56,6 +57,7 @@ import { MatNativeDateModule } from '@angular/material';
     MatTreeModule,
     MatMenuModule,
     MatProgressSpinnerModule,
+    MatButtonToggleModule,
   ],
   exports: [
     MatSliderModule,
@@ -83,6 +85,7 @@ import { MatNativeDateModule } from '@angular/material';
     MatNativeDateModule,
     MatMenuModule,
     MatProgressSpinnerModule,
+    MatButtonToggleModule,
   ]
 })
 export class MaterialModule {}

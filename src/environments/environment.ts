@@ -5,8 +5,8 @@
 export const environment = {
   production: false,
   urlGet: '/bkService.php',
-  urlProd: '/requestsrvrTalenti.php'
-
+  urlProd: '/WebTalenti/requestsrvrTalenti.php',
+  urlArchivo: '/WebTalenti/Subearchivo.php'
 };
 
 /*

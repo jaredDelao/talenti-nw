@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpParams, HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { Empresas } from 'src/app/interfaces/talenti/coordinador/empresas';
 import { CatalogoEstudios } from 'src/app/interfaces/talenti/coordinador/catalogo-estudios';
 import { map } from 'rxjs/operators';
@@ -10,6 +10,9 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class EmpresasService {
+
+  idTipo = new BehaviorSubject(0);
+  $idTipo = this.idTipo.asObservable();
 
   constructor(private _http: HttpClient) { 
     
@@ -23,9 +26,33 @@ export class EmpresasService {
     )
   }
 
+  registrarEmpresa(body) {
+    let params = new HttpParams({fromObject: body});
+    return this._http.post(environment.urlProd, params);
+  }
+
   getCatalogoEstudios(): Observable<CatalogoEstudios> {
     let body = new HttpParams();
     body = body.set('sService', 'getLstEstudios');
     return this._http.post<CatalogoEstudios>(environment.urlProd, body);
+  }
+
+  getAllEstudios(){
+    let body = new HttpParams().set('sService', 'getAllEstudios');
+    return this._http.post(environment.urlProd, body);
+  }
+
+  subirArchivo(blob, nombre) {
+    const formData = new FormData();
+    formData.append('sService', 'SubirArchivo');
+    formData.append('Archivo', blob, nombre);
+    formData.append('p', '()__A81523_[]');
+    
+    return this._http.post(environment.urlArchivo, formData);
+  }
+
+  registraTarifa(tarifa) {
+    let body = new HttpParams({fromObject: tarifa});
+    return this._http.post(environment.urlProd, body);
   }
 }

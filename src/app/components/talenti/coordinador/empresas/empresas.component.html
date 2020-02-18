@@ -18,7 +18,7 @@
             <ng-container matColumnDef="editar">
                 <th mat-header-cell *matHeaderCellDef> EDITAR </th>
                 <td mat-cell *matCellDef="let element">
-                    <mat-icon [routerLink]="['/coordinador/empresas/editar-empresa', element.id]">edit
+                    <mat-icon (click)="editar(element.iIdEmpresa)">edit
                     </mat-icon>
                 </td>
             </ng-container>

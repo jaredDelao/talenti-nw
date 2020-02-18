@@ -1,6 +1,6 @@
 {
-    "/requestsrvrTalenti.php/*": {
-        "target": "http://ec2-54-210-170-110.compute-1.amazonaws.com/WebTalenti/",
+    "/WebTalenti/*": {
+        "target": "http://ec2-54-210-170-110.compute-1.amazonaws.com/",
         "secure": false,
         "changeOrigin": true
     }

@@ -72,7 +72,6 @@ export class PagesComponent implements OnInit, DoCheck {
 
   getLocalStorage() {
     let perfil = localStorage.getItem('perfil');
-    console.log(perfil)
         
     bcryptjs.compare('Admin', perfil, (err, res) => {
       res ? this.menuList = menuAdmin : '';

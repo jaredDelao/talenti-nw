@@ -3,7 +3,8 @@
   height: 100%;
   overflow: auto;
   overflow-x: visible;
-  width: 100%;
+  width: 80%;
+  margin: 0 auto;
 }
 
 .mat-form-field {
@@ -12,6 +13,7 @@
 
 table {
   width: 100%;
+  // margin: 0 auto;
 }
 mat-paginator {
   width: auto;
@@ -45,4 +47,59 @@ th.mat-header-cell {
 
 .find {
     width: auto;
+}
+
+// th.mat-header-cell {
+//   text-align: center;
+// }
+
+// th, td {
+//   overflow: hidden;
+//   width: 200px;
+//   text-overflow: ellipsis;
+//   white-space: nowrap;
+// }
+
+.mat-row:hover {
+  background-color: rgba($color: #000, $alpha: 0.3);
+  // cursor: pointer;
+}
+
+mat-sidenav {
+  width: 50%;
+}
+
+mat-sidenav-container {
+  height: 100%;
+}
+
+mat-sidenav .title {
+  margin: 4% 0;
+}
+
+mat-sidenav li {
+  list-style: none;
+}
+
+mat-sidenav ul {
+  margin: 0;
+  padding: 0;
+}
+
+mat-button-toggle-group, mat-slide-toggle {
+  margin-left: 5%;
+}
+
+.mat-button-toggle-checked {
+  background-color: #555;
+  color: #fff;
+}
+
+.confirm-btn {
+  background-color: #1ABC9C;
+  color: white;
+}
+.cancel-btn {
+  background-color: tomato;
+  color: white;;
 }
