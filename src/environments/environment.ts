@@ -6,9 +6,9 @@ export const environment = {
   production: false,
   urlGet: '/bkService.php',
   // urlProd: '/WebTalenti/requestsrvrTalenti.php',
-  urlProd: 'https://backtalenti.automatizate.mx/WebTalenti/requestsrvrTalenti.php',
+  urlProd: 'https://talenti.automatizate.mx/WebTalenti/requestsrvrTalenti.php',
   // urlArchivo: '/WebTalenti/Subearchivo.php'
-  urlArchivo: 'https://backtalenti.automatizate.mx/WebTalenti/Subearchivo.php'
+  urlArchivo: 'https://talenti.automatizate.mx/WebTalenti/Subearchivo.php'
 };
 
 /*
