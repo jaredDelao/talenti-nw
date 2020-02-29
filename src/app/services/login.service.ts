@@ -11,7 +11,7 @@ export class LoginService {
   
   login(body) {
     let params = new HttpParams({fromObject:body});
-    return this._http.post('https://talentiload-1546059569.us-east-1.elb.amazonaws.com/WebTalenti/requestsrvrTalenti.php', params);
+    return this._http.post(environment.urlProd, params);
   }
 
   assembly() {
