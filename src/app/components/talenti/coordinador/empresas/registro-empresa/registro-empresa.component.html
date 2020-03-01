@@ -27,6 +27,7 @@
         <div class="form-group col-3">
             <input type="file" [(ngModel)]="reqArchivo.Archivo" (change)="subirImagen($event)" placeholder="Subir imagen"/>
             <!-- <label for="file" class="btn-3"><span>SUBIR IMAGEN</span></label> -->
+            <img [src]="previewImg" height="150px" *ngIf="previewImg">
         </div>
 
         <div class="form-group col-3">

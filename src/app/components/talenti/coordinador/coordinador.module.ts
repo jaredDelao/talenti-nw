@@ -15,8 +15,8 @@ import { CoordinadorRouting } from './coordinador.routing.module';
 import { ClientesService } from 'src/app/services/coordinador/clientes.service';
 import { EmpleadosService } from 'src/app/services/coordinador/empleados.service';
 import { EmpresasService } from 'src/app/services/coordinador/empresas.service';
-import { LoadingComponent } from 'src/app/individual-components/loading/loading.component';
-import { CustomComponentsModule } from 'src/app/individual-components/customComponents.module';
+import { LoadingComponent } from 'src/app/shared/loading/loading.component';
+import { CustomComponentsModule } from 'src/app/shared/customComponents.module';
 
 @NgModule({
   imports: [

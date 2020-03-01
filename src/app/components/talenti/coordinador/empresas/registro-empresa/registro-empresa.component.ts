@@ -26,6 +26,7 @@ export class RegistroEmpresaComponent implements OnInit {
 
   //Token img
   tokenImg: string = '';
+  previewImg: any = null;
 
   public registerEmpresa = {
     sService: 'registraEmpresa',
@@ -94,6 +95,7 @@ export class RegistroEmpresaComponent implements OnInit {
   //   });
   // }
 
+  // Lista de estudios
   getAllEstudios() {
     this.empresasService.getAllEstudios().pipe(
       pluck('LstEstudios')
@@ -112,16 +114,18 @@ export class RegistroEmpresaComponent implements OnInit {
   }
 
   subirImagen(e) {
+
     let blob = e.target.files[0];
     let name = e.target.files[0].name;
+    
+    this.previewImage(blob)
+
     this.loader = true;
     this.empresasService.subirArchivo(blob, name).subscribe((resp: any ) => {
-
-      console.log(resp);
       
-
       if (!resp.Identificador || resp.resultado != 'Ok') {
         this.loader = false;
+        this.reqArchivo.Archivo = null;
         return Swal.fire('Error al cargar imagen', 'Revisa que sea un formato válido', 'error');
       }
 
@@ -129,10 +133,24 @@ export class RegistroEmpresaComponent implements OnInit {
       
     }, (err) => {
       this.loader = false;
+      this.reqArchivo.Archivo = null;
       return Swal.fire('Error al cargar imagen', 'Revisa que sea un formato válido', 'error');
     }, () => {
       this.loader = false;
     });
+  }
+
+  previewImage(blob) {
+    const mimeType = blob.type;
+    if (mimeType.match(/image\/*/) == null) {
+      this.reqArchivo.Archivo = null;
+      return;
+    }
+    let reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onload = (event: any) => {
+      this.previewImg = event.target.result;
+    }
   }
 
   registraEmpresa() {
@@ -143,7 +161,7 @@ export class RegistroEmpresaComponent implements OnInit {
     let respEmpresa: any = await this.registraEmpresa();
     // Falta validar si falla el registraEmpresa
     
-    this.idEmpresa = respEmpresa.iIdEmpresa;
+    this.idEmpresa = respEmpresa.iIdEmpresa;    
     const selection = this.selection.selected;
 
     // Validar campos vacios
@@ -176,12 +194,22 @@ export class RegistroEmpresaComponent implements OnInit {
     // }
 
     // Request
-    // console.log(this.empresa);
     console.log(selection);
+    console.log('IdEmpresa:: ', this.idEmpresa);
+    
+
+    // Validación campos empresa
+    if (this.idEmpresa == 'Error') {
+      return Swal.fire({
+            icon: 'warning',
+            title: "Campos incompletos",
+            text: "Faltan llenar campos de empresa"   
+          });
+    }
 
     selection.map((estudio: any) => {
       const {iIdEstudio, dCosto1, dCosto2} = estudio;
-      let req = {
+      let request = {
         sService: 'registraTarifas',
         iIdEmpresa: this.idEmpresa,
         iIdEstudio,
@@ -190,9 +218,9 @@ export class RegistroEmpresaComponent implements OnInit {
       };
 
       // Subscribe
-      console.log(req);
+      console.log(request);
       
-      this.empresasService.registraTarifa(req).subscribe(resp => {
+      this.empresasService.registraTarifa(request).subscribe(resp => {
         console.log(resp);
       });
 

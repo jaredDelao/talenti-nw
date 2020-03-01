@@ -34,3 +34,11 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
         "changeOrigin": true
     }
 }
+
+{
+    "/WebTalenti/*": {
+        "target": "https://backtalenti.automatizate.mx/",
+        "secure": false,
+        "changeOrigin": true
+    }
+}

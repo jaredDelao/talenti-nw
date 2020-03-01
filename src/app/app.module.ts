@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MenuCoordinadorComponent } from './components/talenti/coordinador/menu/menu-coordinador.component';
-import { TitleComponent } from './individual-components/title/title.component';
+import { TitleComponent } from './shared/title/title.component';
 import { MaterialModule } from './material.module';
 import { PagesComponent } from './components/pages/pages.component';
 import { LoginComponent } from './components/login/login.component';
@@ -16,11 +16,11 @@ import { CancelarSolicitudClienteComponent } from './components/cliente/modals/c
 import { SolicitudEstudioClienteComponent } from './components/cliente/solicitud-estudio-cliente/solicitud-estudio-cliente.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { MAT_DATE_LOCALE } from '@angular/material';
-import { LoadingComponent } from './individual-components/loading/loading.component';
+import { LoadingComponent } from './shared/loading/loading.component';
 import localEs from '@angular/common/locales/es';
 import { registerLocaleData } from '@angular/common';
 registerLocaleData(localEs, 'es');
-import {CustomComponentsModule} from './individual-components/customComponents.module';
+import {CustomComponentsModule} from './shared/customComponents.module';
 
 @NgModule({
   declarations: [

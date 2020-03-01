@@ -33,6 +33,15 @@ const menuAdmin: Array<Object> = [
 
 const menuEjecutivo: Array<Object> = [
   {
+    titulo: "ANALISTA",
+    list: [
+      { title: "Nueva agenda", link: "analista/nueva-agenda" },
+      { title: "Cancelar solicitud", link: "analista/cancelar-solicitud" }
+    ]
+  }
+];
+const menuAnalista: Array<Object> = [
+  {
     titulo: "EJECUTIVO",
     list: [
       { title: "Estudios", link: "ejecutivo/estudios" },
@@ -78,6 +87,9 @@ export class PagesComponent implements OnInit, DoCheck {
     });
     bcryptjs.compare('Ejecutivo', perfil, (err, res) => {
       res ? this.menuList = menuEjecutivo : '';
+    });
+    bcryptjs.compare('Analista', perfil, (err, res) => {
+      res ? this.menuList = menuAnalista : '';
     });
 
   }

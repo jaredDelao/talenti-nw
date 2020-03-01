@@ -1,3 +1,5 @@
+
+
 .table-container {
   position: relative;
   height: 100%;
@@ -13,7 +15,6 @@
 
 table {
   width: 100%;
-  // margin: 0 auto;
 }
 mat-paginator {
   width: auto;
@@ -23,7 +24,7 @@ mat-paginator {
 td.mat-cell,
 td.mat-footer-cell,
 th.mat-header-cell {
-  padding: 12px !important;
+  padding: 0 12px !important;
 }
 
 .header {
@@ -61,7 +62,7 @@ th.mat-header-cell {
 // }
 
 .mat-row:hover {
-  background-color: rgba($color: #000, $alpha: 0.3);
+  background-color: rgba($color: #009688, $alpha: 0.2);
   // cursor: pointer;
 }
 
@@ -102,4 +103,8 @@ mat-button-toggle-group, mat-slide-toggle {
 .cancel-btn {
   background-color: tomato;
   color: white;;
+}
+
+mat-icon {
+  color: #009688;
 }

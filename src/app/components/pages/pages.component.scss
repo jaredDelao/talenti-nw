@@ -4,9 +4,14 @@ mat-toolbar {
 mat-drawer-container {
   flex: 1 1 auto;
 }
-// mat-expansion-panel {
-//     background-color: #ccc !important;
-// }
+mat-expansion-panel {
+  box-shadow: none;
+}
+
+.mat-accordion > .mat-expansion-panel-spacing {
+  margin: 0 !important;
+  box-shadow: none;
+}
 
 .flex {
   width: 100%;
