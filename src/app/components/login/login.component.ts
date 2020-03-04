@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit {
     
     this._loginService.login(req).subscribe(res => {
       console.log(res);
-      const { token, perfil, idPerfil, resultado, Nombre, iIdEmpleado }:any = res;
+      const { token, perfil, idPerfil, resultado, Nombre, iIdEmpleado, iIdCliente }:any = res;
 
       if (resultado == 'Error') {
         this.loader = false;
@@ -59,7 +59,9 @@ export class LoginComponent implements OnInit {
       // Nombre
       if (Nombre) localStorage.setItem('nombre', Nombre);
       // idEmpleado
-      if (iIdEmpleado) localStorage.setItem('idEmpleado', iIdEmpleado);
+      if (!iIdEmpleado) localStorage.setItem('idEmpleado', 'cliente');
+      // idCliente
+      if (iIdCliente) localStorage.setItem('idCliente', iIdCliente);
       
       // Perfil & idPerfil
       if (perfil && idPerfil) {

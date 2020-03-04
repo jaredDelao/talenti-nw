@@ -1,0 +1,59 @@
+<div class="contenedor">
+
+    <div class="title text-center">{{ titulo | uppercase }}</div>
+
+    <div class="actions mt-1 mb-3">
+        <input type="file" placeholder="Subir archivo" /> 
+    </div>
+
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <!-- id Column -->
+        <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef style="text-align: center;"> ID </th>
+            <td mat-cell *matCellDef="let element">
+                {{element.id}}
+                <!-- <mat-icon style="color: tomato">file_copy</mat-icon> -->
+            </td>
+        </ng-container>
+
+        <!-- Estudios Column -->
+        <ng-container matColumnDef="estudios">
+            <th mat-header-cell *matHeaderCellDef style="text-align: center;"> ESTUDIOS </th>
+            <td mat-cell *matCellDef="let element">
+                <!-- {{element.estudios}} -->
+                <mat-icon style="color: tomato">file_copy</mat-icon>
+            </td>
+        </ng-container>
+
+        <!-- Documentos Column -->
+        <ng-container matColumnDef="documentos">
+            <th mat-header-cell *matHeaderCellDef style="text-align: center;"> DOCUMENTOS </th>
+            <td mat-cell *matCellDef="let element">
+                <!-- {{element.documentos}} -->
+                <mat-icon style="color: #2E86C1">insert_drive_file</mat-icon>
+            </td>
+        </ng-container>
+
+        <!-- Revision Column -->
+        <ng-container matColumnDef="revision">
+            <th mat-header-cell *matHeaderCellDef style="text-align: center;"> REVISAR </th>
+            <td mat-cell *matCellDef="let element">
+                <!-- {{element.cancelados}}  -->
+                <mat-icon style="color: red">feedback</mat-icon>
+            </td>
+        </ng-container>
+
+        <!-- Publicar Column -->
+        <ng-container matColumnDef="publicar">
+            <th mat-header-cell *matHeaderCellDef style="text-align: center;"> PUBLICAR </th>
+            <td mat-cell *matCellDef="let element">
+                <!-- {{element.cancelados}}  -->
+                <mat-slide-toggle></mat-slide-toggle>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+</div>

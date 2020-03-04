@@ -6,10 +6,14 @@ table {
   width: 100%;
 }
 
-.contenido,
-.contenido2 {
-  margin: 0 auto;
+table td.mat-cell {
+  font-size: 0.8em !important;
 }
+
+// .contenido,
+// .contenido2 {
+  // margin: 0 auto;
+// }
 
 .contenido2 table {
   text-align: center;
@@ -19,7 +23,6 @@ table {
   width: 100%;
 }
 
-.footer button {
-  margin: 8px 0;
-  width: fit-content;
+.btn-cancelar {
+  font-size: 0.8em;
 }

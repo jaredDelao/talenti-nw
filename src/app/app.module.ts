@@ -21,6 +21,7 @@ import localEs from '@angular/common/locales/es';
 import { registerLocaleData } from '@angular/common';
 registerLocaleData(localEs, 'es');
 import {CustomComponentsModule} from './shared/customComponents.module';
+import { TablaGeneralComponent } from './shared/tabla-general/tabla-general.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import {CustomComponentsModule} from './shared/customComponents.module';
     CancelarSolicitudClienteComponent,
     SolicitudEstudioClienteComponent,
     DashboardComponent,
+    // TablaGeneralComponent
     // LoadingComponent,
   ],
   imports: [

@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { CancelarSolicitudClienteComponent } from '../modals/cancelar-solicitud-cliente/cancelar-solicitud-cliente.component';
 
+
 const ELEMENT_DATA = [
   {
     proceso: "Solicitud",
@@ -21,23 +22,38 @@ const ELEMENT_DATA = [
     hora: 6.941,
     status: "EXITOSO"
   },
-  { proceso: "Global", fecha: "1/01/2020", hora: 9.0122, status: "PUBLICADO" }
+  // { proceso: "Global", fecha: "1/01/2020", hora: 9.0122, status: "PUBLICADO" }
 ];
-const ELEMENT_DATA2 = [
-  { estudios: "Solicitud", documentos: "11/10/2019", cancelados: "VALIDADO" },
-  { estudios: "Agenda", documentos: "30/11/2019", cancelados: "REAGENDADO" }
-];
-
 @Component({
   selector: "app-detalle-estudio-cliente",
   templateUrl: "./detalle-estudio-cliente.component.html",
   styleUrls: ["./detalle-estudio-cliente.component.scss"]
 })
 export class DetalleEstudioClienteComponent implements OnInit {
-  displayedColumns: string[] = ["proceso", "fecha", "hora", "status"];
+
+  displayedColumns: string[] = ["proceso", "fecha", "status"];
   dataSource = ELEMENT_DATA;
-  displayedColumns2: string[] = ["estudios", "documentos", "cancelados"];
-  dataSource2 = ELEMENT_DATA2;
+
+  columnsPreliminar = ["id", "estudios", "documentos", "cancelados", 'publicar'];
+  datosPreliminar = [
+    { id: 1, estudios: "est1", documentos: "doc1", cancelados: "VALIDADO" },
+    { id: 2, estudios: "est2", documentos: "doc2", cancelados: "REAGENDADO" }
+  ];
+
+  // Estudios
+  columnsEstudios = ["id", "estudios", "documentos", "revision"];
+  datosEstudios = [
+    { id: 1, estudios: "est1", documentos: "doc1", cancelados: "VALIDADO" },
+    { id: 2, estudios: "est2", documentos: "doc2", cancelados: "REAGENDADO" }
+  ];
+
+  // Complemento
+  columnsComplemento = ["id", "documentos", "revision"];
+  datosComplemento = [
+    { id: 1, estudios: "est1", documentos: "doc1", cancelados: "VALIDADO" },
+    { id: 2, estudios: "est2", documentos: "doc2", cancelados: "REAGENDADO" }
+  ];
+
 
   constructor(public dialog: MatDialog) {}
 

@@ -9,6 +9,7 @@ import { Estudios, Estudio } from 'src/app/interfaces/talenti/ejecutivo/estudios
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { ModalDireccionComponent } from '../modals/modal-direccion/modal-direccion.component';
 import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 @Component({
   selector: "app-datos-ejecutivo",
@@ -54,7 +55,7 @@ export class DatosEjecutivoComponent implements OnInit {
   validarPublicacionPreeliminar: boolean = false;
 
   constructor(private estudiosService: EstudiosService, private fb: FormBuilder,
-    public dialog: MatDialog, private cd: ChangeDetectorRef) {
+    public dialog: MatDialog, private cd: ChangeDetectorRef, private router: Router) {
     this.getEstudios();
   }
 
@@ -106,12 +107,15 @@ export class DatosEjecutivoComponent implements OnInit {
     })
   }
 
+
   detalles(data) {
-    this.detallesMenu.toggle();
-    this.element = data;
-    this.validarDeclinarEstudio();
-    this.publicarPreeliminar();
-    console.log(this.element);
+    this.estudiosService.detalleSolicitud.next(data);
+    this.router.navigate(['ejecutivo/detalle-estudio/', data.iIdSolicitud]);
+    // this.detallesMenu.toggle();
+    // this.element = data;
+    // this.validarDeclinarEstudio();
+    // this.publicarPreeliminar();
+    // console.log(this.element);
   }
 
   validarDeclinarEstudio() {

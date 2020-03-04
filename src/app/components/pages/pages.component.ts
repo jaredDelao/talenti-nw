@@ -28,10 +28,17 @@ const menuAdmin: Array<Object> = [
       { title: "Nueva agenda", link: "analista/nueva-agenda" },
       { title: "Cancelar solicitud", link: "analista/cancelar-solicitud" }
     ]
-  }
+  },
+  // {
+  //   titulo: "CLIENTE",
+  //   list: [
+  //     { title: "Estudios", link: "cliente/detalle-estudio" },
+  //     { title: "Solicitud de estudio", link: "cliente/solicitud-estudio" }
+  //   ]
+  // }
 ];
 
-const menuEjecutivo: Array<Object> = [
+const menuAnalista: Array<Object> = [
   {
     titulo: "ANALISTA",
     list: [
@@ -40,7 +47,7 @@ const menuEjecutivo: Array<Object> = [
     ]
   }
 ];
-const menuAnalista: Array<Object> = [
+const menuEjecutivo: Array<Object> = [
   {
     titulo: "EJECUTIVO",
     list: [
@@ -49,6 +56,16 @@ const menuAnalista: Array<Object> = [
     ]
   },
 ];
+
+const menuCliente: Array<Object> = [
+  {
+      titulo: "CLIENTE",
+      list: [
+        { title: "Estudios", link: "cliente/detalle-estudio" },
+        { title: "Solicitud de estudio", link: "cliente/solicitud-estudio" }
+      ]
+  }
+]
 
 @Component({
   selector: "app-pages",
@@ -81,10 +98,11 @@ export class PagesComponent implements OnInit, DoCheck {
 
   getLocalStorage() {
     let perfil = localStorage.getItem('perfil');
+    let idEmpleado = localStorage.getItem('idEmpleado');
         
-    bcryptjs.compare('Admin', perfil, (err, res) => {
-      res ? this.menuList = menuAdmin : '';
-    });
+    bcryptjs.compare('Admin', perfil, (err, resultPerfil) => {
+      idEmpleado !== 'cliente' && resultPerfil ? this.menuList = menuAdmin : this.menuList = menuCliente;
+    })
     bcryptjs.compare('Ejecutivo', perfil, (err, res) => {
       res ? this.menuList = menuEjecutivo : '';
     });

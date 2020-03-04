@@ -14,6 +14,10 @@ import { EjecutivoRouting } from './ejecutivo.routing.module';
 // Modals
 import { ModalDireccionComponent } from './modals/modal-direccion/modal-direccion.component';
 import { MenuEjecutivoComponent } from './menu/menu.component';
+import { TitleComponent } from '../../../shared/title/title.component';
+import { CustomComponentsModule } from '../../../shared/customComponents.module';
+import { DetalleEstudioEjecutivoComponent } from './detalle-estudio-ejecutivo/detalle-estudio-ejecutivo.component';
+import { TablaGeneralComponent } from '../../../shared/tabla-general/tabla-general.component';
 
 @NgModule({
   imports: [
@@ -21,6 +25,7 @@ import { MenuEjecutivoComponent } from './menu/menu.component';
     EjecutivoRouting,
     MaterialModule,
     HttpClientModule,
+    CustomComponentsModule,
     ReactiveFormsModule
   ],
   declarations: [
@@ -29,6 +34,7 @@ import { MenuEjecutivoComponent } from './menu/menu.component';
     DatosEjecutivoComponent,
     ModalDireccionComponent,
     MenuEjecutivoComponent,
+    DetalleEstudioEjecutivoComponent,
   ],
   entryComponents: [ModalDireccionComponent],
   providers: [DatosEjecutivoService],

@@ -6,6 +6,7 @@ import { LoadingComponent } from "./loading/loading.component";
 import { TitleComponent } from "./title/title.component";
 import { MaterialModule } from '../material.module';
 import { RouterModule } from '@angular/router';
+import { TablaGeneralComponent } from './tabla-general/tabla-general.component';
 
 @NgModule({
   imports: [
@@ -13,8 +14,8 @@ import { RouterModule } from '@angular/router';
       CommonModule,
       RouterModule,
   ],
-  exports: [LoadingComponent, TitleComponent],
-  declarations: [LoadingComponent, TitleComponent],
+  exports: [LoadingComponent, TitleComponent, TablaGeneralComponent],
+  declarations: [LoadingComponent, TitleComponent, TablaGeneralComponent],
   
 })
 export class CustomComponentsModule {}
