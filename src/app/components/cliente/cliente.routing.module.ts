@@ -1,16 +1,17 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
+import { EstudiosClienteComponent } from './estudios-cliente/estudios-cliente.component';
 
 // Components
-import { EstudiosAnalistaComponent } from './estudios-analista/estudios-analista.component';
+
 
 const routes: Routes = [
     { path: '', redirectTo: '/dashboard', pathMatch: 'full'},
-    { path: "detalle-estudio", component: EstudiosAnalistaComponent },  
+    { path: "detalle-estudio", component: EstudiosClienteComponent },  
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class AnalistaRouting {}
+export class ClienteRouting {}

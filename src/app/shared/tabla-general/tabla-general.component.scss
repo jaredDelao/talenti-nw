@@ -10,3 +10,8 @@ table td.mat-cell {
 input {
   font-size: .7em;
 }
+
+::ng-deep.mat-form-field-disabled 
+    { 
+    color: black;
+    }

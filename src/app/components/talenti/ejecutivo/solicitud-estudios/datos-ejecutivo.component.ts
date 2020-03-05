@@ -10,6 +10,8 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog
 import { ModalDireccionComponent } from '../modals/modal-direccion/modal-direccion.component';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { DatePipe } from '@angular/common';
+import * as moment from 'moment'
 
 @Component({
   selector: "app-datos-ejecutivo",
@@ -47,6 +49,7 @@ export class DatosEjecutivoComponent implements OnInit {
   // @Output() fechaFinEvent: EventEmitter<MatDatepickerInputEvent<any>>; (dateChange)="fechaFinEvent($event)"
   fechaInicio: Date;
   fechaFin: Date;
+  pipe: DatePipe;
   estudiosList: Array<any>;
   form: FormGroup;
 
@@ -56,11 +59,20 @@ export class DatosEjecutivoComponent implements OnInit {
 
   constructor(private estudiosService: EstudiosService, private fb: FormBuilder,
     public dialog: MatDialog, private cd: ChangeDetectorRef, private router: Router) {
+    this.pipe = new DatePipe('en');
     this.getEstudios();
+    
   }
 
   ngOnInit() {
     this.formInit();
+  }
+
+  get fromDate() {
+    return this.form.get('fechaInicioForm').value;
+  }
+  get toDate() {
+    return this.form.get('fechaFinalForm').value;
   }
 
   // Direccion modal
@@ -89,6 +101,10 @@ export class DatosEjecutivoComponent implements OnInit {
     })
   }
 
+  filterFechas() {
+    this.dataSource.filter = 'fecha';
+  }
+
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
@@ -96,15 +112,32 @@ export class DatosEjecutivoComponent implements OnInit {
   getEstudios() {
     this.estudiosService.getEstudios(this.req).subscribe((estudiosList: any)=> {
       console.log(estudiosList);
-
       const {resultado} = estudiosList;
       this.estudiosList = resultado;
       this.dataSource = new MatTableDataSource(this.estudiosList);
       this.dataSource.paginator = this.paginator;
 
-      // console.log(this.dataSource);
-      
-    })
+      // Filtro fecha - texto
+      this.dataSource.filterPredicate = (data: any, filter) => {
+        console.log(filter)
+        if (filter == 'fecha') {
+          if (this.fromDate && this.toDate) {
+            let nFrom = moment(this.fromDate, "YYYY-MM-DD").format();
+            let nTo = moment(this.toDate, "YYYY-MM-DD").format();
+            return data.dFechaSolicitud >= nFrom && data.dFechaSolicitud <= nTo
+          }
+        } else {
+          let text = (data.sNombres.concat(' ',data.sApellidos));
+          return text.toLowerCase().includes(filter.trim().toLowerCase()); 
+        }
+        return true;
+      }
+    });
+  }
+
+  clear() {
+      this.dataSource.filter = '';
+      this.form.reset();
   }
 
 

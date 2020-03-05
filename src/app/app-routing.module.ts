@@ -1,13 +1,12 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
-import { NuevaAgendaComponent } from "./components/talenti/analista/nueva-agenda/nueva-agenda.component";
-import { CancelarSolicitudComponent } from "./components/talenti/analista/cancelar-solicitud/cancelar-solicitud.component";
 import { PagesComponent } from "./components/pages/pages.component";
 import { LoginComponent } from "./components/login/login.component";
 import { DetalleEstudioClienteComponent } from './components/cliente/detalle-estudio-cliente/detalle-estudio-cliente.component';
 import { SolicitudEstudioClienteComponent } from './components/cliente/solicitud-estudio-cliente/solicitud-estudio-cliente.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginGuard } from './guards/login.guard';
+import { EstudiosClienteComponent } from './components/cliente/estudios-cliente/estudios-cliente.component';
 
 const routes: Routes = [
   // { path: "", component: MenuCoordinadorComponent, pathMatch: "full" },
@@ -28,15 +27,21 @@ const routes: Routes = [
         loadChildren: './components/talenti/ejecutivo/ejecutivo.module#EjecutivoModule'
       },
       {
-        path: "analista",
-        loadChildren: './components/talenti/analista/analista.module#AnalistaModule'
+        path: "logistica",
+        loadChildren: './components/talenti/logistica/logistica.module#LogisticaModule'
       },
       {
         path: "cliente",
-        children: [
-          { path: "detalle-estudio", component: DetalleEstudioClienteComponent },
-          { path: "solicitud-estudio", component: SolicitudEstudioClienteComponent }
-        ]
+        loadChildren: './components/cliente/cliente.module#ClienteModule'
+        // children: [
+          // { path: "detalle-estudio", component: DetalleEstudioClienteComponent },
+          // { path: "detalle-estudio", component: EstudiosClienteComponent },
+          // { path: "solicitud-estudio", component: SolicitudEstudioClienteComponent }
+        // ]
+      },
+      {
+        path: "analista",
+        loadChildren: './components/talenti/analista/analista.module#AnalistaModule'
       },
       { path: "**", redirectTo: '/dashboard' }
     ]

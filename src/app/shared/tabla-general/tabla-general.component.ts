@@ -15,6 +15,7 @@ export class TablaGeneralComponent implements OnInit {
   @Input('titulo') titulo: string;
   @Input('columns') columns: Array<string>;
   @Input('data') data: any;
+  @Input('archivo') archivo: boolean = false;
 
   displayedColumns: Array<string> = [];
   dataSource: any;

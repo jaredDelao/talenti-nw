@@ -22,20 +22,16 @@ import { registerLocaleData } from '@angular/common';
 registerLocaleData(localEs, 'es');
 import {CustomComponentsModule} from './shared/customComponents.module';
 import { TablaGeneralComponent } from './shared/tabla-general/tabla-general.component';
+import { EstudiosAnalistaComponent } from './components/talenti/analista/estudios-analista/estudios-analista.component';
+import { EstudiosClienteComponent } from './components/cliente/estudios-cliente/estudios-cliente.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MenuCoordinadorComponent,
-    // TitleComponent,
     PagesComponent,
     LoginComponent,
-    DetalleEstudioClienteComponent,
-    CancelarSolicitudClienteComponent,
-    SolicitudEstudioClienteComponent,
     DashboardComponent,
-    // TablaGeneralComponent
-    // LoadingComponent,
   ],
   imports: [
     ReactiveFormsModule,

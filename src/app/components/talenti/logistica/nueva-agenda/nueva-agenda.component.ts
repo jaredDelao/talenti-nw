@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 const estudios: Array<Object> = [
   {id: 1, nombre: 'Estudio socioeconómico laboral completo'},
@@ -24,9 +26,15 @@ export class NuevaAgendaComponent implements OnInit {
 
   estudiosList: Array<any> = estudios;
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
+  }
+
+  enviar() {
+    Swal.fire('Agendado', 'El registro de agenda ha sido exitoso', 'success').then(() => {
+      this.router.navigate(['/dashboard'])
+    })
   }
 
 }

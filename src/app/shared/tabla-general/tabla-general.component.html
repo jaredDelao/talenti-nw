@@ -2,7 +2,7 @@
 
     <div class="title text-center">{{ titulo | uppercase }}</div>
 
-    <div class="actions mt-1 mb-3">
+    <div class="actions mt-1 mb-3" *ngIf="archivo">
         <input type="file" placeholder="Subir archivo" /> 
     </div>
 

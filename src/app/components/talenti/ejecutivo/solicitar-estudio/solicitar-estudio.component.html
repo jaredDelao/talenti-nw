@@ -9,8 +9,8 @@
                 <div class="form-group">
                     <mat-form-field>
                         <mat-label>Tipo de estudio</mat-label>
-                        <mat-select formControlName="tipoEstudio">
-                            <mat-option *ngFor="let estudio of estudiosData" [value]="estudio">
+                        <mat-select formControlName="iIdEstudio">
+                            <mat-option *ngFor="let estudio of estudiosData" [value]="estudio.id">
                                 {{estudio.nombre}}
                             </mat-option>
                         </mat-select>
@@ -20,12 +20,12 @@
                 <div class="form-group">
                     <mat-form-field>
                         <mat-label>Folio</mat-label>
-                        <input matInput type="text" formControlName="folio" />
+                        <input matInput type="text" formControlName="sFolio" />
                     </mat-form-field>
                 </div>
                 <!-- <div class="form-group">
                     <label class="mr-3">Preliminar:</label>
-                    <mat-radio-group color="primary" aria-label="Preliminar" formControlName="preliminar">
+                    <mat-radio-group color="primary" aria-label="Preliminar" formControlName="bPreliminar">
                         <mat-radio-button class="mr-3" value="1">Si</mat-radio-button>
                         <mat-radio-button value="0">No</mat-radio-button>
                     </mat-radio-group>
@@ -44,12 +44,12 @@
                 <div class="form-group">
                     <mat-form-field>
                         <mat-label>Comentarios</mat-label>
-                        <textarea matInput cdkTextareaAutosize formControlName="comentarios"></textarea>
+                        <textarea matInput cdkTextareaAutosize formControlName="sComentarios"></textarea>
                     </mat-form-field>
                 </div>
                 <div class="form-group">
                     <label>Adjuntar CV</label>
-                    <input type="file" placeholder="Examinar" formControlName="archivo" />
+                    <input type="file" placeholder="Examinar" formControlName="sTokenCV" />
                 </div>
 
             </div>
@@ -59,69 +59,69 @@
                 <div class="form-group">
                     <mat-form-field>
                         <mat-label>Nombres</mat-label>
-                        <input matInput type="text" formControlName="nombre">
+                        <input matInput type="text" formControlName="sNombres">
                     </mat-form-field>
                 </div>
                 <div class="form-group">
                     <mat-form-field>
                         <mat-label>Apellidos</mat-label>
-                        <input matInput type="text" formControlName="apellidos">
+                        <input matInput type="text" formControlName="sApellidos">
                     </mat-form-field>
                 </div>
                 <div class="form-group">
                     <mat-form-field>
                         <mat-label>Puesto</mat-label>
-                        <input matInput type="text" formControlName="puesto">
+                        <input matInput type="text" formControlName="sPuesto">
                     </mat-form-field>
                 </div>
                 <div class="form-group">
                     <mat-form-field>
                         <mat-label>Teléfono</mat-label>
-                        <input matInput type="text" formControlName="telefono">
+                        <input matInput type="text" formControlName="sTelefono">
                     </mat-form-field>
                 </div>
                 <div class="form-group">
                     <mat-form-field>
                         <mat-label>NSS</mat-label>
-                        <input matInput type="text" formControlName="nss">
+                        <input matInput type="text" formControlName="sNss">
                     </mat-form-field>
                 </div>
                 <div class="form-group">
                     <mat-form-field>
                         <mat-label>CURP</mat-label>
-                        <input matInput type="text" formControlName="curp">
+                        <input matInput type="text" formControlName="sCurp">
                     </mat-form-field>
                 </div>
                 <!-- container show/hide -->
-                <div *ngIf="form.get('tipoEstudio').value.id === (1 || 3 || 4 || 5 || 7 || 10 || 11 || 12) ">
+                <div *ngIf="form.get('iIdEstudio').value === (1 || 3 || 4 || 5 || 7 || 10 || 11 || 12) ">
                     <div class="form-group">
                         <mat-form-field>
                             <mat-label>Calle y número</mat-label>
-                            <input matInput type="text" formControlName="calle">
+                            <input matInput type="text" formControlName="sCalleNumero">
                         </mat-form-field>
                     </div>
                     <div class="form-group">
                         <mat-form-field>
                             <mat-label>Colonia</mat-label>
-                            <input matInput type="text" formControlName="colonia">
+                            <input matInput type="text" formControlName="sColonia">
                         </mat-form-field>
                     </div>
                     <div class="form-group">
                         <mat-form-field>
                             <mat-label>CP</mat-label>
-                            <input matInput type="text" formControlName="cp">
+                            <input matInput type="text" formControlName="sCp">
                         </mat-form-field>
                     </div>
                     <div class="form-group">
                         <mat-form-field>
                             <mat-label>Alcaldía / Municipio</mat-label>
-                            <input matInput type="text" formControlName="municipio">
+                            <input matInput type="text" formControlName="sMunicipio">
                         </mat-form-field>
                     </div>
                     <div class="form-group">
                         <mat-form-field>
                             <mat-label>Estado</mat-label>
-                            <input matInput type="text" formControlName="estado">
+                            <input matInput type="text" formControlName="sEstado">
                         </mat-form-field>
                     </div>
                 </div>
@@ -130,8 +130,8 @@
 
         <div class="actions d-flex justify-content-center">
             <div class="buttons d-flex flex-column col-3">
-                <button mat-raised-button color="primary" (click)="validar()">VALIDAR</button>
-                <button mat-raised-button color="warn">DECLINAR</button>
+                <button mat-raised-button color="primary" (click)="enviar()">VALIDAR</button>
+                <button mat-raised-button color="warn" [routerLink]="['/ejecutivo/estudios']">DECLINAR</button>
                 <button mat-raised-button color="tomato" [routerLink]="['/ejecutivo/estudios']" >REGRESAR</button>
             </div>
         </div>

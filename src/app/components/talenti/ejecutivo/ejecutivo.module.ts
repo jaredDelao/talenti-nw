@@ -36,6 +36,7 @@ import { TablaGeneralComponent } from '../../../shared/tabla-general/tabla-gener
     MenuEjecutivoComponent,
     DetalleEstudioEjecutivoComponent,
   ],
+  exports: [DatosEjecutivoComponent],
   entryComponents: [ModalDireccionComponent],
   providers: [DatosEjecutivoService],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]

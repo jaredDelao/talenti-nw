@@ -11,7 +11,7 @@ const menuAdmin: Array<Object> = [
     titulo: "EJECUTIVO",
     list: [
       { title: "Estudios", link: "ejecutivo/estudios" },
-      { title: "Solicitud de cancelación", link: "ejecutivo/solicitud-cancelacion" }
+      // { title: "Solicitud de cancelación", link: "ejecutivo/solicitud-cancelacion" }
     ]
   },
   {
@@ -23,10 +23,16 @@ const menuAdmin: Array<Object> = [
     ]
   },
   {
+    titulo: "LOGÍSTICA",
+    list: [
+      { title: "Nueva agenda", link: "logistica/nueva-agenda" },
+      // { title: "Cancelar solicitud", link: "logistica/cancelar-solicitud" }
+    ]
+  },
+  {
     titulo: "ANALISTA",
     list: [
-      { title: "Nueva agenda", link: "analista/nueva-agenda" },
-      { title: "Cancelar solicitud", link: "analista/cancelar-solicitud" }
+      { title: "Estudios", link: "analista/detalle-estudio" },
     ]
   },
   // {
@@ -38,12 +44,20 @@ const menuAdmin: Array<Object> = [
   // }
 ];
 
+const menuLogistica: Array<Object> = [
+  {
+    titulo: "LOGÍSTICA",
+    list: [
+      { title: "Nueva agenda", link: "logistica/nueva-agenda" },
+      { title: "Cancelar solicitud", link: "logistica/cancelar-solicitud" }
+    ]
+  }
+];
 const menuAnalista: Array<Object> = [
   {
     titulo: "ANALISTA",
     list: [
-      { title: "Nueva agenda", link: "analista/nueva-agenda" },
-      { title: "Cancelar solicitud", link: "analista/cancelar-solicitud" }
+      { title: "Estudios", link: "analista/detalle-estudio" },
     ]
   }
 ];
@@ -52,7 +66,7 @@ const menuEjecutivo: Array<Object> = [
     titulo: "EJECUTIVO",
     list: [
       { title: "Estudios", link: "ejecutivo/estudios" },
-      { title: "Solicitud de cancelación", link: "ejecutivo/solicitud-cancelacion" }
+      // { title: "Solicitud de cancelación", link: "ejecutivo/solicitud-cancelacion" }
     ]
   },
 ];
@@ -62,7 +76,7 @@ const menuCliente: Array<Object> = [
       titulo: "CLIENTE",
       list: [
         { title: "Estudios", link: "cliente/detalle-estudio" },
-        { title: "Solicitud de estudio", link: "cliente/solicitud-estudio" }
+        // { title: "Solicitud de estudio", link: "cliente/solicitud-estudio" }
       ]
   }
 ]
@@ -87,7 +101,7 @@ export class PagesComponent implements OnInit, DoCheck {
 
   ngDoCheck() {
     this.router.url === '/dashboard'
-      ? this.colorT = 'white'
+      ? this.colorT = 'primary'
       : this.colorT = 'primary';
   }
 

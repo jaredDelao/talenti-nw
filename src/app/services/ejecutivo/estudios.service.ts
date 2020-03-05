@@ -18,4 +18,9 @@ export class EstudiosService {
     let body = new HttpParams({fromObject: req})
     return this.http.post<any>(environment.urlProd, body);
   }
+
+  crearEstudio(req) {
+    let body = new HttpParams({fromObject: req})
+    return this.http.post(environment.urlProd, body);
+  }
 }

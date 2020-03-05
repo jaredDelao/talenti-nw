@@ -70,19 +70,7 @@
             <form [formGroup]="form">
                 <span>Búsqueda por periodo</span>
                 <div class="row col-12">
-                    <!-- ultimo mes -->
-                    <!-- <div class="form-group col-3">
-
-                        <mat-form-field>
-                        <mat-label>Último mes</mat-label>
-                        <mat-select>
-                            <mat-option *ngFor="let food of foods" [value]="food.value">
-                                {{food.viewValue}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    </div> -->
-
+                   
                     <!-- Fecha inicio -->
                     <div class="form-group col-3">
                         <mat-form-field>
@@ -106,14 +94,16 @@
                         </mat-form-field>
                     </div>
 
-                    <div class="form-group col-3">
-                        <button mat-icon-button color="primary" [disableRipple]="true" class="find">
+                    <div class="form-group row col-3">
+                        <button mat-icon-button color="primary" (click)="filterFechas()" class="find">
                             <mat-icon>find_in_page</mat-icon>
+                        </button>
+                        <button mat-icon-button (click)="clear()" class="ml-2">
+                            <mat-icon color="warn">replay</mat-icon>
                         </button>
                     </div>
                 </div>
 
-                <span>Solicitudes de estudios</span>
                 <div class="row col-12">
                     <!-- nombre encuestado -->
                     <div class="form-group col-4">
@@ -122,21 +112,9 @@
                         </mat-form-field>
                     </div>
 
-                    <!-- nombre solicitante -->
-                    <div class="form-group col-4">
-                        <!-- <mat-form-field class="nombre-solicitante">
-                        <mat-label>Nombre del solicitante</mat-label>
-                        <mat-select>
-                            <mat-option *ngFor="let food of foods" [value]="food.value">
-                                {{food.viewValue}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field> -->
-                    </div>
-
-                    <div class="form-group col-4 text-right">
+                    <div class="form-group col-8 text-right">
                         <button mat-raised-button color="primary" [routerLink]="['/ejecutivo/solicitar-estudio']">
-                            SOLICITAR ESTUDIO
+                            CREAR ESTUDIO
                         </button>
                     </div>
                 </div>
@@ -144,14 +122,14 @@
         </div>
     </div>
 
-    <div class="container">
+    <div class="container mb-5">
         <!-- TABLA -->
         <div class="table-container mat-elevation-z15 mt-4">
 
             <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
                 <ng-container matColumnDef="folio">
-                    <th mat-header-cell *matHeaderCellDef> FOLIO </th>
-                    <td mat-cell *matCellDef="let element"> {{element.sFolio}} </td>
+                    <th mat-header-cell *matHeaderCellDef style="text-align: center;"> FOLIO </th>
+                    <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.sFolio}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="estudio">
@@ -274,8 +252,8 @@
                 </ng-container>
 
                 <ng-container matColumnDef="comentarios">
-                    <th mat-header-cell *matHeaderCellDef> VER DETALLES </th>
-                    <td mat-cell *matCellDef="let element" > 
+                    <th mat-header-cell *matHeaderCellDef style="text-align: center;"> VER DETALLES </th>
+                    <td mat-cell *matCellDef="let element" style="text-align: center;" > 
                         <!-- {{element.sComentarios}} -->
                         <mat-icon>info</mat-icon>
                     </td>
