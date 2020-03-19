@@ -1,0 +1,29 @@
+.titulo {
+    margin: 4% 0;        
+    span {
+        font-size: 1em;
+        font-weight: 500;
+        color: #009688;
+    }
+}
+
+mat-icon {
+    font-size: 2.5em;
+    height: 100%;
+    margin-right: 8px;
+}
+
+.icon span {
+    font-size: 1em;
+    transition: all 0.5s;
+}
+
+.icon span:hover {
+    text-decoration: underline;
+}
+
+.col-3 {
+    margin: 0;
+    padding: 0;
+}
+

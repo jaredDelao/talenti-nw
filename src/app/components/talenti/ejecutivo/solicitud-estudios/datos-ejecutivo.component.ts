@@ -23,18 +23,11 @@ export class DatosEjecutivoComponent implements OnInit {
   displayedColumns: string[] = [
     'folio', 'estudio', 'nombre', 'fecha_solicitud', 'estatus_solicitud', 'comentarios'
   ];
-  // displayedColumns: string[] = [
-  //   'folio', 'estudio', 'nombre', 'direccion', 'fecha_solicitud', 'hora_solicitud', 'estatus_solicitud', 
-  //   'estatus_agendado', 'fecha_agenda', 'estatus_aplicacion', 'fecha_aplicacion', 'preliminar', 'publicacion_preliminar', 
-  //   'estatus_preliminar', 'publicacion_estudio', 'descarga',  'publicacion_dictamen', 'estatus_dictamen',
-  //   'solicitar_calidad', 'certificado_calidad', 'solicitud_cancelacion', 'tipo_cancelacion', 'aprobar_cancelacion',
-  //   'evidencia', 'comentarios'
-  // ];
   dataSource: MatTableDataSource<Estudio>;
 
   req = {
     sService: 'getSolicitudesEjecutivo',
-    iIdEjecutivo: '1'
+    iIdEjecutivo: '2'
   }
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -60,12 +53,11 @@ export class DatosEjecutivoComponent implements OnInit {
   constructor(private estudiosService: EstudiosService, private fb: FormBuilder,
     public dialog: MatDialog, private cd: ChangeDetectorRef, private router: Router) {
     this.pipe = new DatePipe('en');
-    this.getEstudios();
-    
   }
 
   ngOnInit() {
     this.formInit();
+    this.getEstudios();
   }
 
   get fromDate() {
@@ -91,8 +83,6 @@ export class DatosEjecutivoComponent implements OnInit {
       console.log('The dialog was closed');
     });
   }
-
-  
 
   formInit() {
     this.form = this.fb.group({

@@ -1,0 +1,11 @@
+<title-tabla [titulo]="titulo"></title-tabla>
+
+<mat-form-field appearance="fill" class="mt-4">
+    <mat-label>Motivo de rechazo</mat-label>
+    <textarea matInput rows="4" [(ngModel)]="request.sMotivo"></textarea>
+</mat-form-field>
+
+<div class="actions">
+    <button mat-raised-button color="primary" class="mr-3" (click)="rechazar()" [disabled]="!request.sMotivo">ACEPTAR</button>
+    <button mat-raised-button color="warn" (click)="cancelar()">CANCELAR</button>
+</div>

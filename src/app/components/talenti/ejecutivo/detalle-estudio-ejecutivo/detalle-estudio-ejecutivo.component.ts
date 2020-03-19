@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { EstudiosService } from '../../../../services/ejecutivo/estudios.service';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { EmpresasService } from 'src/app/services/coordinador/empresas.service';
 
 const ELEMENT_DATA = [
   {
@@ -35,43 +36,77 @@ export class DetalleEstudioEjecutivoComponent implements OnInit {
   displayedColumns: string[] = ["proceso", "fecha", "status"];
   dataSource = ELEMENT_DATA;
 
+  // Preliminar
+  columnsPreliminar = ["estudios", "revision", 'publicar'];
+  datosPreliminar = [
+    {token: null},
+  ];
+
   // Estudios
-  columnsEstudios = ["id", "estudios", "documentos", "revision", 'publicar'];
+  columnsEstudios = ["estudios", "documentos", "revision", 'publicar'];
   datosEstudios = [
-    { id: 1, estudios: "est1", documentos: "doc1", cancelados: "VALIDADO" },
-    { id: 2, estudios: "est2", documentos: "doc2", cancelados: "REAGENDADO" }
+    {token: null, token2: null},
   ];
 
   // Complemento
-  columnsComplemento = ["id", "documentos", "revision", 'publicar'];
+  columnsComplemento = ["estudios", "revision", 'publicar'];
   datosComplemento = [
-    { id: 1, estudios: "est1", documentos: "doc1", cancelados: "VALIDADO" },
-    { id: 2, estudios: "est2", documentos: "doc2", cancelados: "REAGENDADO" }
+    {token: null},
   ];
 
   datosSolicitud: any = null;
   form: FormGroup;
+  estudioValid: any = '';
+  catEstudios: any;
+  idSolicitud: any;
 
-  constructor(public estudiosService: EstudiosService, private router: Router, private fb: FormBuilder) { }
+  constructor(public estudiosService: EstudiosService, public empresasService: EmpresasService, private router: Router, private fb: FormBuilder, private cd: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.formInit();
-  this.getDatosId();
+    this.getDatosId();
+    this.getCatalogoEstudios();
+  }
+
+  getCatalogoEstudios() {
+    this.empresasService.getCatalogoEstudios().subscribe((resp: any) => {
+      this.catEstudios = resp.LstEstudios;
+    })
   }
   
   getDatosId() {
-    this.estudiosService.$detalleSolicitud.subscribe(result => {
-      this.datosSolicitud = result;
-      console.log(result)
+    this.estudiosService.$detalleSolicitud.subscribe(datosUsuario => {
+      this.idSolicitud = datosUsuario.iIdSolicitud;
+      this.datosSolicitud = datosUsuario;
+      this.estudioValid = datosUsuario.bValidada;
+      console.log(datosUsuario)
       this.redirect();
-      this.setDatos(result)
+      this.setDatosPreliminar(datosUsuario);
+      this.setDatosEstudioDictamen(datosUsuario);
+      this.setDatosComplemento(datosUsuario);
+      // this.setDatos(result)
     })
+  }
+
+  setDatosPreliminar(value) {
+    // this.datosPreliminar[0].bPreliminar = value.bPreliminar;
+    this.datosPreliminar[0].token = value.sArchivoPreliminar;
+  }
+  setDatosEstudioDictamen(value) {
+    // this.datosEstudios[0].bPreliminar = value.bPreliminar;
+    this.datosEstudios[0].token = value.sArch1Dictamen;
+    this.datosEstudios[0].token2 = value.sArch2Dictamen;
+  }
+  setDatosComplemento(value) {
+    // this.datosComplemento[0].bPreliminar = value.bPreliminar;
+    this.datosComplemento[0].token = value.sArchComplemento;
   }
 
   redirect() {
     if (this.datosSolicitud == 0 ) {
       return this.router.navigate(['ejecutivo/estudios']);
     }
+    this.setDatos(this.datosSolicitud);
   }
 
   formInit() {
@@ -106,7 +141,7 @@ export class DetalleEstudioEjecutivoComponent implements OnInit {
   }
 
   setDatos(value) {
-    this.form.setValue({
+    this.form.patchValue({
       iIdSolicitud: value.iIdSolicitud,
       dFechaSolicitud: value.dFechaSolicitud,
       iIdCliente: value.iIdCliente,

@@ -23,4 +23,10 @@ export class EstudiosService {
     let body = new HttpParams({fromObject: req})
     return this.http.post(environment.urlProd, body);
   }
+
+  validarSolicitud(params) {
+    let body = new HttpParams({fromObject: params})
+    return this.http.post(environment.urlProd, body);
+  }
+
 }

@@ -32,16 +32,17 @@ const menuAdmin: Array<Object> = [
   {
     titulo: "ANALISTA",
     list: [
-      { title: "Estudios", link: "analista/detalle-estudio" },
+      { title: "Estudios", link: "analista/estudios" },
+      // { title: "Estudios", link: "analista/detalle-estudio" },
     ]
   },
-  // {
-  //   titulo: "CLIENTE",
-  //   list: [
-  //     { title: "Estudios", link: "cliente/detalle-estudio" },
-  //     { title: "Solicitud de estudio", link: "cliente/solicitud-estudio" }
-  //   ]
-  // }
+  {
+    titulo: "CLIENTE",
+    list: [
+      { title: "Estudios", link: "cliente/estudios-cliente" },
+      // { title: "Solicitud de estudio", link: "cliente/solicitud-estudio" }
+    ]
+  }
 ];
 
 const menuLogistica: Array<Object> = [
@@ -75,7 +76,7 @@ const menuCliente: Array<Object> = [
   {
       titulo: "CLIENTE",
       list: [
-        { title: "Estudios", link: "cliente/detalle-estudio" },
+        { title: "Estudios", link: "cliente/estudios-cliente" },
         // { title: "Solicitud de estudio", link: "cliente/solicitud-estudio" }
       ]
   }

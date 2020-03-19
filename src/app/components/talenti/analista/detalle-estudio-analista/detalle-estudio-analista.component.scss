@@ -1,0 +1,37 @@
+$custom-file-text: (
+en: "Browse",
+es: "Elegir"
+);
+
+mat-form-field {
+    width: 100%;
+  }
+  
+  table {
+    width: 100%;
+  }
+  
+  table td.mat-cell {
+    font-size: 0.8em !important;
+  }
+  
+  // .contenido,
+  // .contenido2 {
+    // margin: 0 auto;
+  // }
+  
+  .contenido2 table {
+    #file {
+      color: tomato;
+    }
+    // text-align: center;
+  }
+  
+  .footer {
+    width: 100%;
+  }
+  
+  .btn-cancelar {
+    font-size: 0.8em;
+  }
+  
