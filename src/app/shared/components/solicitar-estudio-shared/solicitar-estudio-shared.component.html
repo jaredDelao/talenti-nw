@@ -25,7 +25,7 @@
                 </div>
                 <div class="form-group" *ngIf="!esCliente">
                     <label class="mr-3">Preliminar:</label>
-                    <mat-radio-group color="primary" aria-label="Preliminar" formControlName="bPreliminar">
+                    <mat-radio-group color="primary" aria-label="Preliminar" formControlName="iPreliminar">
                         <mat-radio-button class="mr-3" *ngFor="let p of preliminarList" [value]="p.value">
                             {{p.nombre}}
                         </mat-radio-button>
@@ -130,12 +130,12 @@
             </div>
         </div>
 
-        <div class="actions d-flex justify-content-center" *ngIf="!analista">
+        <div class="actions d-flex justify-content-center" *ngIf="!analista && dataEstudio.bDeclinada != '1'">
             <div class="buttons d-flex flex-column col-3">
                 <ng-container *ngIf="!esCliente">
                     <button mat-raised-button color="primary" (click)="enviar('crearValidar')" *ngIf="!dataEstudio">CREAR</button>
                     <button mat-raised-button color="primary" (click)="enviar('validar')" *ngIf="dataEstudio">VALIDAR</button>
-                    <button mat-raised-button color="warn" (click)="regresarFunc()" *ngIf="dataEstudio">DECLINAR</button>
+                    <button mat-raised-button color="warn" (click)="declinarSolicitud()" *ngIf="dataEstudio">DECLINAR</button>
                     <button mat-raised-button color="warn" (click)="regresarFunc()" >REGRESAR</button>
                 </ng-container>
                 

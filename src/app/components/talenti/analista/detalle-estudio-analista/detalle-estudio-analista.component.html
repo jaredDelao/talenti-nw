@@ -38,7 +38,7 @@
             </div>
             <div class="form-group col-lg-4 col-sm-6 col-xs-12">
                 <mat-form-field>
-                    <input type="number" matInput placeholder="Teléfono" formControlName="sTelefono">
+                    <input type="text" matInput placeholder="Teléfono" formControlName="sTelefono">
                 </mat-form-field>
             </div>
             <div class="form-group col-lg-4 col-sm-6 col-xs-12">
@@ -120,6 +120,13 @@
                         </td>
                     </ng-container>
 
+                    <ng-container matColumnDef="motivo">
+                        <th mat-header-cell *matHeaderCellDef> MOTIVO </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ datosSolicitud.sMotivoPreliminar }}
+                        </td>
+                    </ng-container>
+
                     <tr mat-header-row *matHeaderRowDef="displayedColumnsPreliminar"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumnsPreliminar;"></tr>
                 </table>
@@ -143,13 +150,24 @@
                     <ng-container matColumnDef="descargar">
                         <th mat-header-cell *matHeaderCellDef> DESCARGAR </th>
                         <td mat-cell *matCellDef="let element">
-                            <mat-icon id="file" (click)="descargarDictamen(1)">insert_drive_file</mat-icon>
-                            <mat-icon id="file 2" class="ml-2" color="primary" (click)="descargarDictamen(2)">insert_drive_file</mat-icon>
+                            <button mat-icon-button (click)="descargarDictamen(1)">
+                                <mat-icon id="file" >insert_drive_file</mat-icon>
+                            </button>
+                            <button mat-icon-button (click)="descargarDictamen(2)">
+                                <mat-icon id="file 2" class="ml-2" color="primary" >insert_drive_file</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="motivo">
+                        <th mat-header-cell *matHeaderCellDef> MOTIVO </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ datosSolicitud.sMotivoDictamen }}
                         </td>
                     </ng-container>
 
                     <tr mat-header-row *matHeaderRowDef="displayedColumnsDictamen"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumnsDictamen;"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsDictamen;" [ngStyle]="{'background-color': bDictamen == 4 ? '#FEC6C0' : 'white'}"></tr>
                 </table>
 
             </div>
@@ -173,6 +191,13 @@
                         <th mat-header-cell *matHeaderCellDef> DESCARGAR </th>
                         <td mat-cell *matCellDef="let element">
                             <mat-icon id="file" (click)="descargarComplemento()">insert_drive_file</mat-icon>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="motivo">
+                        <th mat-header-cell *matHeaderCellDef> MOTIVO </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ datosSolicitud.sMotivoComplemento }}
                         </td>
                     </ng-container>
 

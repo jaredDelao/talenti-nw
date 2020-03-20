@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import {
@@ -11,22 +11,8 @@ import { EstudiosService } from 'src/app/services/ejecutivo/estudios.service';
 import { EmpresasService } from 'src/app/services/coordinador/empresas.service';
 import { EmpleadosService } from 'src/app/services/coordinador/empleados.service';
 import { flatMap, tap, filter, pluck, toArray, catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 
-const estudios: Array<Object> = [
-  { id: 1, nombre: "Estudio socioeconómico laboral completo" },
-  { id: 2, nombre: "Estudio socioeconómico laboral sin visa" },
-  { id: 3, nombre: "Estudio socioeconómico laboral investigacion legal" },
-  { id: 4, nombre: "Estudio socioeconómico laboral investigacion financiera" },
-  { id: 5, nombre: "Estudio socioeconómico laboral investigacion legal y financiera"},
-  { id: 6, nombre: "Investigación laboral" },
-  { id: 7, nombre: "Validación domiciliaria" },
-  { id: 8, nombre: "Investigación legal" },
-  { id: 9, nombre: "Investigación financiera" },
-  { id: 10, nombre: "Socioeconómica beca" },
-  { id: 11, nombre: "Estudio socioeconómico financiero" },
-  { id: 12, nombre: "Especial" }
-];
 
 @Component({
   selector: 'app-solicitar-estudio-shared',
@@ -35,7 +21,7 @@ const estudios: Array<Object> = [
 })
 
 
-export class SolicitarEstudioSharedComponent implements OnInit {
+export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy {
 
   @Input() esCliente: boolean = false;
   @Input() analista: boolean = false;
@@ -46,16 +32,21 @@ export class SolicitarEstudioSharedComponent implements OnInit {
 
   catAnalistas: any[] = [];
   idSolicitud: any;
-  public estudiosData: Array<Object> = estudios;
+  public estudiosData: Array<Object> = [];
   form: FormGroup;
   preliminarList = [
-    {nombre: 'SI', value: '1'},
-    {nombre: 'NO', value: '0'},
-  ]
+    {nombre: 'SI', value: true},
+    {nombre: 'NO', value: false},
+  ];
+
+  subs = new Subscription();
+  subs1 = new Subscription();
+  subs2 = new Subscription();
 
   constructor(private fb: FormBuilder, public estudiosService: EstudiosService, public router: Router, public empresasService: EmpresasService, public empleadosService: EmpleadosService) {}
 
   ngOnInit() {
+   
     this.formInit();
     // this.catAnalistas();
     if (this.dataEstudio) {this.setValue()};
@@ -65,8 +56,14 @@ export class SolicitarEstudioSharedComponent implements OnInit {
 
   }
 
+  ngOnDestroy() {
+    this.subs.unsubscribe()
+    this.subs1.unsubscribe()
+    this.subs2.unsubscribe()
+  }
+
   getCatAnalistas() {
-    this.empleadosService.getEmpleados().pipe(
+   this.subs =  this.empleadosService.getEmpleados().pipe(
       pluck('Empleados'),
       flatMap((r: any) => r),
       filter((val: any) => val.iIdRol == 3),
@@ -78,14 +75,14 @@ export class SolicitarEstudioSharedComponent implements OnInit {
   }
 
   consultaAnalista() {
-    if (this.analista) {
+    if (this.analista || this.dataEstudio) {
       this.form.disable();
     }
   }
 
 
   getCatalogoEstudios() {
-    this.empresasService.getCatalogoEstudios().subscribe((resp: any) => {
+    this.subs1 = this.empresasService.getCatalogoEstudios().subscribe((resp: any) => {
       this.estudiosData = resp.LstEstudios;
     })
   }
@@ -97,7 +94,7 @@ export class SolicitarEstudioSharedComponent implements OnInit {
       iIdEstudio: new FormControl('', [Validators.required]),
       sFolio: new FormControl(''),
       analista: new FormControl(''),
-      bPreliminar: new FormControl(false),
+      iPreliminar: new FormControl(),
       sComentarios: new FormControl('', [Validators.required]),
       iIdAnalista: new FormControl('1'),
       sTokenCV: new FormControl(''),
@@ -129,7 +126,7 @@ export class SolicitarEstudioSharedComponent implements OnInit {
 
     this.form.patchValue({
       iIdCliente,
-      iIdEstudio: parseInt(iIdEstudio),
+      iIdEstudio: iIdEstudio,
       sFolio,
       bPreliminar,
       sComentarios,
@@ -220,6 +217,40 @@ export class SolicitarEstudioSharedComponent implements OnInit {
       })
     }
 
+  }
+
+
+  declinarSolicitud() {
+    Swal.fire({
+      title: 'Declinar solicitud',
+      text: "¿Estás seguro que deseas declinar la solicitud?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Declinar'
+      }).then((result) => {
+      console.log(result);
+      
+      if (result.value) {
+        let body = {
+          sService: 'declinarSolicitud',
+          iIdSolicitud: this.idSolicitud
+        }
+        this.estudiosService.declinarSolicitud(body).subscribe((res: any) => {
+          
+          if (res.resultado !== 'Ok') {
+            return Swal.fire( 'Error', 'Error al declinar la solicitud', 'warning').then(() => {
+              this.router.navigate(['ejecutivo/estudios']);
+            })
+          }
+          return Swal.fire( 'Solicitud declinada', 'La solicitud se ha declinado con éxito', 'success').then(() => {
+            this.router.navigate(['ejecutivo/estudios']);
+          })
+        })
+      }
+
+    })
   }
 }
 

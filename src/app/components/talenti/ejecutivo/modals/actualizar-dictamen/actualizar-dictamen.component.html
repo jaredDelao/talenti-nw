@@ -1,0 +1,20 @@
+<div class="container">
+
+    <div class="form-group" [formGroup]="form">
+        <title-tabla titulo="ACTUALIZAR ESTATUS DICTAMEN"></title-tabla>
+
+        <mat-form-field class="mt-3">
+            <mat-label>Selecciona un estatus de dictamen</mat-label>
+            <mat-select formControlName="estatusDictamen">
+              <mat-option *ngFor="let dictamen of catDictamenSelect" [value]="dictamen.id">
+                {{dictamen.name}}
+              </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+          <div class="col-12 text-center mt-3">
+              <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="enviar()">ENVIAR</button>
+          </div>
+    </div>
+
+</div>

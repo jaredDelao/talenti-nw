@@ -11,13 +11,29 @@ import { EstudiosAnalistaService } from 'src/app/services/analista/estudios-anal
 })
 export class RevisarModalComponent implements OnInit {
 
+  // catalogo estatus dictamen
+  catDictamen = [
+    {id: '1', name: 'EN PROCESO'},
+    {id: '2', name: 'RECOMENDADO'},
+    {id: '3', name: 'NO RECOMENDADO'},
+    {id: '4', name: 'RECOMENDADO CON RESERVA'},
+  ];
+  catDictamenGNP = [
+    {id: '10', name: 'EN PROCESO'},
+    {id: '11', name: 'RIESGO 1'},
+    {id: '12', name: 'RIESGO 2'},
+    {id: '13', name: 'RIESGO 3'},
+    {id: '14', name: 'SIN RIESGO'},
+  ];
   titulo: any;
 
   request = {
     sService: '',
     iIdSolicitud: null,
-    sMotivo: null
+    sMotivo: null,
+    estatusDictamen: null
   }
+  catDictamenSelect: any;
   // 1 preliminar - 2 estudio - 3 complemento
   sRechazo: any;
 
@@ -26,6 +42,7 @@ export class RevisarModalComponent implements OnInit {
   ngOnInit() {
     this.titulo = this.data.titulo;
     this.sRechazo = this.data.sRechazo;
+    this.catDictamenSelect = this.catDictamen;
     console.log(this.data);
   }
 

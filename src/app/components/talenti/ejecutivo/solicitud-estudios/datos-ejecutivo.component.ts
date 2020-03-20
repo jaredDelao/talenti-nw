@@ -198,8 +198,16 @@ export class DatosEjecutivoComponent implements OnInit {
           this.togglePreliminar.checked = false;
         }
       })
-    
-    
+  
+  }
+
+  color(row) {
+    if (row.bDeclinada == '1') {
+      return {'background-color': '#FEC6C0'}
+    }
+    if (row.bValidada == '1') {
+      return {'background-color': '#D5F5E3'}
+    }
   }
 
 

@@ -18,6 +18,7 @@ import { TitleComponent } from '../../../shared/title/title.component';
 import { CustomComponentsModule } from '../../../shared/customComponents.module';
 import { DetalleEstudioEjecutivoComponent } from './detalle-estudio-ejecutivo/detalle-estudio-ejecutivo.component';
 import { TablaGeneralComponent } from '../../../shared/tabla-general/tabla-general.component';
+import { ActualizarDictamenComponent } from './modals/actualizar-dictamen/actualizar-dictamen.component';
 
 @NgModule({
   imports: [
@@ -35,9 +36,10 @@ import { TablaGeneralComponent } from '../../../shared/tabla-general/tabla-gener
     ModalDireccionComponent,
     MenuEjecutivoComponent,
     DetalleEstudioEjecutivoComponent,
+    ActualizarDictamenComponent,
   ],
   exports: [DatosEjecutivoComponent],
-  entryComponents: [ModalDireccionComponent],
+  entryComponents: [ModalDireccionComponent, ActualizarDictamenComponent],
   providers: [DatosEjecutivoService],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })

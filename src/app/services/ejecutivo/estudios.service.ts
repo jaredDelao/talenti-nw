@@ -12,10 +12,18 @@ export class EstudiosService {
   detalleSolicitud: BehaviorSubject<any> = new BehaviorSubject(0);
   $detalleSolicitud = this.detalleSolicitud.asObservable();
 
+  reloadPage: BehaviorSubject<any> = new BehaviorSubject(0);
+  $reloadPage = this.reloadPage.asObservable();
+
   constructor(private http: HttpClient) { }
 
   getEstudios(req): Observable<any> {
     let body = new HttpParams({fromObject: req})
+    return this.http.post<any>(environment.urlProd, body);
+  }
+
+  getEstudioById(params) {
+    let body = new HttpParams({fromObject: params});
     return this.http.post<any>(environment.urlProd, body);
   }
 
@@ -25,6 +33,26 @@ export class EstudiosService {
   }
 
   validarSolicitud(params) {
+    let body = new HttpParams({fromObject: params})
+    return this.http.post(environment.urlProd, body);
+  }
+
+  publicarPreliminar(params) {
+    let body = new HttpParams({fromObject: params})
+    return this.http.post(environment.urlProd, body);
+  }
+
+  publicarDictamen(params) {
+    let body = new HttpParams({fromObject: params})
+    return this.http.post(environment.urlProd, body);
+  }
+
+  publicarComplemento(params) {
+    let body = new HttpParams({fromObject: params})
+    return this.http.post(environment.urlProd, body);
+  }
+
+  declinarSolicitud(params) {
     let body = new HttpParams({fromObject: params})
     return this.http.post(environment.urlProd, body);
   }

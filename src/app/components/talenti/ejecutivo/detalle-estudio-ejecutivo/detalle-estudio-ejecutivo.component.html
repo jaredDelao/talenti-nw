@@ -1,8 +1,8 @@
-<ng-container #validar *ngIf="estudioValid != '1'">
-    <app-solicitar-estudio-shared [dataEstudio]="datosSolicitud"></app-solicitar-estudio-shared>
+<ng-container #validar *ngIf="estudioValid != '1' && datosSolicitud">
+    <app-solicitar-estudio-shared [dataEstudio]="datosSolicitud" [regresar]="'ejecutivo/estudios'"></app-solicitar-estudio-shared>
 </ng-container>
 
-<ng-container #detalle *ngIf="estudioValid == '1'">
+<ng-container #detalle *ngIf="estudioValid == '1' && datosSolicitud.bDeclinada == '0'">
 
     <app-title regresar="true" titulo="DETALLE DE ESTUDIO" ruta="/ejecutivo/estudios"></app-title>
 
@@ -36,7 +36,7 @@
             </div>
             <div class="form-group col-lg-4 col-sm-6 col-xs-12">
                 <mat-form-field>
-                    <input type="number" matInput placeholder="Teléfono" formControlName="sTelefono">
+                    <input type="text" matInput placeholder="Teléfono" formControlName="sTelefono">
                 </mat-form-field>
             </div>
             <div class="form-group col-lg-4 col-sm-6 col-xs-12">
@@ -92,16 +92,16 @@
         </div>
 
         <div class="contenido row col-12">
-            <div class="contenido2 col-lg-6 col-md-6 col-sm-12 col-xs-12" *ngIf="datosSolicitud.sArchivoPreliminar">
-                <app-tabla-general [titulo]="'PRELIMINAR'" [data]="datosPreliminar" [idSolicitud]="idSolicitud" [idTipoEstudio]="1"
+            <div class="contenido2 col-lg-6 col-md-6 col-sm-12 col-xs-12" *ngIf="datosSolicitud.iPublicarPreliminar >= 2">
+                <app-tabla-general [titulo]="'PRELIMINAR'" (update)="update($event)" [data]="datosPreliminar" [idSolicitud]="idSolicitud" [idTipoEstudio]="1" [publicado]="bPreliminar"
                     [columns]="columnsPreliminar"></app-tabla-general>
             </div>
-            <div class="contenido2 col-lg-6 col-md-6 col-sm-12 col-xs-12" *ngIf="datosSolicitud.sArch1Dictamen && datosSolicitud.sArch2Dictamen">
-                <app-tabla-general [titulo]="'Estudio socieconómico'" [data]="datosEstudios" [idSolicitud]="idSolicitud" [idTipoEstudio]="2"
+            <div class="contenido2 col-lg-6 col-md-6 col-sm-12 col-xs-12" *ngIf="datosSolicitud.bPublicarDictamen >= 2">
+                <app-tabla-general [titulo]="'Estudio socieconómico'" (update)="update($event)" [data]="datosEstudios" [idSolicitud]="idSolicitud" [idTipoEstudio]="2" [publicado]="bDictamen"
                     [columns]="columnsEstudios"></app-tabla-general>
             </div>
-            <div class="contenido2 col-lg-6 col-md-6 col-sm-12 col-xs-12" *ngIf="datosComplemento.sArchComplemento">
-                <app-tabla-general [titulo]="'complemento'" [data]="datosComplemento" [columns]="columnsComplemento" [idSolicitud]="idSolicitud" [idTipoEstudio]="2">
+            <div class="contenido2 col-lg-6 col-md-6 col-sm-12 col-xs-12" *ngIf="datosComplemento.iEstatusComplemento >= 2">
+                <app-tabla-general [titulo]="'complemento'" [data]="datosComplemento" [columns]="columnsComplemento" [idSolicitud]="idSolicitud" [idTipoEstudio]="2" [publicado]="bComplemento">
                 </app-tabla-general>
             </div>
 
