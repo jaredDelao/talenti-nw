@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, AfterViewInit } from '@angular/core';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import {
@@ -21,7 +21,7 @@ import { of, Subscription } from 'rxjs';
 })
 
 
-export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy {
+export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() esCliente: boolean = false;
   @Input() analista: boolean = false;
@@ -43,6 +43,8 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy {
   subs1 = new Subscription();
   subs2 = new Subscription();
 
+  mostrarEstudiosCompletos: boolean = false;
+
   constructor(private fb: FormBuilder, public estudiosService: EstudiosService, public router: Router, public empresasService: EmpresasService, public empleadosService: EmpleadosService) {}
 
   ngOnInit() {
@@ -54,6 +56,19 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy {
     this.consultaAnalista();
     this.getCatAnalistas();
 
+  }
+
+  ngAfterViewInit() {
+    this.form.get('iIdEstudio').valueChanges.subscribe(value => {
+      
+      if (value == 1 || value == 3 || value == 4 || value == 5 || value == 7|| 
+          value == 10 || value == 11 || value == 12) {
+            this.mostrarEstudiosCompletos = true;
+          }
+          else {
+            this.mostrarEstudiosCompletos = false;
+          }
+    })
   }
 
   ngOnDestroy() {

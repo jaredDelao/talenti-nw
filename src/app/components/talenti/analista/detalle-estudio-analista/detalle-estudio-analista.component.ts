@@ -102,6 +102,7 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy {
     }
     if (this.bComplemento == 4) {
       this.displayedColumnsComplemento.push('motivo');
+      
     } else {
       this.displayedColumnsComplemento = ['tipo', 'descargar'];
     }
@@ -139,7 +140,8 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy {
         // Token archivos
         this.tokenPreliminar = datosUsuario[0].sArchivoPreliminar;      
         this.tokenDictamen1 = datosUsuario[0].sArch1Dictamen;      
-        this.tokenDictamen2 = datosUsuario[0].sArch2Dictamen;      
+        this.tokenDictamen2 = datosUsuario[0].sArch2Dictamen;     
+        this.tokenComplemento = datosUsuario[0].sTokenComplemento; 
         this.setDatos(this.datosSolicitud);
         this.mostrarColumnasConMotivo();
       })
@@ -181,12 +183,15 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy {
 
   setDatos(value) {
 
-    // Validar input file preliminar | dictamen
+    // Desactivar input file ya subidos en estatus 2 - subido ó estatus 3 publicado
     if (value.iPublicarPreliminar == '0' || value.iPublicarPreliminar == '2' || value.iPublicarPreliminar == '3' ) {
       this.controlPreliminar.disable();
     }
     if (value.bPublicarDictamen == '2' || value.bPublicarDictamen == '3') {
       this.controlDictamen.disable();
+    }
+    if (value.iEstatusComplemento == '2' || value.iEstatusComplemento == '3') {
+      this.controlComplemento.disable();
     }
 
     this.form.setValue({
@@ -265,7 +270,7 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy {
       return Swal.fire('Error al cargar archivo', 'Revisa que sea un formato DOCX o PDF', 'error');
     }), () => {
       this.loader = false;
-    }
+    } 
     
   }
 
@@ -283,6 +288,8 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy {
     })
   }
   descargarComplemento() {
+    console.log(this.tokenComplemento);
+    
     let req = {
       token: this.tokenComplemento,
     }
@@ -301,6 +308,30 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy {
     this.estudiosAnalistaService.descargarPreliminar(req).subscribe((res) => {
       console.log(res); 
     })
+  }
+
+  color(id: 1 | 2 | 3) {
+
+    switch(id) {
+      case 1:
+        if (this.bPreliminar == '4') return {'background-color': '#FEC6C0'}
+        if (this.bPreliminar == '3') return {'background-color': '#D5F5E3'}
+        break;
+
+      case 2:
+        if (this.bDictamen == '4') return {'background-color': '#FEC6C0'}
+        if (this.bDictamen == '3') return {'background-color': '#D5F5E3'}
+        break;
+
+      case 3:
+        if (this.bComplemento == '4') return {'background-color': '#FEC6C0'}
+        if (this.bComplemento == '3') return {'background-color': '#D5F5E3'}
+        break;
+      
+      default:
+        return {'background-color': 'transparent'}
+        
+    }
   }
     
 }

@@ -1,5 +1,6 @@
-<app-title titulo="SOLICITUD ESTUDIO"></app-title>
-<div class="container">
+    <app-title regresar="true" titulo="AGENDAR CITA" ruta="/analista/estudios"></app-title>
+
+    <!-- <button class="align-self-center" mat-raised-button color="warn">REGRESAR</button> -->
 
     <form [formGroup]="form">
 
@@ -53,6 +54,49 @@
                     <label>Adjuntar CV</label>
                     <input type="file" placeholder="Examinar" formControlName="sTokenCV" />
                 </div>
+
+                <hr class="m-4">
+
+                <div class="form-group date-form">
+                    <mat-form-field class="fecha">
+                        <mat-label>Fecha</mat-label>
+                        <input matInput [matDatepicker]="picker">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+
+                    <div class="box-picker">
+                        <mat-icon color="primary" (click)="openClock()" class="mr-2 clock-ico">schedule</mat-icon>
+                        <input atp-time-picker class="atp-picker" value="19:00"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-label>Encuestador</mat-label>
+                        <input matInput type="text" formControlName="sNombres">
+                    </mat-form-field>
+                </div>
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-label>Correo</mat-label>
+                        <input matInput type="text" formControlName="sNombres">
+                    </mat-form-field>
+                </div>
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-label>Telefono</mat-label>
+                        <input matInput type="text" formControlName="sNombres">
+                    </mat-form-field>
+                </div>
+
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-label>Comentarios</mat-label>
+                        <textarea matInput cdkTextareaAutosize formControlName="sComentarios"></textarea>
+                    </mat-form-field>
+                </div>
+
 
             </div>
 
@@ -130,22 +174,4 @@
             </div>
         </div>
 
-        <div class="actions d-flex justify-content-center" *ngIf="!analista && dataEstudio.bDeclinada != '1'">
-            <div class="buttons d-flex flex-column col-3">
-                <ng-container *ngIf="!esCliente">
-                    <button mat-raised-button color="primary" (click)="enviar('crearValidar')" *ngIf="!dataEstudio">CREAR</button>
-                    <button mat-raised-button color="primary" (click)="enviar('validar')" *ngIf="dataEstudio">VALIDAR</button>
-                    <button mat-raised-button color="warn" (click)="declinarSolicitud()" *ngIf="dataEstudio">DECLINAR</button>
-                    <button mat-raised-button color="warn" (click)="regresarFunc()" >REGRESAR</button>
-                </ng-container>
-                
-                <ng-container *ngIf="esCliente">
-                    <button mat-raised-button color="primary" (click)="enviar('solicitar')">SOLICITAR</button>
-                    <button mat-raised-button color="warn" (click)="regresarFunc()" >REGRESAR</button>
-                </ng-container>
-            </div>
-        </div>
-
     </form>
-
-</div>

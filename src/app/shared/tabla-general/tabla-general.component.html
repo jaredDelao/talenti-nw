@@ -26,8 +26,8 @@
         <ng-container matColumnDef="revision">
             <th mat-header-cell *matHeaderCellDef style="text-align: center;"> REVISAR </th>
             <td mat-cell *matCellDef="let element">
-                <button mat-icon-button (click)="revisar()" #revisarBtn [disabled]="!publicarSlider">
-                    <mat-icon style="color: red" [ngStyle]="{'color': !publicarSlider == true ? '#FEC6C0' : 'red'}">feedback</mat-icon>
+                <button mat-icon-button (click)="revisar()" #revisarBtn [disabled]="publicado == 4 || publicado == 3">
+                    <mat-icon style="color: red" [ngStyle]="{'color': publicado == 4 || publicado == 3 ? '#777' : 'red'}">feedback</mat-icon>
                 </button>
             </td>
         </ng-container>
@@ -36,7 +36,7 @@
         <ng-container matColumnDef="publicar">
             <th mat-header-cell *matHeaderCellDef style="text-align: center;"> PUBLICAR </th>
             <td mat-cell *matCellDef="let element">
-                <mat-slide-toggle (change)="publicar()" [formControl]="publicarSlider"></mat-slide-toggle>
+                <mat-slide-toggle (change)="publicar()" [disabled]="publicado == 4" [formControl]="publicarSlider"></mat-slide-toggle>
             </td>
         </ng-container>
 

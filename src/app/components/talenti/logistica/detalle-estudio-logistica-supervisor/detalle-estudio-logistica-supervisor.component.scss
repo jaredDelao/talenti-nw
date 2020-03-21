@@ -1,0 +1,62 @@
+$custom-file-text: (
+en: "Browse",
+es: "Elegir"
+);
+
+mat-form-field {
+    width: 100%;
+  }
+  
+  table {
+    width: 100%;
+  }
+  
+  table td.mat-cell {
+    font-size: 0.8em !important;
+  }
+  
+  // .contenido,
+  // .contenido2 {
+    // margin: 0 auto;
+  // }
+  
+  .contenido2 table {
+    #file {
+      color: tomato;
+    }
+    // text-align: center;
+  }
+  
+  .footer {
+    width: 100%;
+  }
+  
+  .btn-cancelar {
+    font-size: 0.8em;
+  }
+
+  .box-picker {
+      width: 50%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      input {
+        border: none !important;
+        background: transparent !important;
+        border-bottom: 1.4px solid #ccc !important;
+      }
+  }
+
+  .fecha {
+      width: 40%;
+      margin-right: 10px;
+  }
+
+  .date-form {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+  }
+
+  

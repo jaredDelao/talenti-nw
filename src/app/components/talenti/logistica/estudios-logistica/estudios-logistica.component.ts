@@ -1,18 +1,20 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource, MatPaginator, MatDatepicker, MatSidenav, MatSlideToggle } from '@angular/material';
-import { DatePipe } from '@angular/common';
-import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import Swal from 'sweetalert2';
-import { Router } from '@angular/router';
 import * as moment from 'moment';
+import { MatTableDataSource, MatPaginator, MatDatepicker, MatSidenav, MatSlideToggle } from '@angular/material';
+import { FormControl, FormGroup, FormBuilder } from '@angular/forms';
+import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
 import { EstudiosAnalistaService } from 'src/app/services/analista/estudios-analista.service';
+import * as bcryptjs from 'bcryptjs';
+
 
 @Component({
-  selector: 'app-estudios-analista',
-  templateUrl: './estudios-analista.component.html',
-  styleUrls: ['./estudios-analista.component.scss']
+  selector: 'app-estudios-logistica',
+  templateUrl: './estudios-logistica.component.html',
+  styleUrls: ['./estudios-logistica.component.scss']
 })
-export class EstudiosAnalistaComponent implements OnInit {
+export class EstudiosLogisticaComponent implements OnInit {
 
   displayedColumns: string[] = ['folio', 'estudio', 'nombre', 'fecha_solicitud', 'estatus_solicitud', 'comentarios'];
   dataSource: MatTableDataSource<any>;
@@ -41,12 +43,44 @@ export class EstudiosAnalistaComponent implements OnInit {
   validarEstudio: any = 'PENDIENTE';
   validarPublicacionPreeliminar: boolean = false;
 
+  banderaSupervisor: boolean = false;
+
   constructor(private fb: FormBuilder, private router: Router, public estudiosAnalistaService: EstudiosAnalistaService) { }
 
   ngOnInit() {
+    this.verificarRolLogistica();
     this.formInit();
     this.getEstudios();
   }
+
+  verificarRolLogistica() {
+    let idPerfil = localStorage.getItem('idPerfil');
+    if (idPerfil) {
+      // Rol logistica supervisor
+      bcryptjs.compare('6', idPerfil, (err, res) => {
+        if (res) {
+          this.banderaSupervisor = true;
+          return this.getEstudiosSupervisor();
+        }
+        console.log(res); 
+      });
+
+      // Rol logistica normal
+      bcryptjs.compare('7', idPerfil, (err, res) => {
+        if (res) {
+          this.banderaSupervisor = false;
+          return this.getEstudiosByIdLogistica();
+        }
+        console.log(res); 
+      });
+    } else {
+      return this.router.navigate(['/login']);
+    }
+  }
+
+  getEstudiosByIdLogistica() {}
+
+  getEstudiosSupervisor() {}
 
   get fromDate() {
     return this.form.get('fechaInicioForm').value;
@@ -103,7 +137,15 @@ export class EstudiosAnalistaComponent implements OnInit {
 
 
   detalles(data) {
-    this.router.navigate(['analista/detalle-estudio-analista/', data.iIdSolicitud]);
+    console.log(this.banderaSupervisor);
+
+    if (this.banderaSupervisor) {
+      this.router.navigate(['logistica/detalle-estudio-supervisor/', data.iIdSolicitud]);
+    } else {
+      this.router.navigate(['detalle-estudio-logistica/', data.iIdSolicitud]);
+    }
+    
   }
+
 
 }

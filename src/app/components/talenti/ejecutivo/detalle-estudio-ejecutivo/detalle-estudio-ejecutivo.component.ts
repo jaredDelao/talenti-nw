@@ -36,6 +36,8 @@ const ELEMENT_DATA = [
 })
 export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy {
 
+  loading: boolean = false;
+
   param = {
     sService: "getLstEstudios",
     iIdEmpresa: 0
@@ -101,6 +103,7 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy {
       IdSolicitud: idUrl,
     }
     if (idUrl) {
+      this.loading = true;
       this.subs = this.estudiosService.getEstudioById(req).pipe(map((r) => r.resultado)).subscribe((datosUsuario) => {
         console.log(datosUsuario[0]);
         this.idSolicitud = datosUsuario[0].iIdSolicitud;
@@ -112,9 +115,12 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy {
         this.setDatosPreliminar(datosUsuario[0]);
         this.setDatosEstudioDictamen(datosUsuario[0]);
         this.setDatosComplemento(datosUsuario[0]);
-        this.setDatos(this.datosSolicitud)
-      })
+        this.setDatos(this.datosSolicitud);
+
+        this.loading = false;
+      }, (err) => this.loading = false, (() => this.loading = false));
     } else  {
+      this.loading = false;
       return this.router.navigate(['ejecutivo/estudios']);
     }    
   }
@@ -134,7 +140,9 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy {
     this.datosEstudios[0].token2 = value.sArch2Dictamen;
   }
   setDatosComplemento(value) {
-    this.datosComplemento[0].token = value.sArchComplemento;
+    
+    this.datosComplemento[0].token = value.sTokenComplemento;
+    // console.log(this.datosComplemento);
   }
 
   formInit() {

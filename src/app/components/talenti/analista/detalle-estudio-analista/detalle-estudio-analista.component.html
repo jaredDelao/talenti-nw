@@ -128,7 +128,7 @@
                     </ng-container>
 
                     <tr mat-header-row *matHeaderRowDef="displayedColumnsPreliminar"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumnsPreliminar;"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsPreliminar;" [ngStyle]="color(1)"></tr>
                 </table>
             </div>
             <div class="contenido2 col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -167,7 +167,7 @@
                     </ng-container>
 
                     <tr mat-header-row *matHeaderRowDef="displayedColumnsDictamen"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumnsDictamen;" [ngStyle]="{'background-color': bDictamen == 4 ? '#FEC6C0' : 'white'}"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsDictamen;" [ngStyle]="color(2)"></tr>
                 </table>
 
             </div>
@@ -180,7 +180,7 @@
                     <label class="custom-file-label" for="customFileLang">Seleccionar Archivo</label>
                 </div> 
 
-                <table mat-table [dataSource]="dataSourceComplemento" class="mat-elevation-z8 mt-2" *ngIf="tokenComplemento">
+                <table mat-table [dataSource]="dataSourceComplemento" class="mat-elevation-z8 mt-2" *ngIf="bComplemento >= 2 && bComplemento <=4">
 
                     <ng-container matColumnDef="tipo">
                         <th mat-header-cell *matHeaderCellDef> TIPO </th>
@@ -201,8 +201,8 @@
                         </td>
                     </ng-container>
 
-                    <tr mat-header-row *matHeaderRowDef="displayedColumnsDictamen"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumnsDictamen;"></tr>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsComplemento"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsComplemento;" [ngStyle]="color(3)"></tr>
                 </table>
             </div>
             <!-- table -->

@@ -46,7 +46,7 @@ export class SubirPreliminarModalComponent implements OnInit {
     this.form = this.fb.group({
       sService: new FormControl(this.data.id),
       iIdSolicitud: new FormControl(this.data.idSolicitud),
-      // archivoComplemento: new FormControl(this.data.token),
+      sToken: new FormControl(this.data.token),
       estatusDictamen: new FormControl(null, Validators.required),
     });
   }
@@ -59,12 +59,6 @@ export class SubirPreliminarModalComponent implements OnInit {
     }
 
     let body = this.form.getRawValue();
-
-    if (this.idArchivoTipo == 'subirPreliminar') {
-      body = { ...body, archivoPreliminar: this.data.token }
-    } else {
-      body = { ...body, archivoComplemento: this.data.token }
-    }
     
     console.log(body);
     

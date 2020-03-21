@@ -27,6 +27,7 @@ export class TablaGeneralComponent implements OnInit, AfterViewInit {
   @Input('idSolicitud') idSolicitud: boolean = false;
   // 1 preliminar - 2 estudio - 3 complemento
   @Input('idTipoEstudio') idTipoEstudio: any;
+  // Bandera que indica en que estado se encuentra el estudio 1, 2, 3, 4 
   @Input('publicado') publicado: any;
   @ViewChild('revisarBtn', {static: false}) revisarBtn: MatButton;
 
@@ -42,6 +43,10 @@ export class TablaGeneralComponent implements OnInit, AfterViewInit {
     this.displayedColumns = this.columns;
     this.dataSource = this.data;
     this.checkPublicado();
+
+    console.log(this.titulo, this.data);
+    console.log(this.idTipoEstudio, this.publicado);
+    
     
   }
 
@@ -50,7 +55,7 @@ export class TablaGeneralComponent implements OnInit, AfterViewInit {
   }
 
   checkPublicado() {
-    this.publicado == 3 || this.publicado == 4 ? this.publicarSlider.setValue(true) : this.publicarSlider.setValue(false);
+    this.publicado == 3 ? this.publicarSlider.setValue(true) : this.publicarSlider.setValue(false);
     if (this.publicado == 3 || this.publicado == 4) {
       this.publicarSlider.disable();
     }
@@ -109,7 +114,8 @@ export class TablaGeneralComponent implements OnInit, AfterViewInit {
         break;
       case 3:
         body.sService = 'publicarComplemento';
-        this.estudiosService.publicarComplemento(body).subscribe(console.log)
+        this.openDialogPublicar('publicarComplemento');
+        // this.estudiosService.publicarComplemento(body).subscribe(console.log)
         break;
       
       default:

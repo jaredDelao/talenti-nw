@@ -2,7 +2,10 @@ import { Component, ViewChild, OnInit, AfterContentInit, DoCheck } from "@angula
 import { MatDrawer } from "@angular/material";
 import { Router } from '@angular/router';
 import * as bcryptjs from 'bcryptjs';
+import * as cryptoJS from 'crypto-js';
 import Swal from 'sweetalert2';
+import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencriptar.service';
+
 
 // const menuEjecutivo: Array<Object>;
 
@@ -27,6 +30,7 @@ const menuAdmin: Array<Object> = [
     list: [
       { title: "Nueva agenda", link: "logistica/nueva-agenda" },
       // { title: "Cancelar solicitud", link: "logistica/cancelar-solicitud" }
+      { title: "Estudios", link: "logistica/estudios-logistica" }
     ]
   },
   {
@@ -94,7 +98,7 @@ export class PagesComponent implements OnInit, DoCheck {
   permiso: String = "analista";
   colorT: string = 'primary';
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private cryptService: EncriptarDesencriptarService) { }
 
   ngOnInit() {
     this.getLocalStorage();
@@ -112,6 +116,13 @@ export class PagesComponent implements OnInit, DoCheck {
   }
 
   getLocalStorage() {
+
+    if (localStorage.getItem('super'))
+    this.cryptService.desencriptar(localStorage.getItem('super')).subscribe(console.log)
+    // desencriptar
+    // console.log(ci);
+    
+
     let perfil = localStorage.getItem('perfil');
     let idEmpleado = localStorage.getItem('idEmpleado');
         
