@@ -12,6 +12,7 @@ import { EmpresasService } from 'src/app/services/coordinador/empresas.service';
 import { EmpleadosService } from 'src/app/services/coordinador/empleados.service';
 import { flatMap, tap, filter, pluck, toArray, catchError } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
+import { ClienteService } from 'src/app/services/cliente/cliente.service';
 
 
 @Component({
@@ -35,8 +36,8 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
   public estudiosData: Array<Object> = [];
   form: FormGroup;
   preliminarList = [
-    {nombre: 'SI', value: true},
-    {nombre: 'NO', value: false},
+    {nombre: 'SI', value: '1'},
+    {nombre: 'NO', value: '0'},
   ];
 
   subs = new Subscription();
@@ -45,7 +46,8 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
 
   mostrarEstudiosCompletos: boolean = false;
 
-  constructor(private fb: FormBuilder, public estudiosService: EstudiosService, public router: Router, public empresasService: EmpresasService, public empleadosService: EmpleadosService) {}
+  constructor(private fb: FormBuilder, public estudiosService: EstudiosService, public router: Router, public empresasService: EmpresasService, public empleadosService: EmpleadosService,
+            private clienteService: ClienteService) {}
 
   ngOnInit() {
    
@@ -109,7 +111,7 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
       iIdEstudio: new FormControl('', [Validators.required]),
       sFolio: new FormControl(''),
       analista: new FormControl(''),
-      iPreliminar: new FormControl(),
+      iPublicarPreliminar: new FormControl(),
       sComentarios: new FormControl('', [Validators.required]),
       iIdAnalista: new FormControl('1'),
       sTokenCV: new FormControl(''),
@@ -174,65 +176,71 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
     }
 
     console.log(req);
-    
-    // CREAR Y VALIDAR - EJECUTIVO
-    if (param == 'crearValidar') {
-      this.estudiosService.crearEstudio(req).subscribe((res: any) => {
-        if (res.resultado == "Ok") {
-          return Swal.fire('Registro exitoso', `Se ha registrado un nuevo estudio con folio ${req.sFolio}`, "success").then(r => {
-            this.router.navigate(['ejecutivo/estudios']);
-          })
-        } else {
+
+    switch(param) {
+      case 'crearValidar':
+        this.estudiosService.crearEstudio(req).subscribe((res: any) => {
+          if (res.resultado == "Ok") {
+            return Swal.fire('Registro exitoso', `Se ha registrado un nuevo estudio con folio ${req.sFolio}`, "success").then(r => {
+              this.router.navigate(['ejecutivo/estudios']);
+            })
+          } else {
+            return Swal.fire('Error', `Error al registrar Estudio`, "error");
+          }
+        }, err => {
           return Swal.fire('Error', `Error al registrar Estudio`, "error");
-        }
-      }, err => {
-        return Swal.fire('Error', `Error al registrar Estudio`, "error");
-      })
+        })
+        break;
+    
+        // this.estudiosService.validarSolicitud(reqValidar).subscribe((res:any) => {
+        //   console.log(res);
+        //   if (res.resultado == "Ok") {
+        //     return Swal.fire('Validación exitosa', `Se ha valdiado el estudio con folio ${req.sFolio}`, "success").then(r => {
+        //       this.router.navigate(['analista/estudios']);
+        //     })
+        //   }
+        //   return Swal.fire('Error', `Error al validar estudio`, "error");
+        // }, err => {
+        //   return Swal.fire('Error', `Error al validar estudio`, "error");
+        // })
 
-      // this.estudiosService.validarSolicitud(reqValidar).subscribe((res:any) => {
-      //   console.log(res);
-      //   if (res.resultado == "Ok") {
-      //     return Swal.fire('Validación exitosa', `Se ha valdiado el estudio con folio ${req.sFolio}`, "success").then(r => {
-      //       this.router.navigate(['analista/estudios']);
-      //     })
-      //   }
-      //   return Swal.fire('Error', `Error al validar estudio`, "error");
-      // }, err => {
-      //   return Swal.fire('Error', `Error al validar estudio`, "error");
-      // })
-    }
+        // SOLO VALIDAR - EJECUTIVO
+        case 'validar':
+          this.estudiosService.validarSolicitud(reqValidar).subscribe((res:any) => {
+            console.log(res);
+            if (res.resultado == "Ok") {
+              return Swal.fire('Validación exitosa', `Se ha validado el estudio con folio ${req.sFolio}`, "success").then(r => {
+                this.router.navigate([this.regresar]);
+              })
+            }
+            return Swal.fire('Error', `Error al validar estudio`, "error");
+          }, err => {
+            return Swal.fire('Error', `Error al validar estudio`, "error");
+          });
+        break;
 
-    // SOLO VALIDAR - EJECUTIVO
-    if (param == 'validar') {
-      this.estudiosService.validarSolicitud(reqValidar).subscribe((res:any) => {
-        console.log(res);
-        if (res.resultado == "Ok") {
-          return Swal.fire('Validación exitosa', `Se ha validado el estudio con folio ${req.sFolio}`, "success").then(r => {
-            this.router.navigate([this.regresar]);
+        case 'solicitar':
+          this.clienteService.solicitarEstudioCliente(req).subscribe((res: any) => {
+            if (res.resultado == "Ok") {
+              return Swal.fire('Registro exitoso', `Se ha registrado un nuevo estudio con folio ${req.sFolio}`, "success").then(r => {
+                this.router.navigate([this.regresar]);
+              })
+            } else {
+              return Swal.fire('Error', `Error al registrar Estudio`, "error");
+            }
+          }, err => {
+            return Swal.fire('Error', `Error al registrar Estudio`, "error");
           })
-        }
-        return Swal.fire('Error', `Error al validar estudio`, "error");
-      }, err => {
-        return Swal.fire('Error', `Error al validar estudio`, "error");
-      })
-    }
+          break;
+          
+        default:
+          return Swal.fire('Error', `Error al registrar Estudio`, "error");
+      }
+  }
+    
 
     // SOLICITAR - CLIENTE
-    if (param == 'solicitar') {
-      this.estudiosService.crearEstudio(req).subscribe((res: any) => {
-        if (res.resultado == "Ok") {
-          return Swal.fire('Registro exitoso', `Se ha registrado un nuevo estudio con folio ${req.sFolio}`, "success").then(r => {
-            this.router.navigate([this.regresar]);
-          })
-        } else {
-          return Swal.fire('Error', `Error al registrar Estudio`, "error");
-        }
-      }, err => {
-        return Swal.fire('Error', `Error al registrar Estudio`, "error");
-      })
-    }
-
-  }
+   
 
 
   declinarSolicitud() {

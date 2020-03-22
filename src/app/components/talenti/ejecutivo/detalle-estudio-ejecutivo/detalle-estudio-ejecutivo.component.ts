@@ -64,7 +64,7 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy {
     {token: null},
   ];
 
-  datosSolicitud: any;;
+  datosSolicitud: any;
   form: FormGroup;
   estudioValid: any = '';
   catEstudios: any;
@@ -140,9 +140,7 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy {
     this.datosEstudios[0].token2 = value.sArch2Dictamen;
   }
   setDatosComplemento(value) {
-    
     this.datosComplemento[0].token = value.sTokenComplemento;
-    // console.log(this.datosComplemento);
   }
 
   formInit() {

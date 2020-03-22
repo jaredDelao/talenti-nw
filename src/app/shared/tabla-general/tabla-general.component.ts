@@ -1,23 +1,19 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { EstudiosAnalistaService } from 'src/app/services/analista/estudios-analista.service';
-import { MatDialogRef, MatDialog, MatButton } from '@angular/material';
+import { MatDialog, MatButton } from '@angular/material';
 import { RevisarModalComponent } from '../modals/revisar-modal/revisar-modal.component';
 import { EstudiosService } from 'src/app/services/ejecutivo/estudios.service';
 import { ActualizarDictamenComponent } from 'src/app/components/talenti/ejecutivo/modals/actualizar-dictamen/actualizar-dictamen.component';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-
-const ELEMENT_DATA2 = [
-  { id: 1, estudios: "Solicitud", documentos: "11/10/2019", cancelados: "VALIDADO" },
-  { id: 2, estudios: "Agenda", documentos: "30/11/2019", cancelados: "REAGENDADO" }
-];
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-tabla-general',
   templateUrl: './tabla-general.component.html',
   styleUrls: ['./tabla-general.component.scss']
 })
-export class TablaGeneralComponent implements OnInit, AfterViewInit {
+export class TablaGeneralComponent implements OnInit {
 
   @Output('update') update = new EventEmitter();
   @Input('titulo') titulo: string;
@@ -43,15 +39,6 @@ export class TablaGeneralComponent implements OnInit, AfterViewInit {
     this.displayedColumns = this.columns;
     this.dataSource = this.data;
     this.checkPublicado();
-
-    console.log(this.titulo, this.data);
-    console.log(this.idTipoEstudio, this.publicado);
-    
-    
-  }
-
-  ngAfterViewInit() {
-    
   }
 
   checkPublicado() {
@@ -119,7 +106,7 @@ export class TablaGeneralComponent implements OnInit, AfterViewInit {
         break;
       
       default:
-        return false;
+        return Swal.fire('Error', ' Error al intentar publicar el archivo', 'error');
     }
 
   }
