@@ -16,6 +16,10 @@ export class DetalleEstudioLogisticaSupervisorComponent implements OnInit, After
   form: FormGroup;
   mostrarEstudiosCompletos: boolean = false;
 
+  estudiosData = [];
+  esGNP: boolean = false;
+  esCliente: boolean = false;
+
   constructor(private fb: FormBuilder, private atp: AmazingTimePickerService) { }
 
   ngOnInit() {

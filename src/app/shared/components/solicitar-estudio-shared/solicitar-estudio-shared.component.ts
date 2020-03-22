@@ -30,6 +30,10 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
   @Input() dataEstudio: any = false;
   @Input() regresar: any = '';
 
+  param = {
+    sService: "getLstEstudios",
+    iIdEmpresa: 0
+  }
 
   catAnalistas: any[] = [];
   idSolicitud: any;
@@ -99,7 +103,7 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
 
 
   getCatalogoEstudios() {
-    this.subs1 = this.empresasService.getCatalogoEstudios().subscribe((resp: any) => {
+    this.subs1 = this.empresasService.getCatalogoEstudios(this.param).subscribe((resp: any) => {
       this.estudiosData = resp.LstEstudios;
     })
   }
