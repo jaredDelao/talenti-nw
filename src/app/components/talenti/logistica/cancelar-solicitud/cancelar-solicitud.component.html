@@ -1,36 +1,39 @@
 <app-title titulo="CANCELAR SOLICITUD"></app-title>
-
-<div class="container">
+<app-loading *ngIf="loading"></app-loading>
+<div class="container" [formGroup]="form">
     <div class="row col-12 align-items-baseline">
         <div class="form-group col-6">
-            <!-- <mat-form-field>
+            <mat-form-field>
                 <mat-label>Tipo de cancelación</mat-label>
-                <mat-select>
-                    <mat-option *ngFor="let food of foods" [value]="food.value">
-                        {{food.viewValue}}
+                <mat-select formControlName="sTipoCancelacion">
+                    <mat-option *ngFor="let tipo of catTiposCancelaciones" [value]="tipo.iIdTipo">
+                        {{tipo.sTipoCancelacion}}
                     </mat-option>
                 </mat-select>
-            </mat-form-field> -->
-        </div>
-        <div class="form-group col-3">
-            <mat-form-field>
-                <input matInput placeholder="Solicitante">
             </mat-form-field>
-        </div>
-        <div class="form-group col-3">
-            <input type="file" placeholder="Subir evidencia">
         </div>
         <div class="form-group col-6">
             <mat-form-field>
-                <textarea matInput placeholder="Comentarios"></textarea>
+                <input matInput placeholder="Solicitante" formControlName="iIdClientesolicitante">
+            </mat-form-field>
+        </div>
+        <div class="form-group col-6">
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="customFileLang" (change)="subirArchivo($event)" lang="es" [formControl]="tokenFile">
+                <label class="custom-file-label" for="customFileLang" #label1>Subir evidencia</label>
+            </div> 
+        </div>
+        <div class="form-group col-6">
+            <mat-form-field>
+                <textarea matInput placeholder="Comentarios" formControlName="sComentarios"></textarea>
             </mat-form-field>
         </div>
     </div>
 
-    <div class="row col-12 justify-content-center">
-        <div class="buttons col-3 d-flex justify-content-center flex-column">
-            <button mat-raised-button color="primary">ENVIAR CANCELACIÓN</button>
-            <button mat-raised-button color="warn">CANCELAR</button>
+    <div class="col-12 mb-3 mt-3">
+        <div class="box-c row justify-content-start col-12">
+            <button mat-raised-button color="primary" (click)="enviar()" [disabled]="form.invalid" class="mr-2">SOLICITAR CANCELACIÓN</button>
+            <button mat-raised-button color="warn" (click)="cancelar()">CANCELAR</button>
         </div>
     </div>
 </div>

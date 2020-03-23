@@ -14,4 +14,32 @@ export class LogisticaService {
     let params = new HttpParams({fromObject: body});
     return this.http.post(environment.urlProd, params);
   }
+
+  getSolicitudesLogisticaById(params) {
+    let body = new HttpParams({fromObject: params});
+    return this.http.post(environment.urlProd, body);
+  }
+
+  agendar(params) {
+    let body = new HttpParams({fromObject: params});
+    return this.http.post(environment.urlProd, body);
+  }
+
+  asignarLogistica(params) {
+    let body = new HttpParams({fromObject: params});
+    return this.http.post(environment.urlProd, body);
+  }
+
+  solicitarCancelacion(params) {
+    let body = new HttpParams({fromObject: params});
+    return this.http.post(environment.urlProd, body);
+  }
+
+  tiposCancelaciones() {
+    let body = new HttpParams();
+    body = body.append('sService', 'GetTiposCancelaciones')
+    return this.http.post(environment.urlProd, body);
+  }
+
+  
 }

@@ -1,177 +1,170 @@
-    <app-title regresar="true" titulo="AGENDAR CITA" ruta="/analista/estudios"></app-title>
+<app-loading *ngIf="loading"></app-loading>
 
-    <!-- <button class="align-self-center" mat-raised-button color="warn">REGRESAR</button> -->
+<app-title regresar="true" class="mb-4" titulo="ASIGNAR LOGÍSTICA" ruta="/logistica/estudios-logistica"></app-title>
 
-    <form [formGroup]="form">
+<!-- <button class="align-self-center" mat-raised-button color="warn">REGRESAR</button> -->
 
-        <div class="box-container row d-flex justify-content-center">
-            <div class="left col-5">
-                <p>Tipo de estudio:</p>
-                <div class="form-group">
-                    <mat-form-field>
-                        <mat-label>Tipo de estudio</mat-label>
-                        <mat-select formControlName="iIdEstudio">
-                            <mat-option *ngFor="let estudio of estudiosData" [value]="estudio.iIdEstudio">
-                                {{estudio.sNombreEstudio}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <!-- Mostrar solo gnp -->
-                <div class="form-group" *ngIf="!esGNP">
-                    <mat-form-field>
-                        <mat-label>Folio</mat-label>
-                        <input matInput type="text" formControlName="sFolio" />
-                    </mat-form-field>
-                </div>
-                <div class="form-group" *ngIf="!esCliente">
-                    <label class="mr-3">Preliminar:</label>
-                    <mat-radio-group color="primary" aria-label="Preliminar" formControlName="iPreliminar">
-                        <mat-radio-button class="mr-3" *ngFor="let p of preliminarList" [value]="p.value">
-                            {{p.nombre}}
-                        </mat-radio-button>
-                        
-                    </mat-radio-group>
-                </div>
-                <!-- Mostrar solo al validar estudios -->
-                <div class="form-group" *ngIf="!esCliente">
-                    <mat-form-field>
-                        <mat-label>Analista</mat-label>
-                        <mat-select formControlName="analista">
-                            <mat-option *ngFor="let a of catAnalistas" [value]="a.iIdEmpleado">
-                                {{a.sNombres + ' ' + a.sApellidos}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="form-group">
-                    <mat-form-field>
-                        <mat-label>Comentarios</mat-label>
-                        <textarea matInput cdkTextareaAutosize formControlName="sComentarios"></textarea>
-                    </mat-form-field>
-                </div>
-                <div class="form-group">
-                    <label>Adjuntar CV</label>
-                    <input type="file" placeholder="Examinar" formControlName="sTokenCV" />
-                </div>
+<div class="container">
 
-                <hr class="m-4">
-
-                <div class="form-group date-form">
-                    <mat-form-field class="fecha">
-                        <mat-label>Fecha</mat-label>
-                        <input matInput [matDatepicker]="picker">
-                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
-                    </mat-form-field>
-
-                    <div class="box-picker">
-                        <mat-icon color="primary" (click)="openClock()" class="mr-2 clock-ico">schedule</mat-icon>
-                        <input atp-time-picker class="atp-picker" value="19:00"/>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <mat-form-field>
-                        <mat-label>Encuestador</mat-label>
-                        <input matInput type="text" formControlName="sNombres">
-                    </mat-form-field>
-                </div>
-                <div class="form-group">
-                    <mat-form-field>
-                        <mat-label>Correo</mat-label>
-                        <input matInput type="text" formControlName="sNombres">
-                    </mat-form-field>
-                </div>
-                <div class="form-group">
-                    <mat-form-field>
-                        <mat-label>Telefono</mat-label>
-                        <input matInput type="text" formControlName="sNombres">
-                    </mat-form-field>
-                </div>
-
-                <div class="form-group">
-                    <mat-form-field>
-                        <mat-label>Comentarios</mat-label>
-                        <textarea matInput cdkTextareaAutosize formControlName="sComentarios"></textarea>
-                    </mat-form-field>
-                </div>
+    <div class="alert alert-warning col-12" role="warning" *ngIf="estaAsignado()">
+        Estudio Asignado
+    </div>
 
 
+</div>
+
+<form [formGroup]="form">
+
+
+    <div class="box-container row d-flex justify-content-center container">
+        <div class="left col-lg-6 col-md-6 col-sm-12">
+            <p>Tipo de estudio:</p>
+            <div class="form-group">
+                <mat-form-field>
+                    <mat-label>Tipo de estudio</mat-label>
+                    <mat-select formControlName="iIdEstudio">
+                        <mat-option *ngFor="let estudio of catEstudios" [value]="estudio.iIdEstudio">
+                            {{estudio.sNombreEstudio}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <!-- Mostrar solo gnp -->
+            <div class="form-group" *ngIf="!esGNP">
+                <mat-form-field>
+                    <mat-label>Folio</mat-label>
+                    <input matInput type="text" formControlName="sFolio" />
+                </mat-form-field>
+            </div>
+            <div class="form-group" *ngIf="!esCliente">
+                <label class="mr-3">Preliminar:</label>
+                <mat-radio-group color="primary" aria-label="Preliminar" formControlName="iPreliminar">
+                    <mat-radio-button class="mr-3" *ngFor="let p of preliminarList" [value]="p.value">
+                        {{p.nombre}}
+                    </mat-radio-button>
+                    
+                </mat-radio-group>
+            </div>
+            <!-- Mostrar solo al validar estudios -->
+            <div class="form-group" *ngIf="!esCliente">
+                <mat-form-field>
+                    <mat-label>Analista</mat-label>
+                    <mat-select formControlName="analista">
+                        <mat-option *ngFor="let a of catAnalistas" [value]="a.iIdEmpleado">
+                            {{a.sNombres + ' ' + a.sApellidos}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="form-group">
+                <mat-form-field>
+                    <mat-label>Comentarios</mat-label>
+                    <textarea matInput cdkTextareaAutosize formControlName="sComentarios"></textarea>
+                </mat-form-field>
             </div>
 
-            <div class="right col-5">
-                <p>Datos para el estudio:</p>
+            <ng-container>
+
+                <p>Datos Asignación:</p>
                 <div class="form-group">
                     <mat-form-field>
-                        <mat-label>Nombres</mat-label>
-                        <input matInput type="text" formControlName="sNombres">
+                        <mat-label>Empleado logística</mat-label>
+                        <mat-select [formControl]="controlLogistica">
+                            <mat-option *ngFor="let perfil of catLogistica" [value]="perfil.iIdEmpleado">
+                                {{perfil.sNombres + ' ' + perfil.sApellidos}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-label>Comentarios logística</mat-label>
+                        <textarea matInput cdkTextareaAutosize [formControl]="controlComentarios"></textarea>
+                    </mat-form-field>
+                </div>
+            </ng-container>
+
+        </div>
+
+        <div class="right col-lg-6 col-md-6 col-sm-12">
+            <p>Datos para el estudio:</p>
+            <div class="form-group">
+                <mat-form-field>
+                    <mat-label>Nombres</mat-label>
+                    <input matInput type="text" formControlName="sNombres">
+                </mat-form-field>
+            </div>
+            <div class="form-group">
+                <mat-form-field>
+                    <mat-label>Apellidos</mat-label>
+                    <input matInput type="text" formControlName="sApellidos">
+                </mat-form-field>
+            </div>
+            <div class="form-group">
+                <mat-form-field>
+                    <mat-label>Puesto</mat-label>
+                    <input matInput type="text" formControlName="sPuesto">
+                </mat-form-field>
+            </div>
+            <div class="form-group">
+                <mat-form-field>
+                    <mat-label>Teléfono</mat-label>
+                    <input matInput type="text" formControlName="sTelefono">
+                </mat-form-field>
+            </div>
+            <div class="form-group">
+                <mat-form-field>
+                    <mat-label>NSS</mat-label>
+                    <input matInput type="text" formControlName="sNss">
+                </mat-form-field>
+            </div>
+            <div class="form-group">
+                <mat-form-field>
+                    <mat-label>CURP</mat-label>
+                    <input matInput type="text" formControlName="sCurp">
+                </mat-form-field>
+            </div>
+            <!-- container show/hide -->
+            <div *ngIf="mostrarEstudiosCompletos">
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-label>Calle y número</mat-label>
+                        <input matInput type="text" formControlName="sCalleNumero">
                     </mat-form-field>
                 </div>
                 <div class="form-group">
                     <mat-form-field>
-                        <mat-label>Apellidos</mat-label>
-                        <input matInput type="text" formControlName="sApellidos">
+                        <mat-label>Colonia</mat-label>
+                        <input matInput type="text" formControlName="sColonia">
                     </mat-form-field>
                 </div>
                 <div class="form-group">
                     <mat-form-field>
-                        <mat-label>Puesto</mat-label>
-                        <input matInput type="text" formControlName="sPuesto">
+                        <mat-label>CP</mat-label>
+                        <input matInput type="text" formControlName="sCp">
                     </mat-form-field>
                 </div>
                 <div class="form-group">
                     <mat-form-field>
-                        <mat-label>Teléfono</mat-label>
-                        <input matInput type="text" formControlName="sTelefono">
+                        <mat-label>Alcaldía / Municipio</mat-label>
+                        <input matInput type="text" formControlName="sMunicipio">
                     </mat-form-field>
                 </div>
                 <div class="form-group">
                     <mat-form-field>
-                        <mat-label>NSS</mat-label>
-                        <input matInput type="text" formControlName="sNss">
+                        <mat-label>Estado</mat-label>
+                        <input matInput type="text" formControlName="sEstado">
                     </mat-form-field>
-                </div>
-                <div class="form-group">
-                    <mat-form-field>
-                        <mat-label>CURP</mat-label>
-                        <input matInput type="text" formControlName="sCurp">
-                    </mat-form-field>
-                </div>
-                <!-- container show/hide -->
-                <div *ngIf="mostrarEstudiosCompletos">
-                    <div class="form-group">
-                        <mat-form-field>
-                            <mat-label>Calle y número</mat-label>
-                            <input matInput type="text" formControlName="sCalleNumero">
-                        </mat-form-field>
-                    </div>
-                    <div class="form-group">
-                        <mat-form-field>
-                            <mat-label>Colonia</mat-label>
-                            <input matInput type="text" formControlName="sColonia">
-                        </mat-form-field>
-                    </div>
-                    <div class="form-group">
-                        <mat-form-field>
-                            <mat-label>CP</mat-label>
-                            <input matInput type="text" formControlName="sCp">
-                        </mat-form-field>
-                    </div>
-                    <div class="form-group">
-                        <mat-form-field>
-                            <mat-label>Alcaldía / Municipio</mat-label>
-                            <input matInput type="text" formControlName="sMunicipio">
-                        </mat-form-field>
-                    </div>
-                    <div class="form-group">
-                        <mat-form-field>
-                            <mat-label>Estado</mat-label>
-                            <input matInput type="text" formControlName="sEstado">
-                        </mat-form-field>
-                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
-    </form>
+    <div class="actions d-flex justify-content-center mb-4">
+        <div class="buttons d-flex flex-column col-3">
+            <button mat-raised-button color="primary" (click)="asignar()">ASIGNAR</button>
+        </div>
+    </div>
+
+</form>

@@ -32,7 +32,9 @@ import { DetalleEstudioLogisticaSupervisorComponent } from './detalle-estudio-lo
     DetalleEstudioLogisticaOrdinarioComponent,
     DetalleEstudioLogisticaSupervisorComponent,
   ],
+  exports: [CancelarSolicitudComponent],
   providers: [],
+  entryComponents: [CancelarSolicitudComponent],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class LogisticaModule { }

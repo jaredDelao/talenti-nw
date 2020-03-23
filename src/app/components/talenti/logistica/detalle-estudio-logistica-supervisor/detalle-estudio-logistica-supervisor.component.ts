@@ -1,41 +1,142 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { FormGroup, FormBuilder, FormControl, Validators, FormArray } from '@angular/forms';
 import { AmazingTimePickerService } from 'amazing-time-picker';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { map, pluck, flatMap, filter, toArray } from 'rxjs/operators';
+import { EstudiosService } from 'src/app/services/ejecutivo/estudios.service';
+import * as moment from 'moment';
+import { EmpresasService } from 'src/app/services/coordinador/empresas.service';
+import Swal from 'sweetalert2';
+import { LogisticaService } from 'src/app/services/logistica/logistica.service';
+import { EmpleadosService } from 'src/app/services/coordinador/empleados.service';
+import { Empleados } from 'src/app/interfaces/talenti/coordinador/empleados';
 
 @Component({
   selector: 'app-detalle-estudio-logistica-supervisor',
   templateUrl: './detalle-estudio-logistica-supervisor.component.html',
   styleUrls: ['./detalle-estudio-logistica-supervisor.component.scss']
 })
-export class DetalleEstudioLogisticaSupervisorComponent implements OnInit, AfterViewInit {
+export class DetalleEstudioLogisticaSupervisorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   preliminarList = [
-    {nombre: 'SI', value: true},
-    {nombre: 'NO', value: false},
+    {nombre: 'SI', value: '1'},
+    {nombre: 'NO', value: '0'},
   ];
   form: FormGroup;
+  formAgenda: FormGroup;
   mostrarEstudiosCompletos: boolean = false;
+  loading: boolean = false;
+  idSolicitud: any;
+  datosSolicitud: any;
+  alertCancelado: any;
+  empleadoAsignado: any;
+
+  // Catalogos
+  catLogistica = [];
+  catEstudios: any = [];
+  param = {
+    sService: "getLstEstudios",
+    iIdEmpresa: 0
+  }
 
   estudiosData = [];
   esGNP: boolean = false;
   esCliente: boolean = false;
+  contadorAgendas: any;
+  banderaAsignado: boolean = false;
 
-  constructor(private fb: FormBuilder, private atp: AmazingTimePickerService) { }
+  subs = new Subscription();
+  subs1 = new Subscription();
+  subs2 = new Subscription();
+
+  // Fecha hora
+  controlLogistica = new FormControl(null, Validators.required);
+  controlComentarios = new FormControl(null, Validators.required);
+
+  constructor(private fb: FormBuilder, private atp: AmazingTimePickerService, public empresasService: EmpresasService, public logisticaService: LogisticaService,
+              private route: ActivatedRoute, private estudiosService: EstudiosService, private router: Router, public empleadosService: EmpleadosService) { }
 
   ngOnInit() {
     this.formInit();
+    this.getUrlId();
+    this.getCatalogoEstudios();
+    this.getCatLogistica();
   }
 
   ngAfterViewInit() {
-    this.form.get('iIdEstudio').valueChanges.subscribe(value => {
+    this.subs = this.form.get('iIdEstudio').valueChanges.subscribe(value => {
+      if (value == 1 || value == 3 || value == 4 || value == 5 || value == 7 || value == 10 || value == 11 || value == 12) {
+        this.mostrarEstudiosCompletos = true;
+      }
+      else {
+        this.mostrarEstudiosCompletos = false;
+      }
+    });
+
+  }
+
+  ngOnDestroy() {
+    this.subs.unsubscribe();
+    this.subs1.unsubscribe();
+  }
+
+  getCatLogistica() {
+    this.empleadosService.getEmpleados().pipe(
+      pluck('Empleados'),
+      flatMap((resp) => resp),
+      filter((value) => value.iIdRol == '8'),
+      toArray()
+    )
+    .subscribe((empleados) => {
+      console.log(empleados);
       
-      if (value == 1 || value == 3 || value == 4 || value == 5 || value == 7|| 
-          value == 10 || value == 11 || value == 12) {
-            this.mostrarEstudiosCompletos = true;
-          }
-          else {
-            this.mostrarEstudiosCompletos = false;
-          }
+      this.catLogistica = empleados;
+    })
+  }
+
+  getUrlId() {
+    let idUrl = this.route.snapshot.paramMap.get('id');
+    let req = {
+      sService: 'getSolicitudById',
+      IdSolicitud: idUrl,
+    }
+
+    
+    if (idUrl) {
+      this.loading = true;
+      this.subs = this.estudiosService.getEstudioById(req).pipe(map((r) => r.resultado)).subscribe((datosUsuario) => {
+        if (datosUsuario[0]){
+          console.log(datosUsuario[0]);
+          this.idSolicitud = datosUsuario[0].iIdSolicitud;
+          this.datosSolicitud = datosUsuario[0];
+          this.contadorAgendas = datosUsuario[0].iContadoAgendas;
+          this.controlLogistica.patchValue(datosUsuario[0].iIdEmpleadoLogistica);
+          this.controlComentarios.patchValue(datosUsuario[0].sComentariosAsignacion);
+  
+          // Consulta datos
+          this.setDatos(this.datosSolicitud);
+  
+          this.loading = false;
+        } else {
+          this.loading = false;
+          Swal.fire('Error', 'No existe el estudio seleccionado', 'error').then(() => {
+            return this.router.navigate(['/logistica/estudios-logistica']);
+          })
+        }
+      }, (err) => {
+        this.loading = false;
+        return this.router.navigate(['/logistica/estudios-logistica']);
+      }, (() => this.loading = false));
+    } else  {
+      this.loading = false;
+      return this.router.navigate(['/logistica/estudios-logistica']);
+    }    
+  }
+
+  getCatalogoEstudios() {
+    this.subs1 = this.empresasService.getCatalogoEstudios(this.param).subscribe((resp: any) => {
+      this.catEstudios = resp.LstEstudios;
     })
   }
 
@@ -69,11 +170,84 @@ export class DetalleEstudioLogisticaSupervisorComponent implements OnInit, After
       bSolicitarCalidad: new FormControl({value: '', disabled: true}),
       bCertificadoCalidad: new FormControl({value: '', disabled: true}),
       iPublicarPreliminar: new FormControl({value: '', disabled: true}),
+
     })
   }
 
-  openClock() {
-    this.atp.open();
+  setDatos(value) {
+    this.form.patchValue({
+      iIdSolicitud: value.iIdSolicitud,
+      dFechaSolicitud: value.dFechaSolicitud,
+      iIdCliente: value.iIdCliente,
+      iIdEstudio: value.iIdEstudio,
+      sFolio: value.sFolio,
+      bPreliminar: value.bPreliminar,
+      iIdAnalista: value.iIdAnalista,
+      sComentarios: value.sComentarios,
+      sNombres: value.sNombres,
+      sApellidos: value.sApellidos,
+      sPuesto: value.sPuesto,
+      sTokenCV: value.sTokenCV,
+      sTelefono: value.sTelefono,
+      sNss: value.sNss,
+      sCurp: value.sCurp,
+      sCalleNumero: value.sCalleNumero,
+      sColonia: value.sColonia,
+      sCp: value.sCp,
+      sMunicipio: value.sMunicipio,
+      sEstado: value.sEstado,
+      bDeclinada: value.bDeclinada,
+      bValidada: value.bValidada,
+      bPublicarDictamen: value.bPublicarDictamen,
+      bSolicitarCalidad: value.bSolicitarCalidad,
+      bCertificadoCalidad: value.bCertificadoCalidad,
+      iPublicarPreliminar: value.iPublicarPreliminar,
+    })
+
+    // SetPreliminar
+    if (value.iPublicarPreliminar > '0') {
+      this.form.get('iPreliminar').patchValue('1')
+    } else {
+      this.form.get('iPreliminar').patchValue('0')
+    }
+
+  }
+
+  regresarFunc() {
+    this.router.navigate(['/logistica/estudios-logistica']);
+  }
+
+  estaAsignado() {
+    return this.controlLogistica.value ? true : false;
+  }
+
+
+  asignar() {
+    this.loading = true;
+
+    if (this.controlComentarios.valid &&  this.controlLogistica.valid) {
+      let req = {
+        sService: 'asignarEstudioLogistica',
+        iIdSolicitud: this.idSolicitud,
+        empleadoLogisticaAsignado: this.controlLogistica.value,
+        sComentarios: this.controlComentarios.value
+      }      
+
+      this.logisticaService.asignarLogistica(req).subscribe((resp: any) => {
+        if (resp.resultado != 'Ok') {
+          this.loading = false;
+          return Swal.fire('Error', 'Error al asignar solicitud', 'error');
+        }
+
+        this.loading = false;
+        return Swal.fire('Asignación exitosa', 'La solicitud se ha asignado exitosamente', 'success').then(() => {
+          this.router.navigate(['logistica/detalle-estudio-supervisor', this.idSolicitud]);
+        })
+      });
+     } else {
+       this.loading = false;
+      return Swal.fire('Alerta', 'Faltan campos por llenar', 'warning')
+    }
   }
 
 
