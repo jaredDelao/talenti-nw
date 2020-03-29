@@ -1,0 +1,27 @@
+<app-title titulo="SOLICITUD CANCELACIÓN"></app-title>
+
+<div class="container" [formGroup]="form">
+    <div class="box d-flex justify-content-center row mb-3">
+
+        <div class="right col-12">
+            <div class="form-group">
+                <mat-form-field>
+                    <mat-label>Comentarios</mat-label>
+                    <textarea matInput cdkTextareaAutosize formControlName="sComentarios"></textarea>
+                </mat-form-field>
+            </div>
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="customFileLang" (change)="subirArchivo($event)" lang="es" 
+                        [formControl]="controlEvidencia">
+                <label class="custom-file-label" #label for="customFileLang">Seleccionar evidencia</label>
+            </div> 
+        </div>
+    </div>
+    <div class="actions d-flex justify-content-center">
+        <div class="buttons d-flex flex-row col-12 justify-content-around">
+            <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="enviar()">ENVIAR</button>
+            <button mat-raised-button color="warn" (click)="cerrar()">CERRAR</button>
+        </div>
+    </div>
+
+</div>

@@ -1,3 +1,5 @@
+<app-loading *ngIf="loading"></app-loading>
+
 <app-title titulo="SOLICITUD ESTUDIO"></app-title>
 <div class="container">
 
@@ -49,9 +51,13 @@
                         <textarea matInput cdkTextareaAutosize formControlName="sComentarios"></textarea>
                     </mat-form-field>
                 </div>
-                <div class="form-group">
-                    <label>Adjuntar CV</label>
-                    <input type="file" placeholder="Examinar" formControlName="sTokenCV" />
+                <div class="custom-file" *ngIf="!dataEstudio">
+                    <input type="file" class="custom-file-input" id="customFileLang" (change)="subirArchivo($event)" lang="es" 
+                            [formControl]="controlCV">
+                    <label class="custom-file-label" #label for="customFileLang">Subir CV</label>
+                </div>
+                <div class="form-group mt-3" *ngIf="form.get('sTokenCV').value !== null">
+                    <button mat-raised-button color="primary" (click)="descargarCV()">Descargar CV</button>
                 </div>
 
             </div>

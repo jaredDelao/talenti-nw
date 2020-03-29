@@ -11,6 +11,8 @@ import { SolicitarEstudioSharedComponent } from './components/solicitar-estudio-
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TitleTablaComponent } from './title-tabla/title-tabla.component';
 import { RevisarModalComponent } from './modals/revisar-modal/revisar-modal.component';
+import { SolicitarCancelacionEmpleadoComponent } from './modals/solicitar-cancelacion-empleado/solicitar-cancelacion-empleado.component';
+import { GraficasComponent } from './graficas/graficas.component';
 
 @NgModule({
   imports: [
@@ -28,9 +30,12 @@ import { RevisarModalComponent } from './modals/revisar-modal/revisar-modal.comp
     TablaGeneralComponent, 
     SolicitarEstudioSharedComponent,
     RevisarModalComponent,
+    SolicitarCancelacionEmpleadoComponent,
+    GraficasComponent,
   ],
   entryComponents: [
     RevisarModalComponent,
+    SolicitarCancelacionEmpleadoComponent,
   ]
   
 })

@@ -10,28 +10,7 @@ import { SubirDictamenModalComponent } from '../modals/subir-dictamen-modal/subi
 import { EstudiosService } from 'src/app/services/ejecutivo/estudios.service';
 import { pipe, Subscription } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
-
-const ELEMENT_DATA = [
-  {
-    proceso: "Solicitud",
-    fecha: "11/10/2019",
-    hora: 1.0079,
-    status: "VALIDADO"
-  },
-  {
-    proceso: "Agenda",
-    fecha: "30/11/2019",
-    hora: 4.0026,
-    status: "REAGENDADO"
-  },
-  {
-    proceso: "Aplicación",
-    fecha: "25/12/2019",
-    hora: 6.941,
-    status: "EXITOSO"
-  },
-  // { proceso: "Global", fecha: "1/01/2020", hora: 9.0122, status: "PUBLICADO" }
-];
+import { SolicitarCancelacionEmpleadoComponent } from 'src/app/shared/modals/solicitar-cancelacion-empleado/solicitar-cancelacion-empleado.component';
 
 @Component({
   selector: 'app-detalle-estudio-analista',
@@ -40,11 +19,49 @@ const ELEMENT_DATA = [
 })
 export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy {
 
+  ELEMENT_DATA = [
+    {
+      id: 1,
+      proceso: "Preliminar",
+      fecha: "11/10/2019",
+      status: ""
+    },
+    {
+      id: 2,
+      proceso: "Dictamen",
+      fecha: "30/11/2019",
+      status: ""
+    },
+    {
+      id: 3,
+      proceso: "Complemento",
+      fecha: "25/12/2019",
+      status: ""
+    },
+  ];
+
+  // idSolicitud
   idSolicitud: any;
+
+  // catalogos
+  catSelectDisctamen: any[];
+  catDictamen = [
+    {id: '1', name: 'EN PROCESO'},
+    {id: '2', name: 'RECOMENDADO'},
+    {id: '3', name: 'NO RECOMENDADO'},
+    {id: '4', name: 'RECOMENDADO CON RESERVA'},
+  ];
+  catDictamenGNP = [
+    {id: '10', name: 'EN PROCESO'},
+    {id: '11', name: 'RIESGO 1'},
+    {id: '12', name: 'RIESGO 2'},
+    {id: '13', name: 'RIESGO 3'},
+    {id: '14', name: 'SIN RIESGO'},
+  ];
 
   // Tabla Estatus
   displayedColumns: string[] = ["proceso", "fecha", "status"];
-  dataSource = ELEMENT_DATA;
+  dataSource: any
   
   // Tabla preliminar
   displayedColumnsPreliminar: string[] = ["tipo", "descargar"];
@@ -68,6 +85,7 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy {
     p: '()_A81523[]'
   }
 
+  controlEstatusDictamen = new FormControl({value: null, disabled: true});
   controlPreliminar = new FormControl({value: '', disabled: false});
   controlDictamen = new FormControl('');
   controlComplemento = new FormControl('');
@@ -89,9 +107,9 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.formInit();
+    this.dataSource = this.ELEMENT_DATA;
     this.getDatosId();
-
-    
+    this.catSelectDisctamen = this.catDictamen;
   }
 
   mostrarColumnasConMotivo() {
@@ -135,6 +153,12 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy {
         this.bComplemento = datosUsuario[0].iEstatusComplemento;
         this.bPreliminar = datosUsuario[0].iPublicarPreliminar;
         console.log(datosUsuario[0]);
+
+        // Tabla estatus
+        this.ELEMENT_DATA[0].status = datosUsuario[0].iPublicarPreliminar;
+        this.ELEMENT_DATA[1].status = datosUsuario[0].bPublicarDictamen;
+        this.ELEMENT_DATA[2].status = datosUsuario[0].iEstatusComplemento;
+
         this.estudioValid = datosUsuario[0].bValidada;
         this.idSolicitud = datosUsuario[0].iIdSolicitud;
         // Token archivos
@@ -193,6 +217,9 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy {
     if (value.iEstatusComplemento == '2' || value.iEstatusComplemento == '3') {
       this.controlComplemento.disable();
     }
+
+    // estatusDictamen
+    this.controlEstatusDictamen.patchValue(value.iEstatusDictamen)
 
     this.form.setValue({
       iIdSolicitud: value.iIdSolicitud,
@@ -271,7 +298,6 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy {
     }), () => {
       this.loader = false;
     } 
-    
   }
 
   subirArchivosDictamen() {
@@ -331,6 +357,39 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy {
       default:
         return {'background-color': 'transparent'}
         
+    }
+  }
+
+  solicitarCancelacion(): void {
+    const dialogRef = this.dialog.open(SolicitarCancelacionEmpleadoComponent, {
+      width: '50vw',
+      height: '70vh',
+      data: {
+        idSolicitud: this.idSolicitud
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      
+    });
+  }
+
+  checkEstatus(estatus, id) {
+    if (id == 1) {
+      if (estatus == 0) return 'No aplica';
+      if (estatus == 1) return 'En proceso';
+      if (estatus == 2) return 'Subido';
+      if (estatus == 3) return 'Publicado';
+      if (estatus == 4) return 'En revisión';
+      return 'No aplica';
+
+    } else {
+      if (estatus == 0) return 'En proceso';
+      if (estatus == 1) return 'En proceso';
+      if (estatus == 2) return 'Subido';
+      if (estatus == 3) return 'Publicado';
+      if (estatus == 4) return 'En revisión';
+      return 'No aplica';
     }
   }
     

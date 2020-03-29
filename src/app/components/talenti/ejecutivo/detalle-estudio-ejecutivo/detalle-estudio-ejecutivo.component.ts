@@ -7,34 +7,32 @@ import { Route } from '@angular/compiler/src/core';
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
-const ELEMENT_DATA = [
-  {
-    proceso: "Solicitud",
-    fecha: "11/10/2019",
-    hora: 1.0079,
-    status: "VALIDADO"
-  },
-  {
-    proceso: "Agenda",
-    fecha: "30/11/2019",
-    hora: 4.0026,
-    status: "REAGENDADO"
-  },
-  {
-    proceso: "Aplicación",
-    fecha: "25/12/2019",
-    hora: 6.941,
-    status: "EXITOSO"
-  },
-  // { proceso: "Global", fecha: "1/01/2020", hora: 9.0122, status: "PUBLICADO" }
-];
-
 @Component({
   selector: 'app-detalle-estudio-ejecutivo',
   templateUrl: './detalle-estudio-ejecutivo.component.html',
   styleUrls: ['./detalle-estudio-ejecutivo.component.scss']
 })
 export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy {
+  ELEMENT_DATA = [
+    {
+      id: 1,
+      proceso: "Preliminar",
+      fecha: "11/10/2019",
+      status: ""
+    },
+    {
+      id: 2,
+      proceso: "Dictamen",
+      fecha: "30/11/2019",
+      status: ""
+    },
+    {
+      id: 3,
+      proceso: "Complemento",
+      fecha: "25/12/2019",
+      status: ""
+    },
+  ];
 
   loading: boolean = false;
 
@@ -44,7 +42,7 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy {
   }
 
   displayedColumns: string[] = ["proceso", "fecha", "status"];
-  dataSource = ELEMENT_DATA;
+  dataSource;
 
   // Preliminar
   columnsPreliminar = ["estudios", "revision", 'publicar'];
@@ -86,6 +84,7 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.formInit();
     this.getUrlId();
+    this.dataSource = this.ELEMENT_DATA;
     
     // this.getDatosId();
     this.getCatalogoEstudios();
@@ -117,6 +116,11 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy {
         this.setDatosComplemento(datosUsuario[0]);
         this.setDatos(this.datosSolicitud);
 
+        // Tabla estatus
+        this.ELEMENT_DATA[0].status = datosUsuario[0].iPublicarPreliminar;
+        this.ELEMENT_DATA[1].status = datosUsuario[0].bPublicarDictamen;
+        this.ELEMENT_DATA[2].status = datosUsuario[0].iEstatusComplemento;
+        
         this.loading = false;
       }, (err) => this.loading = false, (() => this.loading = false));
     } else  {
@@ -207,5 +211,25 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy {
 
   update($event) {
     this.getUrlId();
+  }
+
+  checkEstatus(estatus, id) {
+    
+    if (id == 1) {
+      if (estatus == 0) return 'No aplica';
+      if (estatus == 1) return 'En proceso';
+      if (estatus == 2) return 'Subido';
+      if (estatus == 3) return 'Publicado';
+      if (estatus == 4) return 'En revisión';
+      return 'No aplica';
+
+    } else {
+      if (estatus == 0) return 'En proceso';
+      if (estatus == 1) return 'En proceso';
+      if (estatus == 2) return 'Subido';
+      if (estatus == 3) return 'Publicado';
+      if (estatus == 4) return 'En revisión';
+      return 'No aplica';
+    }
   }
 }

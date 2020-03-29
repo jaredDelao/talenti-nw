@@ -18,7 +18,7 @@ import * as moment from 'moment'
   templateUrl: "./datos-ejecutivo.component.html",
   styleUrls: ["./datos-ejecutivo.component.scss"]
 })
-export class DatosEjecutivoComponent implements OnInit {
+export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [
     'folio', 'estudio', 'nombre', 'fecha_solicitud', 'estatus_solicitud', 'comentarios'
@@ -58,6 +58,16 @@ export class DatosEjecutivoComponent implements OnInit {
   ngOnInit() {
     this.formInit();
     this.getEstudios();
+  }
+
+  ngAfterViewInit() {
+    this.form.get('fechaInicioForm').valueChanges.subscribe((v) => {
+      if (v !== '' || v !== null) this.form.get('fechaFinalForm').enable();
+      if (v == null || v == '') {
+        this.form.get('fechaFinalForm').patchValue(null);
+        this.form.get('fechaFinalForm').disable();
+      }
+    })
   }
 
   get fromDate() {
@@ -109,16 +119,17 @@ export class DatosEjecutivoComponent implements OnInit {
 
       // Filtro fecha - texto
       this.dataSource.filterPredicate = (data: any, filter) => {
-        console.log(filter)
         if (filter == 'fecha') {
           if (this.fromDate && this.toDate) {
-            let nFrom = moment(this.fromDate, "YYYY-MM-DD").format();
+            let nFrom = moment(this.fromDate, "YYYY-MM-DD").day(-1).format();
             let nTo = moment(this.toDate, "YYYY-MM-DD").format();
             return data.dFechaSolicitud >= nFrom && data.dFechaSolicitud <= nTo
           }
         } else {
-          let text = (data.sNombres.concat(' ',data.sApellidos));
-          return text.toLowerCase().includes(filter.trim().toLowerCase()); 
+          if (data.sNombres && data.sApellidos) {
+            let text = (data.sNombres.concat(' ',data.sApellidos));
+            return text.toLowerCase().includes(filter.trim().toLowerCase()); 
+          }
         }
         return true;
       }
@@ -201,6 +212,23 @@ export class DatosEjecutivoComponent implements OnInit {
   
   }
 
+  verificarEstatusSolicitud(element) {
+
+    const { bDeclinada, bValidada, bPublicarDictamen, bSolicitarCalidad, iPublicarPreliminar, iEstatusComplemento } = element;
+
+    let complementoPend = false;
+    let preliminarPend = false;
+
+    if (iEstatusComplemento > '0' && iEstatusComplemento != '3') complementoPend = true;
+    if (iPublicarPreliminar > '0' && iPublicarPreliminar != '3') preliminarPend = true;
+
+    if (bPublicarDictamen == '2' || iPublicarPreliminar == '2' || iEstatusComplemento == '4') return 'Revisar'
+        
+    if (bPublicarDictamen == '3' && !complementoPend && !preliminarPend ) return 'Validado'
+    
+    return 'Pendiente';
+  }
+
   color(row) {
     if (row.bDeclinada == '1') {
       return {'background-color': '#FEC6C0'}
@@ -210,5 +238,19 @@ export class DatosEjecutivoComponent implements OnInit {
     }
   }
 
+  verText(e: HTMLSpanElement) {
+    let text = e.innerText;
+
+    if (text == 'Pendiente') return 'priority_high';
+    if (text == 'Validado') return 'done';
+    if (text == 'Revisar') return 'search';
+  }
+
+  verColor(e: HTMLSpanElement) {
+    let text = e.innerText;
+    if (text == 'Pendiente') return {'color': 'red'};
+    if (text == 'Validado') return {'color': '#27AE60'};
+    if (text == 'Revisar') return {'color': '#F5B041'};
+  }
 
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, AfterViewInit, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatDatepicker, MatSidenav, MatSlideToggle } from '@angular/material';
 import { DatePipe } from '@angular/common';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
@@ -12,7 +12,7 @@ import { EstudiosAnalistaService } from 'src/app/services/analista/estudios-anal
   templateUrl: './estudios-analista.component.html',
   styleUrls: ['./estudios-analista.component.scss']
 })
-export class EstudiosAnalistaComponent implements OnInit {
+export class EstudiosAnalistaComponent implements OnInit, OnDestroy, AfterViewInit {
 
   displayedColumns: string[] = ['folio', 'estudio', 'nombre', 'fecha_solicitud', 'estatus_solicitud', 'comentarios'];
   dataSource: MatTableDataSource<any>;
@@ -41,11 +41,26 @@ export class EstudiosAnalistaComponent implements OnInit {
   validarEstudio: any = 'PENDIENTE';
   validarPublicacionPreeliminar: boolean = false;
 
-  constructor(private fb: FormBuilder, private router: Router, public estudiosAnalistaService: EstudiosAnalistaService) { }
+  constructor(private fb: FormBuilder, private router: Router, public estudiosAnalistaService: EstudiosAnalistaService, private cd: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.formInit();
     this.getEstudios();
+  }
+
+  ngOnDestroy() {
+
+  }
+
+  ngAfterViewInit() {
+    
+    this.form.get('fechaInicioForm').valueChanges.subscribe((v) => {
+      if (v !== '' || v !== null) this.form.get('fechaFinalForm').enable();
+      if (v == null || v == '') {
+        this.form.get('fechaFinalForm').patchValue(null);
+        this.form.get('fechaFinalForm').disable();
+      }
+    })
   }
 
   get fromDate() {
@@ -57,8 +72,8 @@ export class EstudiosAnalistaComponent implements OnInit {
 
   formInit() {
     this.form = this.fb.group({
-      fechaInicioForm: new FormControl({ value: '', disabled: true }),
-      fechaFinalForm: new FormControl({ value: '', disabled: true }),
+      fechaInicioForm: new FormControl(''),
+      fechaFinalForm: new FormControl({value: '', disabled: true}),
     })
   }
 
@@ -80,16 +95,17 @@ export class EstudiosAnalistaComponent implements OnInit {
 
       // Filtro fecha - texto
       this.dataSource.filterPredicate = (data: any, filter) => {
-        console.log(filter)
         if (filter == 'fecha') {
           if (this.fromDate && this.toDate) {
-            let nFrom = moment(this.fromDate, "YYYY-MM-DD").format();
+            let nFrom = moment(this.fromDate, "YYYY-MM-DD").day(-1).format();
             let nTo = moment(this.toDate, "YYYY-MM-DD").format();
             return data.dFechaSolicitud >= nFrom && data.dFechaSolicitud <= nTo
           }
         } else {
-          let text = (data.sNombres.concat(' ',data.sApellidos));
-          return text.toLowerCase().includes(filter.trim().toLowerCase()); 
+          if (data.sNombres && data.sApellidos) {
+            let text = (data.sNombres.concat(' ',data.sApellidos));
+            return text.toLowerCase().includes(filter.trim().toLowerCase()); 
+           }
         }
         return true;
       }
@@ -104,6 +120,47 @@ export class EstudiosAnalistaComponent implements OnInit {
 
   detalles(data) {
     this.router.navigate(['analista/detalle-estudio-analista/', data.iIdSolicitud]);
+  }
+
+  verificarEstatusSolicitud(element) {
+
+    const { bDeclinada, bValidada, bPublicarDictamen, bSolicitarCalidad, iPublicarPreliminar, iEstatusComplemento } = element;
+
+    let complementoPend = false;
+    let preliminarPend = false;
+
+    if (iEstatusComplemento > '0' && iEstatusComplemento != '3') complementoPend = true;
+    if (iPublicarPreliminar > '0' && iPublicarPreliminar != '3') preliminarPend = true;
+
+    if (bPublicarDictamen == '4' || iPublicarPreliminar == '4' || iEstatusComplemento == '4') return 'Revisar'
+        
+    if (bPublicarDictamen == '3' && !complementoPend && !preliminarPend ) return 'Validado'
+    
+    return 'Pendiente';
+  }
+
+  color(row) {
+    if (row.bDeclinada == '1') {
+      return {'background-color': '#FEC6C0'}
+    }
+    if (row.bValidada == '1') {
+      return {'background-color': '#D5F5E3'}
+    }
+  }
+
+  verText(e: HTMLSpanElement) {
+    let text = e.innerText;
+
+    if (text == 'Pendiente') return 'priority_high';
+    if (text == 'Validado') return 'done';
+    if (text == 'Revisar') return 'search';
+  }
+
+  verColor(e: HTMLSpanElement) {
+    let text = e.innerText;
+    if (text == 'Pendiente') return {'color': 'red'};
+    if (text == 'Validado') return {'color': '#27AE60'};
+    if (text == 'Revisar') return {'color': '#F5B041'};
   }
 
 }

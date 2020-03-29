@@ -5,6 +5,7 @@ import { LoginService } from "../../services/login.service";
 import * as bcryptjs from 'bcryptjs';
 import  Swal from 'sweetalert2';
 import { Md5 } from 'ts-md5/dist/md5';
+import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencriptar.service';
 
 @Component({
   selector: "app-login",
@@ -20,6 +21,7 @@ export class LoginComponent implements OnInit {
     private _router: Router,
     private fb: FormBuilder,
     private _loginService: LoginService,
+    private encryptService: EncriptarDesencriptarService
   ) {}
 
   ngOnInit() {
@@ -54,6 +56,10 @@ export class LoginComponent implements OnInit {
         return Swal.fire('Error','Usuario y/o password incorrectos','error');
       }
 
+      // idEmpleado
+      if (iIdEmpleado) {
+        this.encryptService.encriptarLocalStorage(iIdEmpleado, 'idEmpleado');
+      }
       // Token
       if (token) localStorage.setItem('token', token);
       // Nombre
@@ -61,7 +67,11 @@ export class LoginComponent implements OnInit {
       // idEmpleado
       if (!iIdEmpleado) localStorage.setItem('idEmpleado', 'cliente');
       // idCliente
-      if (iIdCliente) localStorage.setItem('idCliente', iIdCliente);
+
+      // ENCRIPTARRRRRR!!!
+      if (iIdCliente) {
+        this.encryptService.encriptarLocalStorage(iIdCliente, 'idCliente');
+      };
       
       // Perfil & idPerfil
       if (perfil && idPerfil) {

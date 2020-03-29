@@ -15,7 +15,7 @@ export class EncriptarDesencriptarService {
   encriptarLocalStorage(value, nombreStorage) {
     let textoCrypt = cryptoJS.AES.encrypt(value, this.key).toString();
     localStorage.setItem(nombreStorage, textoCrypt);
-    return of({ok: true});
+    return true;
   }
 
   encriptar(value) {

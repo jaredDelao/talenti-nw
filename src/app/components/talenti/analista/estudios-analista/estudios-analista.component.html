@@ -8,7 +8,7 @@
                 <!-- Fecha inicio -->
                 <div class="form-group col-3">
                     <mat-form-field>
-                        <input matInput #fechaI disabled [matDatepicker]="fechaInicio" formControlName="fechaInicioForm"
+                        <input matInput #fechaI [matDatepicker]="fechaInicio" formControlName="fechaInicioForm"
                             placeholder="Fecha de inicio">
                         <mat-datepicker-toggle matSuffix [for]="fechaInicio"></mat-datepicker-toggle>
                         <mat-datepicker #fechaInicio disabled="false" startView="year"></mat-datepicker>
@@ -18,12 +18,11 @@
                 <!-- Fecha termino -->
                 <div class="form-group col-3">
                     <mat-form-field>
-                        <input matInput #fechaF disabled [matDatepicker]="fechaFinal"
+                        <input matInput #fechaF [matDatepicker]="fechaFinal"
                             [min]="form.get('fechaInicioForm').value" formControlName="fechaFinalForm"
                             placeholder="Fecha de termino">
                         <mat-datepicker-toggle matSuffix [for]="fechaFinal"></mat-datepicker-toggle>
-                        <mat-datepicker startView="year" #fechaFinal
-                            [disabled]="form.get('fechaInicioForm').value === ''">
+                        <mat-datepicker startView="year" #fechaFinal>
                         </mat-datepicker>
                     </mat-form-field>
                 </div>
@@ -95,9 +94,15 @@
                 <td mat-cell *matCellDef="let element"> {{element.dFechaSolicitud}} </td>
             </ng-container>
 
+            <!-- Estatus solicitud -->
             <ng-container matColumnDef="estatus_solicitud">
-                <th mat-header-cell *matHeaderCellDef> ESTATUS SOLICITUD </th>
-                <td mat-cell *matCellDef="let element"> {{element.estatus_solicitud}} </td>
+                <th mat-header-cell *matHeaderCellDef > ESTATUS SOLICITUD </th>
+                <td mat-cell *matCellDef="let element">
+                    <div class="content-estatus">
+                        <mat-icon class="mr-2" [ngStyle]="verColor(textE)">{{verText(textE)}}</mat-icon>
+                        <span #textE>{{verificarEstatusSolicitud(element)}} </span>
+                    </div>
+                </td>
             </ng-container>
 
             <ng-container matColumnDef="estatus_agendado">
@@ -194,7 +199,7 @@
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-            <tr mat-row (click)="detalles(row)" *matRowDef="let row; columns: displayedColumns;"></tr>
+            <tr mat-row (click)="detalles(row)" [ngStyle]="color(row)" *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
 
         <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 25, 50 ]"> </mat-paginator>

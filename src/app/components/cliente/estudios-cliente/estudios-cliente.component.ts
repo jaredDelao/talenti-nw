@@ -6,6 +6,7 @@ import { EstudiosService } from 'src/app/services/ejecutivo/estudios.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import * as moment from 'moment';
+import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencriptar.service';
 
 @Component({
   selector: 'app-estudios-cliente',
@@ -21,7 +22,7 @@ export class EstudiosClienteComponent implements OnInit {
 
   req = {
     sService: 'getSolicitudesEjecutivo',
-    iIdEjecutivo: '2'
+    iIdCliente: null
   }
 
   fechaInicio: Date;
@@ -42,10 +43,11 @@ export class EstudiosClienteComponent implements OnInit {
   @ViewChild('togglePublicarPreliminar', {static: false}) togglePreliminar: MatSlideToggle;
   @ViewChild('togglePublicarDictamen', {static: false}) toggleDictamen: MatSlideToggle;
 
-  constructor(private estudiosService: EstudiosService, private fb: FormBuilder,
+  constructor(private estudiosService: EstudiosService, private fb: FormBuilder, private encryptDecryptService: EncriptarDesencriptarService,
     public dialog: MatDialog, private cd: ChangeDetectorRef, private router: Router) { }
 
   ngOnInit() {
+    this.getIdCliente();
     this.formInit();
     this.getEstudios();
   }
@@ -55,7 +57,16 @@ export class EstudiosClienteComponent implements OnInit {
   }
   get toDate() {
     return this.form.get('fechaFinalForm').value;
-  }  
+  }
+
+  getIdCliente() {
+    let idClienteEncrypt = localStorage.getItem('idCliente');
+    if (idClienteEncrypt) {
+      this.encryptDecryptService.desencriptar(idClienteEncrypt).subscribe((idCliente) => {
+        this.req.iIdCliente = idCliente;
+      })
+    }
+  }
 
   formInit() {
     this.form = this.fb.group({
@@ -74,7 +85,10 @@ export class EstudiosClienteComponent implements OnInit {
 
   getEstudios() {
     this.estudiosService.getEstudios(this.req).subscribe((estudiosList: any)=> {
-      console.log(estudiosList);
+      
+      // Verificar estudios
+      if(estudiosList.resultado.length <= 0) return Swal.fire('Error', 'No se encontraron estudios registrados', 'warning');
+
       const {resultado} = estudiosList;
       this.estudiosList = resultado;
       this.dataSource = new MatTableDataSource(this.estudiosList);
@@ -84,17 +98,19 @@ export class EstudiosClienteComponent implements OnInit {
       this.dataSource.filterPredicate = (data: any, filter) => {
         if (filter == 'fecha') {
           if (this.fromDate && this.toDate) {
-            let nFrom = moment(this.fromDate, "YYYY-MM-DD").format();
+            let nFrom = moment(this.fromDate, "YYYY-MM-DD").day(-1).format();
             let nTo = moment(this.toDate, "YYYY-MM-DD").format();
             return data.dFechaSolicitud >= nFrom && data.dFechaSolicitud <= nTo
           }
         } else {
+          if (data.sNombres && data.sApellidos) {
           let text = (data.sNombres.concat(' ',data.sApellidos));
           return text.toLowerCase().includes(filter.trim().toLowerCase()); 
+          }
         }
         return true;
       }
-    });
+    }, (err) => Swal.fire('Error', 'Error al procesar las solicitudes ' + err, 'error'));
   }
 
   clear() {
@@ -110,6 +126,38 @@ export class EstudiosClienteComponent implements OnInit {
 
   crearEstudio() {
     this.router.navigate(['cliente/solicitar-estudio/']);
+  }
+
+
+  verificarEstatusSolicitud(element) {
+
+    const { bDeclinada, bValidada, bPublicarDictamen, bSolicitarCalidad, iPublicarPreliminar, iEstatusComplemento } = element;
+
+    let complementoPend = false;
+    let preliminarPend = false;
+
+    // if (iEstatusComplemento != '3') complementoPend = true;
+    if (iPublicarPreliminar == '3') return 'Publicado';
+    if (bDeclinada == '1') return 'Declinado';
+        
+    // if (bPublicarDictamen == '3' && !complementoPend && !preliminarPend ) return 'Validado'
+    
+    return 'Pendiente';
+  }
+
+  color(row) {
+    if (row.bDeclinada == '1') {
+      return {'background-color': '#FEC6C0'}
+    }
+    if (row.bValidada == '1' && row.iPublicarPreliminar != '3') {
+      return {'background-color': '#F9E79F'}
+    }
+    if (row.bValidada == '1' && row.iPublicarPreliminar == '3') {
+      return {'background-color': '#D5F5E3'}
+    }
+
+    return {'background-color': '#F9E79F'}
+    
   }
 
 }

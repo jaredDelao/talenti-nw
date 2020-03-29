@@ -96,13 +96,13 @@ export class DetalleEstudioClienteComponent implements OnInit, AfterViewInit, On
             this.mostrarEstudiosCompletos = true;
       }
       else { this.mostrarEstudiosCompletos = false; }
-    this.verificarMessage();
+    // this.verificarMessage();
     this.cd.detectChanges();
   }
     
   // Mostrar message
-  verificarMessage() {
-      if (this.bDictamen != '3' && this.bComplemento != '3' ) this.solicitudEnProceso = true;
+  verificarMessage(bDictamen) {
+      if (bDictamen != '3' ) this.solicitudEnProceso = true;
   }
 
   ngOnDestroy() {
@@ -123,6 +123,7 @@ export class DetalleEstudioClienteComponent implements OnInit, AfterViewInit, On
         console.log(datosUsuario[0]);
         this.idSolicitud = datosUsuario[0].iIdSolicitud;
         this.bDictamen = datosUsuario[0].bPublicarDictamen;
+        this.verificarMessage(datosUsuario[0].bPublicarDictamen);
         this.bComplemento = datosUsuario[0].iEstatusComplemento;
         // this.bPreliminar = datosUsuario[0].iPublicarPreliminar;
         this.datosSolicitud = datosUsuario[0];
@@ -190,14 +191,13 @@ export class DetalleEstudioClienteComponent implements OnInit, AfterViewInit, On
 
   setDatos(value) {
     this.form.disable();
-    
+
     this.form.patchValue({
       iIdSolicitud: value.iIdSolicitud,
       dFechaSolicitud: value.dFechaSolicitud,
       iIdCliente: value.iIdCliente,
       iIdEstudio: value.iIdEstudio,
       sFolio: value.sFolio,
-      // bPreliminar: value.bPreliminar,
       iIdAnalista: value.iIdAnalista,
       sComentarios: value.sComentarios,
       sNombres: value.sNombres,

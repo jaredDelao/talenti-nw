@@ -50,4 +50,9 @@ export class EstudiosAnalistaService {
     let body = new HttpParams({fromObject: params})
     return this.http.post(environment.urlProd, body);
   }
+
+  solicitarCancelacionEmpleado(params) {
+    let body = new HttpParams({fromObject: params})
+    return this.http.post(environment.urlProd, body);
+  }
 }

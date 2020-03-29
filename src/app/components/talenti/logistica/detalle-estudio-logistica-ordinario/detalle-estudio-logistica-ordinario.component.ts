@@ -11,6 +11,7 @@ import Swal from 'sweetalert2';
 import { LogisticaService } from 'src/app/services/logistica/logistica.service';
 import { MatDialog } from '@angular/material';
 import { CancelarSolicitudComponent } from '../cancelar-solicitud/cancelar-solicitud.component';
+import { SolicitarCancelacionEmpleadoComponent } from 'src/app/shared/modals/solicitar-cancelacion-empleado/solicitar-cancelacion-empleado.component';
 
 @Component({
   selector: 'app-detalle-estudio-logistica-ordinario',
@@ -296,17 +297,14 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
   }
 
   solicitarCancelacion() {
-    const dialogRef = this.dialog.open(CancelarSolicitudComponent, {
-      width: '80vw',
+    const dialogRef = this.dialog.open(SolicitarCancelacionEmpleadoComponent, {
+      width: '45vw',
       // height: '70vh',
       maxWidth: '85vw',
       maxHeight: '90vh',
-      data: {idSolicitud: this.idSolicitud, idCliente: this.idCliente}
+      data: {idSolicitud: this.idSolicitud}
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
   }
 }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import {
@@ -13,6 +13,7 @@ import { EmpleadosService } from 'src/app/services/coordinador/empleados.service
 import { flatMap, tap, filter, pluck, toArray, catchError } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
 import { ClienteService } from 'src/app/services/cliente/cliente.service';
+import { EstudiosAnalistaService } from 'src/app/services/analista/estudios-analista.service';
 
 
 @Component({
@@ -24,6 +25,7 @@ import { ClienteService } from 'src/app/services/cliente/cliente.service';
 
 export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, AfterViewInit {
 
+  @ViewChild('label', {static: false}) label1: ElementRef;
   @Input() esCliente: boolean = false;
   @Input() analista: boolean = false;
   @Input() esGNP: boolean = true;
@@ -35,6 +37,8 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
     iIdEmpresa: 0
   }
 
+  loading: boolean = false;
+  controlCV = new FormControl(null);
   catAnalistas: any[] = [];
   idSolicitud: any;
   public estudiosData: Array<Object> = [];
@@ -51,7 +55,7 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
   mostrarEstudiosCompletos: boolean = false;
 
   constructor(private fb: FormBuilder, public estudiosService: EstudiosService, public router: Router, public empresasService: EmpresasService, public empleadosService: EmpleadosService,
-            private clienteService: ClienteService) {}
+            private clienteService: ClienteService, public estudiosAnalistaService:EstudiosAnalistaService) {}
 
   ngOnInit() {
    
@@ -118,7 +122,7 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
       iPublicarPreliminar: new FormControl(),
       sComentarios: new FormControl('', [Validators.required]),
       iIdAnalista: new FormControl('1'),
-      sTokenCV: new FormControl(''),
+      sTokenCV: new FormControl(null),
       sNombres: new FormControl('', [Validators.required]),
       sApellidos: new FormControl('', [Validators.required]),
       sPuesto: new FormControl('', [Validators.required]),
@@ -138,17 +142,19 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
   }
 
   setValue() {
-    const { iIdSolicitud, iIdCliente, iIdEstudio, 
+    const { iIdSolicitud, iIdCliente, iIdEstudio, iPublicarPreliminar,
       sFolio, bPreliminar, iIdAnalista, sComentarios, sNombres, sApellidos, sPuesto, 
       sTokenCV, sTelefono, sNss, sCurp, sCalleNumero, sColonia, sCp, sMunicipio, sEstado,
     } = this.dataEstudio;
 
     this.idSolicitud = iIdSolicitud;
+    this.controlCV.disable();
 
     this.form.patchValue({
       iIdCliente,
       iIdEstudio: iIdEstudio,
       sFolio,
+      iPublicarPreliminar,
       bPreliminar,
       sComentarios,
       iIdAnalista,
@@ -171,6 +177,48 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
     console.log(this.form.get("tipoEstudio").value);
   }
 
+  subirArchivo(e) {
+
+    // Set value en label
+    this.loading = true;
+    let blob = e.target.files[0];
+    let name = e.target.files[0].name;
+    this.label1.nativeElement.innerText = name;
+    
+    this.empresasService.subirArchivo(blob, name).subscribe((resp: {resultado: string, Identificador: string} ) => { 
+
+      if (!resp.Identificador || resp.resultado != 'Ok') {
+        // this.reqArchivo.ArchivoPreliminar = null;
+        this.controlCV.setValue(null)
+        this.label1.nativeElement.innerText = 'Subir CV';
+        this.loading = false;
+        return Swal.fire('Error al cargar archivo', 'Revisa que sea un formato DOCX o PDF', 'error');
+      }
+     console.log(resp);
+     
+      this.form.get('sTokenCV').patchValue(resp.Identificador);
+      this.loading = false;
+      
+    }, (err) => {
+      this.loading = false;
+      return Swal.fire('Error al cargar archivo', 'Revisa que sea un formato DOCX o PDF', 'error');
+    }), () => {
+      this.loading = false;
+    } 
+  }
+
+  // DESCARGA CV
+  descargarCV() {
+    if (this.form.get('sTokenCV').value) {
+      let req = {
+        token: this.form.get('sTokenCV').value,
+      }
+      this.estudiosAnalistaService.descargarPreliminar(req).subscribe((res) => {
+        console.log(res); 
+      })
+    }
+  }
+
   enviar(param, row) {
     this.form.get('sFolio').setValue(Math.floor(Math.random()*10));
     let req = this.form.getRawValue();
@@ -178,8 +226,6 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
       sService: 'validarSolicitud',
       iIdSolicitud: this.idSolicitud
     }
-
-    console.log(req);
 
     switch(param) {
       case 'crearValidar':
@@ -224,6 +270,10 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
         break;
 
         case 'solicitar':
+          req.sService = 'SolicitarEstudioCliente';
+          delete req.iIdAnalista;
+          console.log(req);
+          
           this.clienteService.solicitarEstudioCliente(req).subscribe((res: any) => {
             if (res.resultado == "Ok") {
               return Swal.fire('Registro exitoso', `Se ha registrado un nuevo estudio con folio ${req.sFolio}`, "success").then(r => {

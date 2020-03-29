@@ -20,7 +20,7 @@ import { of } from 'rxjs';
 })
 export class EstudiosLogisticaComponent implements OnInit {
 
-  displayedColumns: string[] = ['folio', 'estudio', 'nombre', 'fecha_solicitud', 'estatus_agendado', 'detalles'];
+  displayedColumns: string[] = ['folio', 'estudio', 'nombre', 'fecha_solicitud', 'estatus_agendado', 'estatus_solicitud', 'detalles'];
   dataSource: MatTableDataSource<any>;
 
   // request getEstudios
@@ -219,6 +219,47 @@ export class EstudiosLogisticaComponent implements OnInit {
     } else {
       return 'Sin asignar'
     }
+  }
+
+  verificarEstatusSolicitud(element) {
+
+    const { bDeclinada, bValidada, bPublicarDictamen, bSolicitarCalidad, iPublicarPreliminar, iEstatusComplemento } = element;
+
+    let complementoPend = false;
+    let preliminarPend = false;
+
+    if (iEstatusComplemento > '0' && iEstatusComplemento != '3') complementoPend = true;
+    if (iPublicarPreliminar > '0' && iPublicarPreliminar != '3') preliminarPend = true;
+
+    if (bPublicarDictamen == '2' || iPublicarPreliminar == '2' || iEstatusComplemento == '4') return 'Revisar'
+        
+    if (bPublicarDictamen == '3' && !complementoPend && !preliminarPend ) return 'Validado'
+    
+    return 'Pendiente';
+  }
+
+  color(row) {
+    if (row.bDeclinada == '1') {
+      return {'background-color': '#FEC6C0'}
+    }
+    if (row.bValidada == '1') {
+      return {'background-color': '#D5F5E3'}
+    }
+  }
+
+  verText(e: HTMLSpanElement) {
+    let text = e.innerText;
+
+    if (text == 'Pendiente') return 'priority_high';
+    if (text == 'Validado') return 'done';
+    if (text == 'Revisar') return 'search';
+  }
+
+  verColor(e: HTMLSpanElement) {
+    let text = e.innerText;
+    if (text == 'Pendiente') return {'color': 'red'};
+    if (text == 'Validado') return {'color': '#27AE60'};
+    if (text == 'Revisar') return {'color': '#F5B041'};
   }
 
 
