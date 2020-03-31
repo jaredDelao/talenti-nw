@@ -19,7 +19,7 @@
                     </mat-form-field>
                 </div>
                 <!-- Mostrar solo gnp -->
-                <div class="form-group" *ngIf="!esGNP">
+                <div class="form-group" *ngIf="folioEditable && !esGNP">
                     <mat-form-field>
                         <mat-label>Folio</mat-label>
                         <input matInput type="text" formControlName="sFolio" />
@@ -37,8 +37,28 @@
                 <!-- Mostrar solo al validar estudios -->
                 <div class="form-group" *ngIf="!esCliente">
                     <mat-form-field>
+                        <mat-label>Empresa</mat-label>
+                        <mat-select [formControl]="controlEmpresa" (selectionChange)="selectEmpresa($event)">
+                            <mat-option *ngFor="let emp of catEmpresas" [value]="emp.iIdEmpresa">
+                                {{emp.sNombreEmpresa}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="form-group" *ngIf="!esCliente">
+                    <mat-form-field>
+                        <mat-label>Cliente</mat-label>
+                        <mat-select [formControl]="controlCliente">
+                            <mat-option *ngFor="let a of catClientes" [value]="a">
+                                {{a.sNombres + ' ' + a.sApellidos}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="form-group" *ngIf="!esCliente">
+                    <mat-form-field>
                         <mat-label>Analista</mat-label>
-                        <mat-select formControlName="analista">
+                        <mat-select formControlName="iIdAnalista">
                             <mat-option *ngFor="let a of catAnalistas" [value]="a.iIdEmpleado">
                                 {{a.sNombres + ' ' + a.sApellidos}}
                             </mat-option>

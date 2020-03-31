@@ -3,7 +3,7 @@ import { MatTableDataSource } from "@angular/material/table";
 import { SelectionModel } from "@angular/cdk/collections";
 import { MatPaginator } from "@angular/material/paginator";
 import Swal from "sweetalert2";
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EmpresasService } from 'src/app/services/coordinador/empresas.service';
 import { CatalogoEstudios, CatalogoEstudio } from 'src/app/interfaces/talenti/coordinador/catalogo-estudios';
 import { pluck } from 'rxjs/operators';
@@ -46,15 +46,68 @@ export class RegistroEmpresaComponent implements OnInit {
     { id: 'f', descripcion: "Folio Fijo" }
   ];
 
-  constructor(private _route: ActivatedRoute, private empresasService: EmpresasService) {}
+  empresaById: any;
+
+  constructor(private _route: ActivatedRoute, private empresasService: EmpresasService, private router: Router) {}
 
   ngOnInit() {
-    this.idEmpresa = this._route.snapshot.paramMap.get('id');
+    this.getIdEmpresa();
     // this.getCatalogoEstudios();
     this.getAllEstudios();
+  }
 
-    // IdSubject
-    // this.empresasService.$idTipo.subscribe(console.log);
+  getIdEmpresa() {
+    this.idEmpresa = this._route.snapshot.paramMap.get('id');
+    console.log(this.idEmpresa);
+    if (this.idEmpresa) {
+      this.empresasService.getEmpresaById(this.idEmpresa).subscribe((empresa: any) => {
+        this.empresaById = empresa.Empresas[0];
+        // Validacion error
+        if (empresa.status !== 'Ok') return Swal.fire('Error', 'Error al consultar empresa', 'error').then(() => {
+          return this.router.navigate(['/coordinador/empresas']);
+        })
+      })
+    }
+  }
+
+  setValue(value) {
+    this.registerEmpresa.sNombreEmpresa = value.sNombreEmpresa;
+    this.registerEmpresa.sTipoFolio = value.sTipoFolio;
+
+    // for (let i = 0; i < this.catalogoEstudios.length; i++) {
+    //   let iIdEstudio = this.catalogoEstudios[i].iIdEstudio;
+    //   let req = {
+    //     sService: 'getTarifas',
+    //     iIdEstudio,
+    //     iIdEmpresa: this.idEmpresa
+    //   }
+    //   this.empresasService.getTarifas(req).subscribe((tarifa:any)=> {
+    //     if (tarifa.resultado.length > 0) {
+    //       let setterValue = {
+    //         iIdEstudio,
+    //         sNombreEstudio: this.catalogoEstudios[i].sNombreEstudio,
+    //         sDescripcion: this.catalogoEstudios[i].sDescripcion,
+    //         dCosto1: tarifa.resultado[0].dCosto1,
+    //         dCosto2: tarifa.resultado[0].dCosto2,
+    //       }
+    //       this.selection.toggle(setterValue);
+    //       this.selection.isSelected(setterValue);
+    //     }
+    //   })
+    // }    
+    
+  }
+
+  selectRow(row) {
+    console.log(row);
+    console.log(this.selection);
+    
+    
+    this.selection.toggle(row)
+  }
+
+  consultarEmpresa() {
+
   }
   
   InitMatTable() {
@@ -74,6 +127,9 @@ export class RegistroEmpresaComponent implements OnInit {
     this.isAllSelected()
       ? this.selection.clear()
       : this.dataSource.data.forEach((row: any) => this.selection.select(row));
+
+      console.log(this.selection);
+      
   }
 
   /** The label for the checkbox on the passed row */
@@ -103,14 +159,18 @@ export class RegistroEmpresaComponent implements OnInit {
       .subscribe((res: any) => {
         this.catalogoEstudios = res;
         this.InitMatTable();
-      }, (err) => Swal.fire('Error', 'Error al mostrar lista de estudios', 'error'));
+      }, (err) => Swal.fire('Error', 'Error al mostrar lista de estudios', 'error'), (() => {
+        // SetValue
+        if (this.idEmpresa) {
+          setTimeout(() => {
+            this.setValue(this.empresaById);
+          }, 500)
+        }
+      }));
   }
 
   stop() {
     event.stopPropagation();
-  }
-
-  getData(e) {
   }
 
   subirImagen(e) {
@@ -154,6 +214,7 @@ export class RegistroEmpresaComponent implements OnInit {
   }
 
   registraEmpresa() {
+    console.log(this.registerEmpresa);
     return this.empresasService.registrarEmpresa(this.registerEmpresa).toPromise();
   }
 

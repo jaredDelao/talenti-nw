@@ -63,13 +63,13 @@
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
             <ng-container matColumnDef="folio">
                 <th mat-header-cell *matHeaderCellDef style="text-align: center;"> FOLIO </th>
-                <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.sFolio}} </td>
+                <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.iIdSolicitud}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="estudio">
+            <!-- <ng-container matColumnDef="estudio">
                 <th mat-header-cell *matHeaderCellDef> ESTUDIO </th>
-                <td mat-cell *matCellDef="let element"> {{element.iIdEstudio}} </td>
-            </ng-container>
+                <td mat-cell *matCellDef="let element"> {{element.iIdSolicitud}} </td>
+            </ng-container> -->
 
             <ng-container matColumnDef="nombre">
                 <th mat-header-cell *matHeaderCellDef> NOMBRE </th>

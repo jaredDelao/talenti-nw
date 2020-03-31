@@ -24,6 +24,7 @@ import {CustomComponentsModule} from './shared/customComponents.module';
 import { TablaGeneralComponent } from './shared/tabla-general/tabla-general.component';
 import { EstudiosAnalistaComponent } from './components/talenti/analista/estudios-analista/estudios-analista.component';
 import { EstudiosClienteComponent } from './components/cliente/estudios-cliente/estudios-cliente.component';
+import { ChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { EstudiosClienteComponent } from './components/cliente/estudios-cliente/
   entryComponents: [
     // CancelarSolicitudClienteComponent,
   ],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

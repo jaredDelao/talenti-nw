@@ -158,7 +158,9 @@ export class DetalleEstudioClienteComponent implements OnInit, AfterViewInit, On
   openDialog(): void {
     const dialogRef = this.dialog.open(CancelarSolicitudClienteComponent, {
       width: "60%",
-      data: {}
+      data: {
+        idSolicitud: this.idSolicitud
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {});

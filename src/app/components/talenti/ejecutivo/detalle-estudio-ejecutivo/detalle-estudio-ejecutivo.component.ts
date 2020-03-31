@@ -179,6 +179,8 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy {
   }
 
   setDatos(value) {
+    console.log(value.iIdCliente);
+    
     this.form.patchValue({
       iIdSolicitud: value.iIdSolicitud,
       dFechaSolicitud: value.dFechaSolicitud,

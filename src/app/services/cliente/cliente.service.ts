@@ -13,4 +13,17 @@ export class ClienteService {
     let body = new HttpParams({fromObject: params})
     return this.http.post(environment.urlProd, body);
   }
+
+  getTiposCancelacion() {
+    let params = {
+      sService: 'GetTiposCancelaciones'
+    }
+    let body = new HttpParams({fromObject: params})
+    return this.http.post(environment.urlProd, body);
+  }
+
+  solicitarCancelacionCliente(params) {
+    let body = new HttpParams({fromObject: params})
+    return this.http.post(environment.urlProd, body);
+  }
 }

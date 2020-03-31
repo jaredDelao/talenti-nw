@@ -1,31 +1,40 @@
 <app-title titulo="SOLICITUD DE CANCELACION"></app-title>
 
 <div class="container">
-    <div class="col-12 row align-items-end">
+    <div class="col-12 row align-items-end" [formGroup]="form">
         <div class="form-group col-6">
-            <!-- <mat-form-field>
+            <mat-form-field>
                 <mat-label>Motivo de cancelacion</mat-label>
-                <mat-select>
-                    <mat-option *ngFor="let food of foods" [value]="food.value">
-                        {{food.name}}
+                <mat-select formControlName="sTipoCancelacion">
+                    <mat-option *ngFor="let m of catMotivo" [value]="m.iIdTipo">
+                        {{m.sTipoCancelacion}}
                     </mat-option>
                 </mat-select>
-            </mat-form-field> -->
+            </mat-form-field>
         </div>
         <div class="form-group col-6">
             <mat-form-field>
-                <textarea cdkTextareaAutosize matInput placeholder="Comentarios"></textarea>
+                <textarea formControlName="sComentarios" cdkTextareaAutosize matInput placeholder="Comentarios"></textarea>
             </mat-form-field>
         </div>
 
         <div class="form-group col-6">
-            <label for="evidencia">Subir evidencia</label>
-            <input name="evidencia" type="file">
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="customFileLang" (change)="subirArchivo($event)" lang="es" 
+                        [formControl]="controlEvidencia">
+                <label class="custom-file-label" #label1 for="customFileLang">Seleccionar Archivo</label>
+            </div>
+        </div>
+
+        <div class="form-group col-6" *ngIf="loadArchivo">
+            <div class="spinner-border text-primary"  role="status">
+                <span class="sr-only">Subiendo evidencia...</span>
+            </div>
         </div>
     </div>
 
-    <div class="footer d-flex flex-column justify-content-center">
-        <button class="align-self-center" mat-raised-button color="primary">ENVIAR</button>
+    <div class="footer d-flex flex-row justify-content-around">
+        <button class="align-self-center" mat-raised-button color="primary" (click)="enviar()" [disabled]="form.invalid">ENVIAR</button>
         <button class="align-self-center" mat-raised-button color="warn" (click)="close()">CERRAR</button>
     </div>
 </div>

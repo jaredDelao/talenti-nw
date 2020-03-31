@@ -1,6 +1,5 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators, FormArray } from '@angular/forms';
-import { AmazingTimePickerService } from 'amazing-time-picker';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, pluck, flatMap, filter, toArray } from 'rxjs/operators';
@@ -11,11 +10,11 @@ import { LogisticaService } from 'src/app/services/logistica/logistica.service';
 import { EmpleadosService } from 'src/app/services/coordinador/empleados.service';
 
 @Component({
-  selector: 'app-detalle-estudio-logistica-supervisor',
-  templateUrl: './detalle-estudio-logistica-supervisor.component.html',
-  styleUrls: ['./detalle-estudio-logistica-supervisor.component.scss']
+  selector: 'app-detalle-estudio-calidad',
+  templateUrl: './detalle-estudio-calidad.component.html',
+  styleUrls: ['./detalle-estudio-calidad.component.scss']
 })
-export class DetalleEstudioLogisticaSupervisorComponent implements OnInit, AfterViewInit, OnDestroy {
+export class DetalleEstudioCalidadComponent implements OnInit {
 
   preliminarList = [
     {nombre: 'SI', value: '1'},
@@ -52,7 +51,7 @@ export class DetalleEstudioLogisticaSupervisorComponent implements OnInit, After
   controlLogistica = new FormControl(null, Validators.required);
   controlComentarios = new FormControl(null, Validators.required);
 
-  constructor(private fb: FormBuilder, private atp: AmazingTimePickerService, public empresasService: EmpresasService, public logisticaService: LogisticaService,
+  constructor(private fb: FormBuilder, public empresasService: EmpresasService, public logisticaService: LogisticaService,
               private route: ActivatedRoute, private estudiosService: EstudiosService, private router: Router, public empleadosService: EmpleadosService) { }
 
   ngOnInit() {
@@ -87,8 +86,6 @@ export class DetalleEstudioLogisticaSupervisorComponent implements OnInit, After
       toArray()
     )
     .subscribe((empleados) => {
-      console.log(empleados);
-      
       this.catLogistica = empleados;
     })
   }
@@ -106,6 +103,7 @@ export class DetalleEstudioLogisticaSupervisorComponent implements OnInit, After
       this.subs = this.estudiosService.getEstudioById(req).pipe(map((r) => r.resultado)).subscribe((datosUsuario) => {
         if (datosUsuario[0]){
           console.log(datosUsuario[0]);
+
           this.idSolicitud = datosUsuario[0].iIdSolicitud;
           this.datosSolicitud = datosUsuario[0];
           this.contadorAgendas = datosUsuario[0].iContadoAgendas;
@@ -119,16 +117,16 @@ export class DetalleEstudioLogisticaSupervisorComponent implements OnInit, After
         } else {
           this.loading = false;
           Swal.fire('Error', 'No existe el estudio seleccionado', 'error').then(() => {
-            return this.router.navigate(['/logistica/estudios-logistica']);
+            return this.router.navigate(['/calidad/estudios-calidad']);
           })
         }
       }, (err) => {
         this.loading = false;
-        return this.router.navigate(['/logistica/estudios-logistica']);
+        return this.router.navigate(['/calidad/estudios-calidad']);
       }, (() => this.loading = false));
     } else  {
       this.loading = false;
-      return this.router.navigate(['/logistica/estudios-logistica']);
+      return this.router.navigate(['/calidad/estudios-calidad']);
     }    
   }
 
@@ -212,40 +210,16 @@ export class DetalleEstudioLogisticaSupervisorComponent implements OnInit, After
   }
 
   regresarFunc() {
-    this.router.navigate(['/logistica/estudios-logistica']);
+    this.router.navigate(['/calidad/estudios-calidad']);
   }
 
   estaAsignado() {
     return this.controlLogistica.value ? true : false;
   }
 
-
-  asignar() {
-    this.loading = true;
-
-    if (this.controlComentarios.valid &&  this.controlLogistica.valid) {
-      let req = {
-        sService: 'asignarEstudioLogistica',
-        iIdSolicitud: this.idSolicitud,
-        empleadoLogisticaAsignado: this.controlLogistica.value,
-        sComentarios: this.controlComentarios.value
-      }      
-
-      this.logisticaService.asignarLogistica(req).subscribe((resp: any) => {
-        if (resp.resultado != 'Ok') {
-          this.loading = false;
-          return Swal.fire('Error', 'Error al asignar solicitud', 'error');
-        }
-
-        this.loading = false;
-        return Swal.fire('Asignación exitosa', 'La solicitud se ha asignado exitosamente', 'success').then(() => {
-          this.router.navigate(['logistica/detalle-estudio-supervisor', this.idSolicitud]);
-        })
-      });
-     } else {
-       this.loading = false;
-      return Swal.fire('Alerta', 'Faltan campos por llenar', 'warning')
-    }
+  aprobar(e) {
+    console.log(e);
+    
   }
 
 

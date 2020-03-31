@@ -60,4 +60,19 @@ export class EmpresasService {
     let body = new HttpParams({fromObject: tarifa});
     return this._http.post(environment.urlProd, body);
   }
+
+  getEmpresaById(id) {
+    let req = {
+      sService: 'getEmpresabyId',
+      iIdEmpresa: id
+    }
+
+    let body = new HttpParams({fromObject: req});
+    return this._http.post(environment.urlProd, body);
+  }
+
+  getTarifas(params) {
+    let body = new HttpParams({fromObject: params});
+    return this._http.post(environment.urlProd, body);
+  }
 }

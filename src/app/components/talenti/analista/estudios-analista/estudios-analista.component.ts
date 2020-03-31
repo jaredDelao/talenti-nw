@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { EstudiosAnalistaService } from 'src/app/services/analista/estudios-analista.service';
+import { GenerateExcelService } from 'src/app/services/generate-excel.service';
 
 @Component({
   selector: 'app-estudios-analista',
@@ -16,12 +17,15 @@ export class EstudiosAnalistaComponent implements OnInit, OnDestroy, AfterViewIn
 
   displayedColumns: string[] = ['folio', 'estudio', 'nombre', 'fecha_solicitud', 'estatus_solicitud', 'comentarios'];
   dataSource: MatTableDataSource<any>;
+  loading: boolean = false;
 
   // request getEstudios
   req = {
     sService: 'getSolicitudesAnalista',
     iIdAnalista: '1'
   }
+
+  jsonExportExcel: any;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild('fechaI', { static: false }) fechaI: MatDatepicker<any>;
@@ -41,7 +45,7 @@ export class EstudiosAnalistaComponent implements OnInit, OnDestroy, AfterViewIn
   validarEstudio: any = 'PENDIENTE';
   validarPublicacionPreeliminar: boolean = false;
 
-  constructor(private fb: FormBuilder, private router: Router, public estudiosAnalistaService: EstudiosAnalistaService, private cd: ChangeDetectorRef) { }
+  constructor(private fb: FormBuilder, private router: Router, public estudiosAnalistaService: EstudiosAnalistaService, private cd: ChangeDetectorRef, private excelGenerate: GenerateExcelService) { }
 
   ngOnInit() {
     this.formInit();
@@ -90,6 +94,7 @@ export class EstudiosAnalistaComponent implements OnInit, OnDestroy, AfterViewIn
       console.log(estudiosList);
       const {resultado} = estudiosList;
       this.estudiosList = resultado;
+      this.jsonExportExcel = resultado;
       this.dataSource = new MatTableDataSource(this.estudiosList);
       this.dataSource.paginator = this.paginator;
 
@@ -161,6 +166,46 @@ export class EstudiosAnalistaComponent implements OnInit, OnDestroy, AfterViewIn
     if (text == 'Pendiente') return {'color': 'red'};
     if (text == 'Validado') return {'color': '#27AE60'};
     if (text == 'Revisar') return {'color': '#F5B041'};
+  }
+
+  exportExcel() {
+    this.loading = true;
+    this.jsonExportExcel = this.dataSource.filteredData;
+
+    this.jsonExportExcel.forEach((element, i) => {
+      delete element['iIdSolicitud'];
+      delete element['iEstatusGeneral'];
+      delete element['iIdCliente'];
+      delete element['iIdSolicitud'];
+      delete element['iIdAnalista'];
+      delete element['sTokenCV'];
+      delete element['bDeclinada'];
+      delete element['bValidada'];
+      delete element['bDeclinada'];
+      delete element['bDeclinada'];
+      delete element['bPublicarDictamen'];
+      delete element['bSolicitarCalidad'];
+      delete element['bCertificadoCalidad'];
+      delete element['iPublicarPreliminar'];
+      delete element['iEstatusDictamen'];
+      delete element['sArchivoPreliminar'];
+      delete element['sArch1Dictamen'];
+      delete element['sArch2Dictamen'];
+      delete element['sArchComplemento'];
+      delete element['iEstatusComplemento'];
+      delete element['sMotivoPreliminar'];
+      delete element['sMotivoDictamen'];
+      delete element['sMotivoComplemento'];
+      delete element['sTokenComplemento'];
+    });
+    
+
+    console.log(this.jsonExportExcel);
+    
+    this.excelGenerate.exportAsExcelFile(this.jsonExportExcel, 'sample');
+
+    this.loading = false;
+    
   }
 
 }

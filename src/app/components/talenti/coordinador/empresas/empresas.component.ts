@@ -32,7 +32,6 @@ export class EmpresasComponent implements OnInit {
   }
 
   editar(id) {
-    this.empresasService.idTipo.next(2);
     this.router.navigate(['/coordinador/empresas/editar-empresa', id])
   }
 

@@ -30,15 +30,15 @@ export class SolicitarCancelacionEmpleadoComponent implements OnInit {
   getIdEmpleado() {
     let idEmpleado = localStorage.getItem('idEmpleado');
     this.decryptService.desencriptar(idEmpleado).subscribe((idEmpleado) => {
-      this.form.get('iIdEmpleadoSolicitante').patchValue(idEmpleado);
+      this.form.get('iIdEmpleadosolicitante').patchValue(idEmpleado);
     }, (err) => Swal.fire('Error', 'Error al traer el idEmpleado', 'error'))
   }
 
   formInit() {
     this.form = this.fb.group({
       sService: ['solicitarCancelacionEmpleado', Validators.required],
-      idSolicitud: [this.data.idSolicitud, Validators.required],
-      iIdEmpleadoSolicitante: [null, Validators.required],
+      iIdSolicitud: [this.data.idSolicitud, Validators.required],
+      iIdEmpleadosolicitante: [null, Validators.required],
       sTokenEvidencia: [null, Validators.required],
       sComentarios: [null, Validators.required],
     })
@@ -69,7 +69,6 @@ export class SolicitarCancelacionEmpleadoComponent implements OnInit {
       return Swal.fire('Error al cargar archivo', 'Revisa que sea un formato DOCX o PDF', 'error');
     }), () => {
     } 
-    console.log(this.form);
   }
 
   cerrar() {
@@ -78,10 +77,11 @@ export class SolicitarCancelacionEmpleadoComponent implements OnInit {
 
   enviar() {
 
-    this.estudiosAnalistaService.solicitarCancelacionEmpleado(this.form.getRawValue()).subscribe((value) => {
-      console.log(value);
-      
-    })
+    this.estudiosAnalistaService.solicitarCancelacionEmpleado(this.form.getRawValue()).subscribe((value: any) => {
+      if (value.resultado == 'Ok') return Swal.fire('Solicitud exitosa', 'La solicitud de cancelación ha sido exitosa', 'success');
+
+      return Swal.fire('Error', 'Error al solicitar cancelación', 'error');
+    }, (err) => Swal.fire('Error', 'Error al solicitar cancelación', 'error'))
 
   }
 

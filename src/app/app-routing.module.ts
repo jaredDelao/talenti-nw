@@ -7,6 +7,7 @@ import { SolicitudEstudioClienteComponent } from './components/cliente/solicitud
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginGuard } from './guards/login.guard';
 import { EstudiosClienteComponent } from './components/cliente/estudios-cliente/estudios-cliente.component';
+import { GraficasComponent } from './shared/graficas/graficas.component';
 
 const routes: Routes = [
   // { path: "", component: MenuCoordinadorComponent, pathMatch: "full" },
@@ -33,16 +34,16 @@ const routes: Routes = [
       {
         path: "cliente",
         loadChildren: './components/cliente/cliente.module#ClienteModule'
-        // children: [
-          // { path: "detalle-estudio", component: DetalleEstudioClienteComponent },
-          // { path: "detalle-estudio", component: EstudiosClienteComponent },
-          // { path: "solicitud-estudio", component: SolicitudEstudioClienteComponent }
-        // ]
       },
       {
         path: "analista",
         loadChildren: './components/talenti/analista/analista.module#AnalistaModule'
       },
+      {
+        path: "calidad",
+        loadChildren: './components/talenti/calidad/calidad.module#CalidadModule'
+      },
+      { path: 'graficas', component: GraficasComponent},
       { path: "**", redirectTo: '/dashboard' }
     ]
   }

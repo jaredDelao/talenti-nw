@@ -7,6 +7,6 @@ export interface CatalogoEstudios {
 }
 
 export interface CatalogoEstudio {
-    id: string;
+    iIdEstudio: string;
     nombre: string;
 }

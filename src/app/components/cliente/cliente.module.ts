@@ -33,6 +33,7 @@ import { SolicitudEstudioClienteComponent } from './solicitud-estudio-cliente/so
     SolicitudEstudioClienteComponent,
   ],
   providers: [],
+  entryComponents: [CancelarSolicitudClienteComponent],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class ClienteModule { }

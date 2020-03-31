@@ -14,11 +14,11 @@ import { of } from 'rxjs';
 
 
 @Component({
-  selector: 'app-estudios-logistica',
-  templateUrl: './estudios-logistica.component.html',
-  styleUrls: ['./estudios-logistica.component.scss']
+  selector: 'app-estudios-calidad',
+  templateUrl: './estudios-calidad.component.html',
+  styleUrls: ['./estudios-calidad.component.scss']
 })
-export class EstudiosLogisticaComponent implements OnInit {
+export class EstudiosCalidadComponent implements OnInit {
 
   displayedColumns: string[] = ['folio', 'estudio', 'nombre', 'fecha_solicitud', 'estatus_agendado', 'estatus_solicitud', 'detalles'];
   dataSource: MatTableDataSource<any>;
@@ -42,7 +42,6 @@ export class EstudiosLogisticaComponent implements OnInit {
   pipe: DatePipe;
   estudiosList: Array<any>;
   form: FormGroup;
-  idLogistica: any = '19';
   idPerfil: any;
 
   catEmpleados = [];
@@ -56,46 +55,10 @@ export class EstudiosLogisticaComponent implements OnInit {
   constructor(private fb: FormBuilder, private router: Router, public estudiosAnalistaService: EstudiosAnalistaService, public logisticaService: LogisticaService, private empleadosService: EmpleadosService) { }
 
   ngOnInit() {
-    this.verificarRolLogistica();
     this.formInit();
+    this.getEstudiosSupervisor();
     this.getEmpleados();
     // this.getEstudios();
-  }
-  
-  verificarRolLogistica() {
-    // let idPerfil = '8';
-    const idPerfil = localStorage.getItem('idPerfil');
-    if (idPerfil) {
-      // Rol logistica supervisor
-      bcryptjs.compare('4', idPerfil, (err, res) => {
-        if (res) {
-          console.log('Es supervisor: ',res);
-          this.displayedColumns = ['folio', 'estudio', 'nombre', 'fecha_solicitud', 'estatus_agendado', 'asignado', 'detalles'];
-          
-          this.banderaSupervisor = true;
-          return this.getEstudiosSupervisor();
-        }
-        console.log(res); 
-      });
-
-      // Rol logistica normal
-      bcryptjs.compare('8', idPerfil, (err, res) => {
-        if (res) {
-          this.banderaSupervisor = false;
-          return this.getEstudiosByIdLogistica();
-        }
-        console.log('Es logistica ord: ', res); 
-      });
-    } else {
-      return this.router.navigate(['/login']);
-    }
-
-    // if (idPerfil == '4') {
-    //   return this.getEstudiosSupervisor();
-    // }
-    // if (idPerfil == '8') {
-    //   return this.getEstudiosByIdLogistica();
-    // }
   }
 
   getEmpleados() {
@@ -106,20 +69,6 @@ export class EstudiosLogisticaComponent implements OnInit {
     .subscribe((resp) => {
       this.catEmpleados = resp;
     })
-  }
-
-  getEstudiosByIdLogistica() {
-    this.banderaSupervisor = false;
-    let params = {
-      sService: 'getSolicitudesLogisticabyId',
-      iIdLogistica: this.idLogistica
-    }
-    this.logisticaService.getSolicitudesLogisticaById(params).subscribe((res: any) => {
-      console.log('res', res);
-      this.estudiosList = res.resultado;
-      this.getEstudios(res.resultado);
-    })
-
   }
 
   getEstudiosSupervisor() {
@@ -182,16 +131,7 @@ export class EstudiosLogisticaComponent implements OnInit {
 
 
   detalles(data) {
-    console.log(this.banderaSupervisor);
-
-    if (this.banderaSupervisor) {
-      this.router.navigate(['logistica/detalle-estudio-supervisor/', data.iIdSolicitud]);
-    } else {
-      console.log(data.iIdSolicitud);
-      
-      this.router.navigate(['logistica/detalle-estudio-logistica/', data.iIdSolicitud]);
-    }
-    
+    this.router.navigate(['calidad/detalle-estudio-calidad/', data.iIdSolicitud]);
   }
 
   estatusAgenda(estatus) {
@@ -261,6 +201,5 @@ export class EstudiosLogisticaComponent implements OnInit {
     if (text == 'Validado') return {'color': '#27AE60'};
     if (text == 'Revisar') return {'color': '#F5B041'};
   }
-
 
 }

@@ -14,7 +14,8 @@ import { flatMap, tap, filter, pluck, toArray, catchError } from 'rxjs/operators
 import { of, Subscription } from 'rxjs';
 import { ClienteService } from 'src/app/services/cliente/cliente.service';
 import { EstudiosAnalistaService } from 'src/app/services/analista/estudios-analista.service';
-
+import { ClientesService } from 'src/app/services/coordinador/clientes.service';
+import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencriptar.service';
 
 @Component({
   selector: 'app-solicitar-estudio-shared',
@@ -37,9 +38,19 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
     iIdEmpresa: 0
   }
 
+
+  // catalogos
+  catAnalistas: any[] = [];
+  catEmpresas: any;
+  catClientes: any[] = [];
+  catClientesAll: any[] = [];
+
+  // controls
+  controlEmpresa = new FormControl(null);
+  controlCliente = new FormControl(null);
+
   loading: boolean = false;
   controlCV = new FormControl(null);
-  catAnalistas: any[] = [];
   idSolicitud: any;
   public estudiosData: Array<Object> = [];
   form: FormGroup;
@@ -53,19 +64,26 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
   subs2 = new Subscription();
 
   mostrarEstudiosCompletos: boolean = false;
+  folioEditable: boolean = false;
 
   constructor(private fb: FormBuilder, public estudiosService: EstudiosService, public router: Router, public empresasService: EmpresasService, public empleadosService: EmpleadosService,
-            private clienteService: ClienteService, public estudiosAnalistaService:EstudiosAnalistaService) {}
+            private clienteService: ClientesService, public estudiosAnalistaService:EstudiosAnalistaService, public clientesService: ClienteService, private encryptService: EncriptarDesencriptarService) {}
 
-  ngOnInit() {
+  async ngOnInit() {
    
     this.formInit();
     // this.catAnalistas();
-    if (this.dataEstudio) {this.setValue()};
     this.getCatalogoEstudios();
     this.consultaAnalista();
     this.getCatAnalistas();
 
+    this.catEmpresas = await this.getEmpresas();
+    let clientes = await this.getClientes();
+    this.catClientesAll = clientes.Clientes;
+    this.catClientes = clientes.Clientes;
+    
+    if (this.dataEstudio) {this.setValue()};
+    if (this.esCliente) {this.getIdCliente()};
   }
 
   ngAfterViewInit() {
@@ -78,6 +96,28 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
           else {
             this.mostrarEstudiosCompletos = false;
           }
+    })
+
+    // controlCliente
+    this.controlCliente.valueChanges.subscribe((value) => {
+      this.controlEmpresa.patchValue(value.iIdEmpresa);   
+      this.form.get('iIdCliente').patchValue(value.iIdCliente);
+    })
+
+    // controlEmpresa
+    this.controlEmpresa.valueChanges.subscribe((value) => {
+      if (value) {
+        this.catClientes= this.catClientesAll.filter((cliente) => cliente.iIdEmpresa == value);
+        let folioE = this.catEmpresas.filter((emp) => emp.iIdEmpresa == value)
+  
+        if (folioE.length > 0) {
+          if (folioE[0].sTipoFolio == 'e') {
+            this.folioEditable = true
+          } else {
+            this.folioEditable = false;
+          }
+        }
+      }      
     })
   }
 
@@ -99,10 +139,39 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
     })
   }
 
+  getIdCliente() {
+    let idClienteD = localStorage.getItem('idCliente');
+    this.encryptService.desencriptar(idClienteD).subscribe((res) => {
+      this.form.get('iIdCliente').patchValue(res);
+      console.log('idCliente', res);
+      
+    })
+  }
+
   consultaAnalista() {
     if (this.analista || this.dataEstudio) {
       this.form.disable();
     }
+  }
+
+  getEmpresas() {
+    return this.empresasService.getEmpresas().toPromise()
+    // .subscribe((empresa: any) => {
+    //   this.catEmpresas = empresa;
+    // })
+  }
+
+  getClientes() {
+    return this.clienteService.getClientes().toPromise();
+    // .subscribe((clientes) => {
+    //   this.catClientesAll = clientes.Clientes;
+    //   this.catClientes = clientes.Clientes;
+    // })
+  }
+
+  selectEmpresa({value}) {
+    let filter = this.catClientesAll.filter((cliente) => cliente.iIdEmpresa == value);
+    this.catClientes = filter;
   }
 
 
@@ -115,13 +184,12 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
   formInit() {
     this.form = this.fb.group({
       sService: new FormControl('SolicitarEstudio'),
-      iIdCliente: new FormControl('1'),
+      iIdCliente: new FormControl(null, Validators.required),
       iIdEstudio: new FormControl('', [Validators.required]),
       sFolio: new FormControl(''),
-      analista: new FormControl(''),
       iPublicarPreliminar: new FormControl(),
       sComentarios: new FormControl('', [Validators.required]),
-      iIdAnalista: new FormControl('1'),
+      iIdAnalista: new FormControl(null, Validators.required),
       sTokenCV: new FormControl(null),
       sNombres: new FormControl('', [Validators.required]),
       sApellidos: new FormControl('', [Validators.required]),
@@ -142,6 +210,7 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
   }
 
   setValue() {
+
     const { iIdSolicitud, iIdCliente, iIdEstudio, iPublicarPreliminar,
       sFolio, bPreliminar, iIdAnalista, sComentarios, sNombres, sApellidos, sPuesto, 
       sTokenCV, sTelefono, sNss, sCurp, sCalleNumero, sColonia, sCp, sMunicipio, sEstado,
@@ -149,6 +218,15 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
 
     this.idSolicitud = iIdSolicitud;
     this.controlCV.disable();
+
+    // setCliente
+    let cliente = this.catClientes.filter((cl) => {
+      return cl.iIdCliente == iIdCliente
+    });
+
+    this.controlCliente.patchValue(cliente[0]);
+    this.controlEmpresa.disable();
+    this.controlCliente.disable();
 
     this.form.patchValue({
       iIdCliente,
@@ -220,7 +298,7 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
   }
 
   enviar(param, row) {
-    this.form.get('sFolio').setValue(Math.floor(Math.random()*10));
+    // this.form.get('sFolio').setValue(Math.floor(Math.random()*10));
     let req = this.form.getRawValue();
     let reqValidar = {
       sService: 'validarSolicitud',
@@ -231,7 +309,7 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
       case 'crearValidar':
         this.estudiosService.crearEstudio(req).subscribe((res: any) => {
           if (res.resultado == "Ok") {
-            return Swal.fire('Registro exitoso', `Se ha registrado un nuevo estudio con folio ${req.sFolio}`, "success").then(r => {
+            return Swal.fire('Registro exitoso', `Se ha registrado un nuevo estudio exitosamente`, "success").then(r => {
               this.router.navigate(['ejecutivo/estudios']);
             })
           } else {
@@ -274,7 +352,7 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
           delete req.iIdAnalista;
           console.log(req);
           
-          this.clienteService.solicitarEstudioCliente(req).subscribe((res: any) => {
+          this.clientesService.solicitarEstudioCliente(req).subscribe((res: any) => {
             if (res.resultado == "Ok") {
               return Swal.fire('Registro exitoso', `Se ha registrado un nuevo estudio con folio ${req.sFolio}`, "success").then(r => {
                 this.router.navigate([this.regresar]);

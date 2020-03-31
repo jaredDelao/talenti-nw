@@ -16,12 +16,12 @@ import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencr
 export class EstudiosClienteComponent implements OnInit {
 
   displayedColumns: string[] = [
-    'folio', 'estudio', 'nombre', 'fecha_solicitud', 'estatus_solicitud', 'comentarios'
+    'folio', 'nombre', 'fecha_solicitud', 'estatus_solicitud', 'comentarios'
   ];
   dataSource: MatTableDataSource<any>;
 
   req = {
-    sService: 'getSolicitudesEjecutivo',
+    sService: 'getSolicitudesCliente',
     iIdCliente: null
   }
 
@@ -85,6 +85,9 @@ export class EstudiosClienteComponent implements OnInit {
 
   getEstudios() {
     this.estudiosService.getEstudios(this.req).subscribe((estudiosList: any)=> {
+
+      console.log(estudiosList);
+      
       
       // Verificar estudios
       if(estudiosList.resultado.length <= 0) return Swal.fire('Error', 'No se encontraron estudios registrados', 'warning');

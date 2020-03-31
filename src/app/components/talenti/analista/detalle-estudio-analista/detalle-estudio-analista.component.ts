@@ -363,7 +363,6 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy {
   solicitarCancelacion(): void {
     const dialogRef = this.dialog.open(SolicitarCancelacionEmpleadoComponent, {
       width: '50vw',
-      height: '70vh',
       data: {
         idSolicitud: this.idSolicitud
       }

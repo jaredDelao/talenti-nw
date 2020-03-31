@@ -13,6 +13,7 @@ import { TitleTablaComponent } from './title-tabla/title-tabla.component';
 import { RevisarModalComponent } from './modals/revisar-modal/revisar-modal.component';
 import { SolicitarCancelacionEmpleadoComponent } from './modals/solicitar-cancelacion-empleado/solicitar-cancelacion-empleado.component';
 import { GraficasComponent } from './graficas/graficas.component';
+import { ChartsModule } from 'ng2-charts';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import { GraficasComponent } from './graficas/graficas.component';
       RouterModule,
       ReactiveFormsModule,
       FormsModule,
+      ChartsModule,
   ],
   exports: [LoadingComponent, TitleComponent, TitleTablaComponent, TablaGeneralComponent, SolicitarEstudioSharedComponent, RevisarModalComponent],
   declarations: [

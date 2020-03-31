@@ -46,6 +46,13 @@ const menuAdmin: Array<Object> = [
       { title: "Estudios", link: "cliente/estudios-cliente" },
       // { title: "Solicitud de estudio", link: "cliente/solicitud-estudio" }
     ]
+  },
+  {
+    titulo: "CALIDAD",
+    list: [
+      { title: "Estudios", link: "calidad/estudios-calidad" },
+      // { title: "Solicitud de estudio", link: "cliente/solicitud-estudio" }
+    ]
   }
 ];
 
@@ -70,6 +77,16 @@ const menuEjecutivo: Array<Object> = [
     titulo: "EJECUTIVO",
     list: [
       { title: "Estudios", link: "ejecutivo/estudios" },
+      // { title: "Solicitud de cancelación", link: "ejecutivo/solicitud-cancelacion" }
+    ]
+  },
+];
+
+const menuCalidad: Array<Object> = [
+  {
+    titulo: "CALIDAD",
+    list: [
+      { title: "Estudios", link: "calidad/estudios-calidad" },
       // { title: "Solicitud de cancelación", link: "ejecutivo/solicitud-cancelacion" }
     ]
   },
@@ -125,6 +142,8 @@ export class PagesComponent implements OnInit, DoCheck {
     let perfil = localStorage.getItem('perfil');
     let idPerfil = localStorage.getItem('idPerfil');
     let idEmpleado = localStorage.getItem('idEmpleado');
+    let idCliente = localStorage.getItem('idCliente');
+
         
     bcryptjs.compare('Admin', perfil, (err, resultPerfil) => {
       idEmpleado !== 'cliente' && resultPerfil ? this.menuList = menuAdmin : '';
@@ -143,6 +162,10 @@ export class PagesComponent implements OnInit, DoCheck {
     bcryptjs.compare('8', idPerfil, (err, res) => {
       res ? this.menuList = menuLogistica : '';
     });
+
+    if (idCliente) {
+      this.menuList = menuCliente;
+    }
 
   }
 

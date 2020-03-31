@@ -67,8 +67,6 @@ export class LoginComponent implements OnInit {
       // idEmpleado
       if (!iIdEmpleado) localStorage.setItem('idEmpleado', 'cliente');
       // idCliente
-
-      // ENCRIPTARRRRRR!!!
       if (iIdCliente) {
         this.encryptService.encriptarLocalStorage(iIdCliente, 'idCliente');
       };
