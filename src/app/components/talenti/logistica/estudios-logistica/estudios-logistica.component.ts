@@ -11,6 +11,7 @@ import { LogisticaService } from 'src/app/services/logistica/logistica.service';
 import { EmpleadosService } from 'src/app/services/coordinador/empleados.service';
 import { pluck, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencriptar.service';
 
 
 @Component({
@@ -24,10 +25,10 @@ export class EstudiosLogisticaComponent implements OnInit {
   dataSource: MatTableDataSource<any>;
 
   // request getEstudios
-  req = {
-    sService: 'getSolicitudesAnalista',
-    iIdAnalista: '1'
-  }
+  // req = {
+  //   sService: 'getSolicitudesAnalista',
+  //   iIdAnalista: '1'
+  // }
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild('fechaI', { static: false }) fechaI: MatDatepicker<any>;
@@ -53,13 +54,19 @@ export class EstudiosLogisticaComponent implements OnInit {
 
   banderaSupervisor: boolean = false;
 
-  constructor(private fb: FormBuilder, private router: Router, public estudiosAnalistaService: EstudiosAnalistaService, public logisticaService: LogisticaService, private empleadosService: EmpleadosService) { }
+  constructor(private fb: FormBuilder, private router: Router, public estudiosAnalistaService: EstudiosAnalistaService, public logisticaService: LogisticaService, private empleadosService: EmpleadosService, private encryptDecryptService: EncriptarDesencriptarService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.idLogistica = await this.getIdLogistica();
     this.verificarRolLogistica();
     this.formInit();
     this.getEmpleados();
     // this.getEstudios();
+  }
+
+  getIdLogistica() {
+    let idClienteEncrypt = localStorage.getItem('idEmpleado');
+    return this.encryptDecryptService.desencriptar(idClienteEncrypt).toPromise();
   }
   
   verificarRolLogistica() {
@@ -69,7 +76,7 @@ export class EstudiosLogisticaComponent implements OnInit {
       // Rol logistica supervisor
       bcryptjs.compare('4', idPerfil, (err, res) => {
         if (res) {
-          console.log('Es supervisor: ',res);
+          console.log('Es supervisor: ',this.idLogistica);
           this.displayedColumns = ['folio', 'estudio', 'nombre', 'fecha_solicitud', 'estatus_agendado', 'asignado', 'detalles'];
           
           this.banderaSupervisor = true;
@@ -81,6 +88,8 @@ export class EstudiosLogisticaComponent implements OnInit {
       // Rol logistica normal
       bcryptjs.compare('8', idPerfil, (err, res) => {
         if (res) {
+          console.log('Es normal', this.idLogistica);
+          
           this.banderaSupervisor = false;
           return this.getEstudiosByIdLogistica();
         }
@@ -115,7 +124,6 @@ export class EstudiosLogisticaComponent implements OnInit {
       iIdLogistica: this.idLogistica
     }
     this.logisticaService.getSolicitudesLogisticaById(params).subscribe((res: any) => {
-      console.log('res', res);
       this.estudiosList = res.resultado;
       this.getEstudios(res.resultado);
     })
@@ -125,7 +133,6 @@ export class EstudiosLogisticaComponent implements OnInit {
   getEstudiosSupervisor() {
     this.banderaSupervisor = true;
     this.logisticaService.getSolicitudesLogistica().subscribe((res: any) => {
-      console.log('res', res);
       this.estudiosList = res.resultado;
       this.getEstudios(res.resultado);
     })

@@ -68,7 +68,7 @@ const menuAnalista: Array<Object> = [
   {
     titulo: "ANALISTA",
     list: [
-      { title: "Estudios", link: "analista/detalle-estudio" },
+      { title: "Estudios", link: "analista/estudios" },
     ]
   }
 ];

@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { EstudiosAnalistaService } from 'src/app/services/analista/estudios-analista.service';
 import { GenerateExcelService } from 'src/app/services/generate-excel.service';
+import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencriptar.service';
 
 @Component({
   selector: 'app-estudios-analista',
@@ -22,7 +23,7 @@ export class EstudiosAnalistaComponent implements OnInit, OnDestroy, AfterViewIn
   // request getEstudios
   req = {
     sService: 'getSolicitudesAnalista',
-    iIdAnalista: '1'
+    iIdAnalista: null
   }
 
   jsonExportExcel: any;
@@ -45,15 +46,21 @@ export class EstudiosAnalistaComponent implements OnInit, OnDestroy, AfterViewIn
   validarEstudio: any = 'PENDIENTE';
   validarPublicacionPreeliminar: boolean = false;
 
-  constructor(private fb: FormBuilder, private router: Router, public estudiosAnalistaService: EstudiosAnalistaService, private cd: ChangeDetectorRef, private excelGenerate: GenerateExcelService) { }
+  constructor(private fb: FormBuilder, private router: Router, public estudiosAnalistaService: EstudiosAnalistaService, private cd: ChangeDetectorRef, private excelGenerate: GenerateExcelService, private encryptService: EncriptarDesencriptarService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.formInit();
+    this.req.iIdAnalista = await this.getIdAnalista();
     this.getEstudios();
   }
 
   ngOnDestroy() {
 
+  }
+
+  getIdAnalista() {
+    let id = localStorage.getItem('idEmpleado');
+    return this.encryptService.desencriptar(id).toPromise();
   }
 
   ngAfterViewInit() {

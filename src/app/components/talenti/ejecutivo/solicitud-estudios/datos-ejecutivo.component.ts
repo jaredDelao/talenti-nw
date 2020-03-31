@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import * as moment from 'moment'
 import { GenerateExcelService } from 'src/app/services/generate-excel.service';
+import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencriptar.service';
 
 @Component({
   selector: "app-datos-ejecutivo",
@@ -28,7 +29,7 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
 
   req = {
     sService: 'getSolicitudesEjecutivo',
-    iIdEjecutivo: '2'
+    iIdEjecutivo: null
   }
 
   jsonExportExcel: any;
@@ -54,12 +55,13 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
   validarPublicacionPreeliminar: boolean = false;
 
   constructor(private estudiosService: EstudiosService, private fb: FormBuilder, private excelGenerate: GenerateExcelService,
-    public dialog: MatDialog, private cd: ChangeDetectorRef, private router: Router) {
+    public dialog: MatDialog, private cd: ChangeDetectorRef, private router: Router, private encryptService: EncriptarDesencriptarService) {
     this.pipe = new DatePipe('en');
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.formInit();
+    this.req.iIdEjecutivo = await this.getIdEjecutivo();
     this.getEstudios();
   }
 
@@ -71,6 +73,11 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
         this.form.get('fechaFinalForm').disable();
       }
     })
+  }
+
+  getIdEjecutivo() {
+    let id = localStorage.getItem('idEmpleado');
+    return this.encryptService.desencriptar(id).toPromise();
   }
 
   get fromDate() {
@@ -113,6 +120,7 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
   }
 
   getEstudios() {
+    console.log(this.req)
     this.estudiosService.getEstudios(this.req).subscribe((estudiosList: any)=> {
       console.log(estudiosList);
       const {resultado} = estudiosList;

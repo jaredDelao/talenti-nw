@@ -46,9 +46,10 @@ export class EstudiosClienteComponent implements OnInit {
   constructor(private estudiosService: EstudiosService, private fb: FormBuilder, private encryptDecryptService: EncriptarDesencriptarService,
     public dialog: MatDialog, private cd: ChangeDetectorRef, private router: Router) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.getIdCliente();
     this.formInit();
+    this.req.iIdCliente = await this.getIdCliente();
     this.getEstudios();
   }
 
@@ -61,11 +62,7 @@ export class EstudiosClienteComponent implements OnInit {
 
   getIdCliente() {
     let idClienteEncrypt = localStorage.getItem('idCliente');
-    if (idClienteEncrypt) {
-      this.encryptDecryptService.desencriptar(idClienteEncrypt).subscribe((idCliente) => {
-        this.req.iIdCliente = idCliente;
-      })
-    }
+    return this.encryptDecryptService.desencriptar(idClienteEncrypt).toPromise();
   }
 
   formInit() {
@@ -84,6 +81,9 @@ export class EstudiosClienteComponent implements OnInit {
   }
 
   getEstudios() {
+
+    console.log(this.req);
+    
     this.estudiosService.getEstudios(this.req).subscribe((estudiosList: any)=> {
 
       console.log(estudiosList);
