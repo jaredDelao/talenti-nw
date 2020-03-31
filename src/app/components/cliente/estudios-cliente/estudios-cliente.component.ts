@@ -47,7 +47,6 @@ export class EstudiosClienteComponent implements OnInit {
     public dialog: MatDialog, private cd: ChangeDetectorRef, private router: Router) { }
 
   async ngOnInit() {
-    this.getIdCliente();
     this.formInit();
     this.req.iIdCliente = await this.getIdCliente();
     this.getEstudios();
