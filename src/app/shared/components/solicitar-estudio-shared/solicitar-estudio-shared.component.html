@@ -19,7 +19,7 @@
                     </mat-form-field>
                 </div>
                 <!-- Mostrar solo gnp -->
-                <div class="form-group" *ngIf="folioEditable && !esGNP">
+                <div class="form-group" *ngIf="esGNP">
                     <mat-form-field>
                         <mat-label>Folio</mat-label>
                         <input matInput type="text" formControlName="sFolio" />

@@ -35,7 +35,7 @@ export class EstudiosAnalistaService {
   }
 
   descargarPreliminar(params) {
-    return this.http.get(this.url + `/GetFile.php?Token=__-Talenti&file=${params.token}`);
+    return this.http.get(environment.urlProd + `/GetFile.php?Token=__-Talenti&file=${params.token}`);
   }
 
   rechazarPreliminar(params) {
