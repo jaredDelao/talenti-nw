@@ -62,6 +62,21 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
     {token: null},
   ];
 
+  catSelectDisctamen: any[];
+  catDictamen = [
+    {id: '1', name: 'EN PROCESO'},
+    {id: '2', name: 'RECOMENDADO'},
+    {id: '3', name: 'NO RECOMENDADO'},
+    {id: '4', name: 'RECOMENDADO CON RESERVA'},
+  ];
+  catDictamenGNP = [
+    {id: '10', name: 'EN PROCESO'},
+    {id: '11', name: 'RIESGO 1'},
+    {id: '12', name: 'RIESGO 2'},
+    {id: '13', name: 'RIESGO 3'},
+    {id: '14', name: 'SIN RIESGO'},
+  ];
+
   datosSolicitud: any;
   form: FormGroup;
   estudioValid: any = '';
@@ -77,10 +92,14 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
   subs1 = new Subscription();
   subs2 = new Subscription();
 
+  controlEstatusDictamen = new FormControl({value: null, disabled: true});
+
+
   mostrarEstudiosCompletos: boolean = false;
 
   constructor(public estudiosService: EstudiosService, public empresasService: EmpresasService, private router: Router, private fb: FormBuilder, 
               private cd: ChangeDetectorRef, private route: ActivatedRoute) {
+                this.catSelectDisctamen = this.catDictamen;
                }
 
   ngOnInit() {
@@ -194,6 +213,9 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
 
   setDatos(value) {
     console.log(value.iIdCliente);
+
+    // estatusDictamen
+    this.controlEstatusDictamen.setValue(value.iEstatusDictamen);
     
     this.form.patchValue({
       iIdSolicitud: value.iIdSolicitud,

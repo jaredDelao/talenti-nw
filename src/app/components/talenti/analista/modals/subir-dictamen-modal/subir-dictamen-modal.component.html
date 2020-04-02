@@ -1,6 +1,8 @@
 
-<div class="container">
-
+<div class="loader" *ngIf="loader">
+    <mat-spinner></mat-spinner>
+</div>
+<div class="container" *ngIf="!loader">
     <div class="form-group" [formGroup]="form">
         <title-tabla titulo="ACTUALIZAR ESTATUS DICTAMEN"></title-tabla>
 

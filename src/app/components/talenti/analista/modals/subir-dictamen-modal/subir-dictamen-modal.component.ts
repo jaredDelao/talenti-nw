@@ -32,7 +32,7 @@ export class SubirDictamenModalComponent implements OnInit {
   ];
 
   catSelectDisctamen: any[];
-
+  loader: boolean = false;
   constructor(public dialogRef: MatDialogRef<any>, @Inject(MAT_DIALOG_DATA) public data: any, private fb: FormBuilder,
   public estudiosAnalistaService: EstudiosAnalistaService, public empresasService: EmpresasService) { }
 
@@ -53,6 +53,7 @@ export class SubirDictamenModalComponent implements OnInit {
   }
 
   subirArchivo(e, idLabel) {
+    this.loader = true;
     let blob = e.target.files[0];
     let name = e.target.files[0].name;
 
@@ -71,6 +72,7 @@ export class SubirDictamenModalComponent implements OnInit {
           this.label2.nativeElement.innerText = 'Seleccionar Archivo 2';
           this.form.get('documento2').setValue(null);
         };
+        this.loader = false;
         return Swal.fire('Error al cargar archivo', 'Revisa que sea un formato DOCX o PDF', 'error');
       }
 
@@ -79,12 +81,11 @@ export class SubirDictamenModalComponent implements OnInit {
       } else {
         this.form.get('documento2').setValue(resp.Identificador);
       }
+      this.loader = false;
     }, (err) => {
-     
+     this.loader = false;
       return Swal.fire('Error al cargar archivo', 'Revisa que sea un formato DOCX o PDF', 'error');
-    }), () => {
-      
-    }
+    }), () => {}
     
   }
 

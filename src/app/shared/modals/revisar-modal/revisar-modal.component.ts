@@ -31,7 +31,6 @@ export class RevisarModalComponent implements OnInit {
     sService: '',
     iIdSolicitud: null,
     sMotivo: null,
-    estatusDictamen: null
   }
   catDictamenSelect: any;
   // 1 preliminar - 2 estudio - 3 complemento
@@ -42,7 +41,6 @@ export class RevisarModalComponent implements OnInit {
   ngOnInit() {
     this.titulo = this.data.titulo;
     this.sRechazo = this.data.sRechazo;
-    this.catDictamenSelect = this.catDictamen;
     console.log(this.data);
   }
 

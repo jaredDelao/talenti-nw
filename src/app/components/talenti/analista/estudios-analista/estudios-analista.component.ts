@@ -163,7 +163,7 @@ export class EstudiosAnalistaComponent implements OnInit, OnDestroy, AfterViewIn
 
     if (bPublicarDictamen == '1') return 'En proceso';
     if (bPublicarDictamen == ('2'||'3')) return 'En proceso';
-    if (bPublicarDictamen == '4') return 'Publicado';    
+    if (bPublicarDictamen == '4') return 'Rechazado';    
     return 'Pendiente';
   }
 

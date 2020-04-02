@@ -1,14 +1,5 @@
 <title-tabla [titulo]="titulo"></title-tabla>
 
-<mat-form-field class="mt-3">
-    <mat-label>Selecciona un estatus de dictamen</mat-label>
-    <mat-select [(ngModel)]="request.estatusDictamen">
-      <mat-option *ngFor="let dictamen of catDictamenSelect" [value]="dictamen.id">
-        {{dictamen.name}}
-      </mat-option>
-    </mat-select>
-</mat-form-field>
-
 <mat-form-field appearance="fill" class="mt-4">
     <mat-label>Motivo de rechazo</mat-label>
     <textarea matInput rows="4" [(ngModel)]="request.sMotivo"></textarea>
