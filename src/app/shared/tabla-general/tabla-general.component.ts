@@ -48,9 +48,12 @@ export class TablaGeneralComponent implements OnInit {
     }
   }
 
-  descargar(e) {
-    console.log(e);
-    this.estudiosAnalistaService.subirArchivo(e).subscribe(console.log);
+  descargar(token) {
+    let reqParams = {
+      token
+    }
+    console.log(token);
+    this.estudiosAnalistaService.descargarPreliminar(reqParams).subscribe(console.log);
   }
 
   openDialogRechazar(): void {
@@ -91,17 +94,36 @@ export class TablaGeneralComponent implements OnInit {
     switch(this.idTipoEstudio) {
       case 1:
         body.sService = 'publicarPreliminar';
-        this.openDialogPublicar('publicarPreliminar');
+        this.estudiosService.publicarPreliminar(body).subscribe((res: any) => {
+          if (res.resultado !== 'Ok') {
+            return Swal.fire('Error', 'Error al publicar el estudio', 'success');
+          }
+          return Swal.fire('Estudio publicado', 'El estudio se ha publicado exitosamente', 'success')
+        })
+
+        // this.openDialogPublicar('publicarPreliminar');
         break;
       case 2:
         body.sService = 'publicarDictamen';
-        this.openDialogPublicar('publicarDictamen');
+        this.estudiosService.publicarPreliminar(body).subscribe((res: any) => {
+          if (res.resultado !== 'Ok') {
+            return Swal.fire('Error', 'Error al publicar el estudio', 'success');
+          }
+          return Swal.fire('Estudio publicado', 'El estudio se ha publicado exitosamente', 'success')
+        })
 
+        // this.openDialogPublicar('publicarDictamen');
         // this.estudiosService.publicarDictamen(body).subscribe(console.log)
         break;
       case 3:
         body.sService = 'publicarComplemento';
-        this.openDialogPublicar('publicarComplemento');
+        this.estudiosService.publicarPreliminar(body).subscribe((res: any) => {
+          if (res.resultado !== 'Ok') {
+            return Swal.fire('Error', 'Error al publicar el estudio', 'success');
+          }
+          return Swal.fire('Estudio publicado', 'El estudio se ha publicado exitosamente', 'success')
+        })
+        // this.openDialogPublicar('publicarComplemento');
         // this.estudiosService.publicarComplemento(body).subscribe(console.log)
         break;
       

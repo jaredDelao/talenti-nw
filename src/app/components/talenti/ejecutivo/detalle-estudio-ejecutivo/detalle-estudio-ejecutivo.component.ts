@@ -4,8 +4,9 @@ import { EstudiosService } from '../../../../services/ejecutivo/estudios.service
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { EmpresasService } from 'src/app/services/coordinador/empresas.service';
 import { Route } from '@angular/compiler/src/core';
-import { map } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { map, pluck, flatMap, filter, toArray, catchError } from 'rxjs/operators';
+import { Subscription, of } from 'rxjs';
+import { EmpleadosService } from 'src/app/services/coordinador/empleados.service';
 
 @Component({
   selector: 'app-detalle-estudio-ejecutivo',
@@ -62,6 +63,7 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
     {token: null},
   ];
 
+  catAnalistas = [];
   catSelectDisctamen: any[];
   catDictamen = [
     {id: '1', name: 'EN PROCESO'},
@@ -98,12 +100,13 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
   mostrarEstudiosCompletos: boolean = false;
 
   constructor(public estudiosService: EstudiosService, public empresasService: EmpresasService, private router: Router, private fb: FormBuilder, 
-              private cd: ChangeDetectorRef, private route: ActivatedRoute) {
+              private cd: ChangeDetectorRef, private route: ActivatedRoute, private empleadosService: EmpleadosService) {
                 this.catSelectDisctamen = this.catDictamen;
                }
 
   ngOnInit() {
     this.formInit();
+    this.getCatAnalistas();
     this.getUrlId();
     this.dataSource = this.ELEMENT_DATA;
     
@@ -127,6 +130,18 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
           }
     })
   }
+
+  getCatAnalistas() {
+    this.subs =  this.empleadosService.getEmpleados().pipe(
+       pluck('Empleados'),
+       flatMap((r: any) => r),
+       filter((val: any) => val.iIdRol == 3),
+       toArray(),
+       catchError((err) => of([])))
+     .subscribe((analistas: Array<any>) => {
+       this.catAnalistas = analistas;
+     })
+   }
 
   getUrlId() {
     let idUrl = this.route.snapshot.paramMap.get('id');
