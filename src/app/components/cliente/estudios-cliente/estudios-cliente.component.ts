@@ -16,7 +16,7 @@ import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencr
 export class EstudiosClienteComponent implements OnInit {
 
   displayedColumns: string[] = [
-    'folio', 'nombre', 'fecha_solicitud', 'estatus_solicitud', 'comentarios'
+    'folio', 'nombre', 'fecha_solicitud', 'estatus_solicitud', 'estatus_estudio', 'comentarios'
   ];
   dataSource: MatTableDataSource<any>;
 
@@ -132,17 +132,17 @@ export class EstudiosClienteComponent implements OnInit {
 
 
   verificarEstatusSolicitud(element) {
+    const { bDeclinada, bValidada } = element;
+    if (bDeclinada == '1') return 'Declinada';
+    if (bValidada == '1') return 'Validada';    
+    return 'Pendiente';
+  }
+  verificarEstatusEstudio(element) {
+    const { bDeclinada, bValidada, bPublicarDictamen } = element;
 
-    const { bDeclinada, bValidada, bPublicarDictamen, bSolicitarCalidad, iPublicarPreliminar, iEstatusComplemento } = element;
-
-    let complementoPend = false;
-    let preliminarPend = false;
-
-    // if (iEstatusComplemento != '3') complementoPend = true;
-    if (iPublicarPreliminar == '3') return 'Publicado';
-    if (bDeclinada == '1') return 'Declinado';
-        
-    // if (bPublicarDictamen == '3' && !complementoPend && !preliminarPend ) return 'Validado'
+    if (bValidada == '1') return 'En proceso';
+    if (bDeclinada == '1') return 'Cancelada';
+    if (bPublicarDictamen == '3') 'Publicado'
     
     return 'Pendiente';
   }
@@ -151,15 +151,10 @@ export class EstudiosClienteComponent implements OnInit {
     if (row.bDeclinada == '1') {
       return {'background-color': '#FEC6C0'}
     }
-    if (row.bValidada == '1' && row.iPublicarPreliminar != '3') {
-      return {'background-color': '#F9E79F'}
+    if (row.bValidada == '1') {
+      return {'background-color': '#ABEBC6'}
     }
-    if (row.bValidada == '1' && row.iPublicarPreliminar == '3') {
-      return {'background-color': '#D5F5E3'}
-    }
-
-    return {'background-color': '#F9E79F'}
-    
+    // return {'background-color': '#F9E79F'}
   }
 
 }

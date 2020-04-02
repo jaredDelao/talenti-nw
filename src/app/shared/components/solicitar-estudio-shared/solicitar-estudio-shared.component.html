@@ -72,13 +72,13 @@
                     </mat-form-field>
                 </div>
                 <div class="custom-file" *ngIf="!dataEstudio">
-                    <input type="file" class="custom-file-input" id="customFileLang" (change)="subirArchivo($event)" lang="es" 
+                    <input type="file" class="custom-file-input" id="customFileLang" (change)="getDataArchivo($event)" lang="es" 
                             [formControl]="controlCV">
                     <label class="custom-file-label" #label for="customFileLang">Subir CV</label>
                 </div>
-                <div class="form-group mt-3" *ngIf="form.get('sTokenCV').value !== null">
+                <!-- <div class="form-group mt-3" *ngIf="form.get('sTokenCV').value !== null">
                     <button mat-raised-button color="primary" (click)="descargarCV()">Descargar CV</button>
-                </div>
+                </div> -->
 
             </div>
 

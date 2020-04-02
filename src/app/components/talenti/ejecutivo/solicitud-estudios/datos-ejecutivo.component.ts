@@ -23,7 +23,7 @@ import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencr
 export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [
-    'folio', 'estudio', 'nombre', 'fecha_solicitud', 'estatus_solicitud', 'comentarios'
+    'folio', 'estudio', 'nombre', 'fecha_solicitud', 'estatus_solicitud', 'estatus_estudio', 'comentarios'
   ];
   dataSource: MatTableDataSource<Estudio>;
 
@@ -224,30 +224,14 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
   
   }
 
-  verificarEstatusSolicitud(element) {
-
-    const { bDeclinada, bValidada, bPublicarDictamen, bSolicitarCalidad, iPublicarPreliminar, iEstatusComplemento } = element;
-
-    let complementoPend = false;
-    let preliminarPend = false;
-
-    if (iEstatusComplemento > '0' && iEstatusComplemento != '3') complementoPend = true;
-    if (iPublicarPreliminar > '0' && iPublicarPreliminar != '3') preliminarPend = true;
-
-    if (bPublicarDictamen == '2' || iPublicarPreliminar == '2' || iEstatusComplemento == '4') return 'Revisar'
-        
-    if (bPublicarDictamen == '3' && !complementoPend && !preliminarPend ) return 'Validado'
-    
-    return 'Pendiente';
-  }
-
   color(row) {
     if (row.bDeclinada == '1') {
       return {'background-color': '#FEC6C0'}
     }
     if (row.bValidada == '1') {
-      return {'background-color': '#D5F5E3'}
+      return {'background-color': '#ABEBC6'}
     }
+    return {'background-color': '#F9E79F'}
   }
 
   verText(e: HTMLSpanElement) {
@@ -298,6 +282,23 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
     console.log(this.jsonExportExcel);
     
     this.excelGenerate.exportAsExcelFile(this.jsonExportExcel, 'sample');
+  }
+
+  verificarEstatusSolicitud(element) {
+    const { bDeclinada, bValidada } = element;
+    if (bDeclinada == '1') return 'Declinada';
+    if (bValidada == '1') return 'Validada';    
+    return 'Pendiente';
+  }
+
+  verificarEstatusEstudio(element) {
+    const { bDeclinada, bValidada, bPublicarDictamen } = element;
+
+    if (bValidada == '1') return 'En proceso';
+    if (bDeclinada == '1') return 'Cancelada';
+    if (bPublicarDictamen == '3') 'Publicado'
+    
+    return 'Pendiente';
   }
 
 }

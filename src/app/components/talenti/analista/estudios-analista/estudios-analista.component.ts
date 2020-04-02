@@ -16,7 +16,7 @@ import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencr
 })
 export class EstudiosAnalistaComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  displayedColumns: string[] = ['folio', 'estudio', 'nombre', 'fecha_solicitud', 'estatus_solicitud', 'comentarios'];
+  displayedColumns: string[] = ['folio', 'estudio', 'nombre', 'fecha_solicitud', 'estatus_solicitud', 'estatus_estudio', 'comentarios'];
   dataSource: MatTableDataSource<any>;
   loading: boolean = false;
 
@@ -134,20 +134,36 @@ export class EstudiosAnalistaComponent implements OnInit, OnDestroy, AfterViewIn
     this.router.navigate(['analista/detalle-estudio-analista/', data.iIdSolicitud]);
   }
 
-  verificarEstatusSolicitud(element) {
+  // verificarEstatusSolicitud(element) {
 
-    const { bDeclinada, bValidada, bPublicarDictamen, bSolicitarCalidad, iPublicarPreliminar, iEstatusComplemento } = element;
+  //   const { bDeclinada, bValidada, bPublicarDictamen, bSolicitarCalidad, iPublicarPreliminar, iEstatusComplemento } = element;
 
-    let complementoPend = false;
-    let preliminarPend = false;
+  //   let complementoPend = false;
+  //   let preliminarPend = false;
 
-    if (iEstatusComplemento > '0' && iEstatusComplemento != '3') complementoPend = true;
-    if (iPublicarPreliminar > '0' && iPublicarPreliminar != '3') preliminarPend = true;
+  //   if (iEstatusComplemento > '0' && iEstatusComplemento != '3') complementoPend = true;
+  //   if (iPublicarPreliminar > '0' && iPublicarPreliminar != '3') preliminarPend = true;
 
-    if (bPublicarDictamen == '4' || iPublicarPreliminar == '4' || iEstatusComplemento == '4') return 'Revisar'
+  //   if (bPublicarDictamen == '4' || iPublicarPreliminar == '4' || iEstatusComplemento == '4') return 'Revisar'
         
-    if (bPublicarDictamen == '3' && !complementoPend && !preliminarPend ) return 'Validado'
+  //   if (bPublicarDictamen == '3' && !complementoPend && !preliminarPend ) return 'Validado'
     
+  //   return 'Pendiente';
+  // }
+
+  verificarEstatusSolicitud(element) {
+    const { bDeclinada, bValidada } = element;
+    if (bDeclinada == '1') return 'Declinada';
+    if (bValidada == '1') return 'Validada';    
+    return 'Pendiente por validar';
+  }
+
+  verificarEstatusEstudio(element) {
+    const { bDeclinada, bValidada, bPublicarDictamen } = element;
+
+    if (bPublicarDictamen == '1') return 'En proceso';
+    if (bPublicarDictamen == ('2'||'3')) return 'En proceso';
+    if (bPublicarDictamen == '4') return 'Publicado';    
     return 'Pendiente';
   }
 
@@ -156,8 +172,9 @@ export class EstudiosAnalistaComponent implements OnInit, OnDestroy, AfterViewIn
       return {'background-color': '#FEC6C0'}
     }
     if (row.bValidada == '1') {
-      return {'background-color': '#D5F5E3'}
+      return {'background-color': '#ABEBC6'}
     }
+    return {'background-color': '#F9E79F'}
   }
 
   verText(e: HTMLSpanElement) {
@@ -206,11 +223,8 @@ export class EstudiosAnalistaComponent implements OnInit, OnDestroy, AfterViewIn
       delete element['sTokenComplemento'];
     });
     
-
     console.log(this.jsonExportExcel);
-    
     this.excelGenerate.exportAsExcelFile(this.jsonExportExcel, 'sample');
-
     this.loading = false;
     
   }

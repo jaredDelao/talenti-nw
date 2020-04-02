@@ -25,6 +25,7 @@ export class CancelarSolicitudClienteComponent implements OnInit {
 
   loadArchivo: boolean = false;
   catMotivo: any;
+  dataArchivo: any = null;
 
   constructor( private fb: FormBuilder, private encryptDecryptService: EncriptarDesencriptarService,
     public dialogRef: MatDialogRef<any>, private empresasService: EmpresasService, private clienteService: ClienteService,
@@ -57,9 +58,8 @@ export class CancelarSolicitudClienteComponent implements OnInit {
     this.form = this.fb.group({
       sService: ['solicitarCancelacionCliente', Validators.required],
       idSolicitud: [this.data.idSolicitud, Validators.required],
-      sTipoCancelacion: [null, Validators.required],
       iIdClienteSolicitante: [null],
-      sTokenEvidencia: [null, Validators.required],
+      sTokenEvidencia: [null],
       sComentarios: [null, Validators.required]
     })
 
@@ -70,16 +70,41 @@ export class CancelarSolicitudClienteComponent implements OnInit {
   }
 
   // SUBIR ARCHIVO
-  subirArchivo(e) {
+  subirArchivo() {
 
+    if (this.dataArchivo) {
+      this.loadArchivo = true;
+      let blob = this.dataArchivo.target.files[0];
+      let name = this.dataArchivo.target.files[0].name;
+      return this.empresasService.subirArchivo(blob, name).toPromise();
+    }
+    //   if (!resp.Identificador || resp.resultado != 'Ok') {
+    //     this.controlEvidencia.setValue(null)
+    //     this.loadArchivo = false;
+    //     this.label1.nativeElement.innerText = 'Seleccionar Archivo';
+    //     return Swal.fire('Error al cargar archivo', 'Revisa que sea un formato DOCX o PDF', 'error');
+    //   }
+    //   this.loadArchivo = false;
+    //   this.form.get('sTokenEvidencia').setValue(resp.Identificador)
+      
+    // }, (err) => {
+    //   this.loadArchivo = false;
+    //   return Swal.fire('Error al cargar archivo', 'Revisa que sea un formato DOCX o PDF', 'error');
+    // }), () => {
+    // } 
+  }
+
+  getArchivo(e) {
+    this.dataArchivo = e;
+    let name = this.dataArchivo.target.files[0].name;
+    this.label1.nativeElement.innerText = name;
+  }
+
+  async enviar() {
     this.loadArchivo = true;
 
-    let blob = e.target.files[0];
-    let name = e.target.files[0].name;
-
-    this.label1.nativeElement.innerText = name;
-
-    this.empresasService.subirArchivo(blob, name).subscribe((resp: any ) => { 
+    try {
+      let resp: any = await this.subirArchivo();
       if (!resp.Identificador || resp.resultado != 'Ok') {
         this.controlEvidencia.setValue(null)
         this.loadArchivo = false;
@@ -88,19 +113,17 @@ export class CancelarSolicitudClienteComponent implements OnInit {
       }
       this.loadArchivo = false;
       this.form.get('sTokenEvidencia').setValue(resp.Identificador)
-      
-    }, (err) => {
+    } catch(err) {
       this.loadArchivo = false;
-      return Swal.fire('Error al cargar archivo', 'Revisa que sea un formato DOCX o PDF', 'error');
-    }), () => {
-    } 
-  }
+      this.controlEvidencia.setValue(null)
+      return Swal.fire('Error', 'Falta cargar el archivo', 'error');
+    }
 
-  enviar() {
     this.form.get('iIdClienteSolicitante').patchValue(this.idCliente);
     let req = this.form.getRawValue();
     console.log(req);
-    this.clienteService.solicitarCancelacionCliente(req).subscribe(console.log)
-    
+    this.clienteService.solicitarCancelacionCliente(req).subscribe((resp: any) => {
+      Swal.fire('Aviso', resp.resultado, 'warning');
+    })
   }
 }

@@ -38,6 +38,8 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
     iIdEmpresa: 0
   }
 
+  // Archivo
+  dataArchivo: any = null;
 
   // catalogos
   catAnalistas: any[] = [];
@@ -249,41 +251,32 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
       sMunicipio,
       sEstado,
     });
+
+    if (!this.esCliente) {
+      this.form.get('iIdAnalista').enable();
+    }
   } 
 
-  validar() {
-    console.log(this.form.get("tipoEstudio").value);
-  }
 
-  subirArchivo(e) {
-
-    // Set value en label
-    this.loading = true;
-    let blob = e.target.files[0];
+  getDataArchivo(e) {
+    this.dataArchivo = e;
     let name = e.target.files[0].name;
     this.label1.nativeElement.innerText = name;
-    
-    this.empresasService.subirArchivo(blob, name).subscribe((resp: {resultado: string, Identificador: string} ) => { 
-
-      if (!resp.Identificador || resp.resultado != 'Ok') {
-        // this.reqArchivo.ArchivoPreliminar = null;
-        this.controlCV.setValue(null)
-        this.label1.nativeElement.innerText = 'Subir CV';
-        this.loading = false;
-        return Swal.fire('Error al cargar archivo', 'Revisa que sea un formato DOCX o PDF', 'error');
-      }
-     console.log(resp);
-     
-      this.form.get('sTokenCV').patchValue(resp.Identificador);
-      this.loading = false;
-      
-    }, (err) => {
-      this.loading = false;
-      return Swal.fire('Error al cargar archivo', 'Revisa que sea un formato DOCX o PDF', 'error');
-    }), () => {
-      this.loading = false;
-    } 
   }
+
+  subirArchivo() {
+    if (this.dataArchivo){
+      this.loading = true;
+      let blob = this.dataArchivo.target.files[0];
+      console.log(blob, name);
+      
+      return this.empresasService.subirArchivo(blob, name).toPromise();
+    }
+
+    this.loading = false;
+    // return Swal.fire('Error', 'El archivo no ha sido seleccionado', 'error');
+  }
+
 
   // DESCARGA CV
   descargarCV() {
@@ -297,12 +290,36 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
     }
   }
 
-  enviar(param, row) {
+
+  async enviar(param, row) {
+    // Archivo
+
+    if (this.dataArchivo == false) {
+      try {
+        const resp: any = await this.subirArchivo();
+        if (!resp.Identificador || resp.resultado != 'Ok') {
+          // this.reqArchivo.ArchivoPreliminar = null;
+          this.controlCV.setValue(null)
+          this.label1.nativeElement.innerText = 'Subir CV';
+          this.loading = false;
+          return Swal.fire('Error al cargar archivo', 'Revisa que sea un formato DOCX o PDF', 'error');
+        }
+       console.log(resp);
+        this.form.get('sTokenCV').patchValue(resp.Identificador);
+        this.loading = false;
+      } catch(err) {
+        this.loading = false;
+        console.log(err);
+      }
+    }
+
     // this.form.get('sFolio').setValue(Math.floor(Math.random()*10));
     let req = this.form.getRawValue();
+
     let reqValidar = {
       sService: 'validarSolicitud',
-      iIdSolicitud: this.idSolicitud
+      iIdSolicitud: this.idSolicitud,
+      iIdAnalista: this.form.get('iIdAnalista').value
     }
 
     switch(param) {
@@ -334,17 +351,21 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
 
         // SOLO VALIDAR - EJECUTIVO
         case 'validar':
-          this.estudiosService.validarSolicitud(reqValidar).subscribe((res:any) => {
-            console.log(res);
-            if (res.resultado == "Ok") {
-              return Swal.fire('Validación exitosa', `Se ha validado el estudio con folio ${req.sFolio}`, "success").then(r => {
-                this.router.navigate([this.regresar]);
-              })
-            }
-            return Swal.fire('Error', `Error al validar estudio`, "error");
-          }, err => {
-            return Swal.fire('Error', `Error al validar estudio`, "error");
-          });
+          if (reqValidar.iIdAnalista) {
+            this.estudiosService.validarSolicitud(reqValidar).subscribe((res:any) => {
+              console.log(res);
+              if (res.resultado == "Ok") {
+                return Swal.fire('Validación exitosa', `Se ha validado el estudio con folio ${req.sFolio}`, "success").then(r => {
+                  this.router.navigate([this.regresar]);
+                })
+              }
+              return Swal.fire('Error', `Error al validar estudio`, "error");
+            }, err => {
+              return Swal.fire('Error', `Error al validar estudio`, "error");
+            });
+          } else {
+            return Swal.fire('Error', 'Falta llenar el campo analista', 'warning');
+          }
         break;
 
         case 'solicitar':

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { EstudiosAnalistaService } from 'src/app/services/analista/estudios-analista.service';
@@ -17,7 +17,7 @@ import { SolicitarCancelacionEmpleadoComponent } from 'src/app/shared/modals/sol
   templateUrl: './detalle-estudio-analista.component.html',
   styleUrls: ['./detalle-estudio-analista.component.scss']
 })
-export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy {
+export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ELEMENT_DATA = [
     {
@@ -40,10 +40,16 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy {
     },
   ];
 
+  param = {
+    sService: "getLstEstudios",
+    iIdEmpresa: 0
+  }
+
   // idSolicitud
   idSolicitud: any;
 
   // catalogos
+  catEstudios = [];
   catSelectDisctamen: any[];
   catDictamen = [
     {id: '1', name: 'EN PROCESO'},
@@ -101,15 +107,32 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy {
   bPreliminar: any;
   bDictamen: any;
   bComplemento: any;
+  mostrarEstudiosCompletos = false;
+  subs1 = new Subscription();
 
   constructor(public estudiosAnalistaService: EstudiosAnalistaService, private router: Router, private fb: FormBuilder,
-              public empresasService: EmpresasService, private estudiosService: EstudiosService ,public dialog: MatDialog, private route: ActivatedRoute) { }
+              public empresasService: EmpresasService, private estudiosService: EstudiosService ,public dialog: MatDialog, private route: ActivatedRoute) {
+                this.catSelectDisctamen = this.catDictamen;
+               }
 
   ngOnInit() {
     this.formInit();
+    this.getCatalogoEstudios();
     this.dataSource = this.ELEMENT_DATA;
     this.getDatosId();
-    this.catSelectDisctamen = this.catDictamen;
+    
+  }
+
+  ngAfterViewInit() {
+    this.form.get('iIdEstudio').valueChanges.subscribe(value => {
+      if (value == 1 || value == 3 || value == 4 || value == 5 || value == 7|| 
+          value == 10 || value == 11 || value == 12) {
+            this.mostrarEstudiosCompletos = true;
+          }
+          else {
+            this.mostrarEstudiosCompletos = false;
+          }
+    })
   }
 
   mostrarColumnasConMotivo() {
@@ -132,12 +155,20 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy {
 
   }
 
+  getCatalogoEstudios() {
+    this.subs1 = this.empresasService.getCatalogoEstudios(this.param).subscribe((resp: any) => {
+      this.catEstudios = resp.LstEstudios;
+    })
+  }
+
   ngOnDestroy() {
     this.subs.unsubscribe();
   }
 
   getDatosId() {
     this.idUrl = this.route.snapshot.paramMap.get('id');
+    this.controlEstatusDictamen.setValue(2);
+
     if (this.idUrl) {
 
       let req = {
@@ -219,7 +250,7 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy {
     }
 
     // estatusDictamen
-    this.controlEstatusDictamen.patchValue(value.iEstatusDictamen)
+    this.controlEstatusDictamen.setValue(value.iEstatusDictamen);
 
     this.form.setValue({
       iIdSolicitud: value.iIdSolicitud,

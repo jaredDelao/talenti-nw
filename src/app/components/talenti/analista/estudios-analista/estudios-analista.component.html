@@ -106,8 +106,19 @@
                 <th mat-header-cell *matHeaderCellDef > ESTATUS SOLICITUD </th>
                 <td mat-cell *matCellDef="let element">
                     <div class="content-estatus">
-                        <mat-icon class="mr-2" [ngStyle]="verColor(textE)">{{verText(textE)}}</mat-icon>
+                        <!-- <mat-icon class="mr-2" [ngStyle]="verColor(textE)">{{verText(textE)}}</mat-icon> -->
                         <span #textE>{{verificarEstatusSolicitud(element)}} </span>
+                    </div>
+                </td>
+            </ng-container>
+
+             <!-- Estatus-estudio -->
+             <ng-container matColumnDef="estatus_estudio">
+                <th mat-header-cell *matHeaderCellDef> ESTATUS ESTUDIO </th>
+                <td mat-cell *matCellDef="let element">
+                    <div class="content-estatus">
+                        <!-- <mat-icon class="mr-2" [ngStyle]="verColor(textE)">{{verText(textE)}}</mat-icon> -->
+                        <span #textE>{{verificarEstatusEstudio(element)}} </span>
                     </div>
                 </td>
             </ng-container>

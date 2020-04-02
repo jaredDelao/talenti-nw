@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, AfterViewInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { EstudiosService } from '../../../../services/ejecutivo/estudios.service';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './detalle-estudio-ejecutivo.component.html',
   styleUrls: ['./detalle-estudio-ejecutivo.component.scss']
 })
-export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy {
+export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, AfterViewInit {
   ELEMENT_DATA = [
     {
       id: 1,
@@ -77,6 +77,8 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy {
   subs1 = new Subscription();
   subs2 = new Subscription();
 
+  mostrarEstudiosCompletos: boolean = false;
+
   constructor(public estudiosService: EstudiosService, public empresasService: EmpresasService, private router: Router, private fb: FormBuilder, 
               private cd: ChangeDetectorRef, private route: ActivatedRoute) {
                }
@@ -93,6 +95,18 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subs.unsubscribe();
     this.subs1.unsubscribe();
+  }
+
+  ngAfterViewInit() {
+    this.form.get('iIdEstudio').valueChanges.subscribe(value => {
+      if (value == 1 || value == 3 || value == 4 || value == 5 || value == 7|| 
+          value == 10 || value == 11 || value == 12) {
+            this.mostrarEstudiosCompletos = true;
+          }
+          else {
+            this.mostrarEstudiosCompletos = false;
+          }
+    })
   }
 
   getUrlId() {
