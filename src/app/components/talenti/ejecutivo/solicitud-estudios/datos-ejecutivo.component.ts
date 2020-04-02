@@ -294,9 +294,10 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
   verificarEstatusEstudio(element) {
     const { bDeclinada, bValidada, bPublicarDictamen } = element;
 
-    if (bValidada == '1') return 'En proceso';
-    if (bDeclinada == '1') return 'Cancelada';
-    if (bPublicarDictamen == '3') 'Publicado'
+    if (bPublicarDictamen == '3') return 'Publicado'
+    if (bPublicarDictamen == '4') return 'Rechazado'
+    // if (bValidada == '1') return 'En proceso';
+    // if (bDeclinada == '1') return 'Cancelada';
     
     return 'Pendiente';
   }
