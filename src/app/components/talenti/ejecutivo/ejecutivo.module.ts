@@ -19,6 +19,7 @@ import { CustomComponentsModule } from '../../../shared/customComponents.module'
 import { DetalleEstudioEjecutivoComponent } from './detalle-estudio-ejecutivo/detalle-estudio-ejecutivo.component';
 import { TablaGeneralComponent } from '../../../shared/tabla-general/tabla-general.component';
 import { ActualizarDictamenComponent } from './modals/actualizar-dictamen/actualizar-dictamen.component';
+import { AprobarCancelacionModalComponent } from './modals/aprobar-cancelacion-modal/aprobar-cancelacion-modal.component';
 
 @NgModule({
   imports: [
@@ -37,9 +38,10 @@ import { ActualizarDictamenComponent } from './modals/actualizar-dictamen/actual
     MenuEjecutivoComponent,
     DetalleEstudioEjecutivoComponent,
     ActualizarDictamenComponent,
+    AprobarCancelacionModalComponent,
   ],
   exports: [DatosEjecutivoComponent],
-  entryComponents: [ModalDireccionComponent, ActualizarDictamenComponent],
+  entryComponents: [ModalDireccionComponent, ActualizarDictamenComponent, AprobarCancelacionModalComponent],
   providers: [DatosEjecutivoService],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })

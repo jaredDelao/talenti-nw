@@ -1,6 +1,6 @@
 <app-loading *ngIf="loading"></app-loading>
 <ng-container #validar *ngIf="estudioValid != '1' && datosSolicitud">
-    <app-solicitar-estudio-shared [dataEstudio]="datosSolicitud" [regresar]="'ejecutivo/estudios'"></app-solicitar-estudio-shared>
+    <app-solicitar-estudio-shared [dataEstudio]="datosSolicitud" [bSolicCancel]="bSolicCancel" [regresar]="'ejecutivo/estudios'"></app-solicitar-estudio-shared>
 </ng-container>
 
 <ng-container #detalle *ngIf="estudioValid == '1' && datosSolicitud.bDeclinada == '0'">
@@ -125,6 +125,9 @@
         </div>
 
         <div class="contenido row col-12">
+
+            <app-tabla-estatus *ngIf="dataTablaEstatus.length > 0" [data]="dataTablaEstatus" [tipoEstudio]="tipoEstudio" [columnas]="columnasTablaEstatus"></app-tabla-estatus>
+
             <div class="contenido2 col-lg-6 col-md-6 col-sm-12 col-xs-12" *ngIf="datosSolicitud.iPublicarPreliminar >= 2">
                 <app-tabla-general [titulo]="'PRELIMINAR'" (update)="update($event)" [data]="datosPreliminar" [idSolicitud]="idSolicitud" [idTipoEstudio]="1" [publicado]="bPreliminar"
                     [columns]="columnsPreliminar"></app-tabla-general>
@@ -140,7 +143,7 @@
 
 
             <!-- table -->
-            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-5">
+            <!-- <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-5">
                 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
                     <ng-container matColumnDef="proceso">
@@ -169,7 +172,7 @@
                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                 </table>
-            </div>
+            </div> -->
 
             <!-- <div class="contenido2 col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <app-tabla-general [titulo]="'preliminar'" [columns]="columnsPreliminar"></app-tabla-general>

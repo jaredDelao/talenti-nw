@@ -76,6 +76,20 @@
                             [formControl]="controlCV">
                     <label class="custom-file-label" #label for="customFileLang">Subir CV</label>
                 </div>
+
+                <!-- CANCELACION -->
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-label>Comentario de cancelación</mat-label>
+                        <textarea matInput cdkTextareaAutosize [formControl]="controlComentarioCancel"></textarea>
+                    </mat-form-field>
+                </div>
+                <div class="form-group">
+                    <button mat-stroked-button color="warn" (click)="descargarEvidencia()">Descargar evidencia de cancelación</button>
+                </div>
+                <div class="form-group">
+                    <button mat-raised-button color="warn" (click)="aprobar()">Aprobar cancelación</button>
+                </div>
                 <!-- <div class="form-group mt-3" *ngIf="form.get('sTokenCV').value !== null">
                     <button mat-raised-button color="primary" (click)="descargarCV()">Descargar CV</button>
                 </div> -->
@@ -156,7 +170,8 @@
             </div>
         </div>
 
-        <div class="actions d-flex justify-content-center" *ngIf="!analista && dataEstudio.bDeclinada != '1'">
+
+        <div class="actions d-flex justify-content-center mt-3" *ngIf="!analista && dataEstudio.bDeclinada != '1'">
             <div class="buttons d-flex flex-column col-3">
                 <ng-container *ngIf="!esCliente">
                     <button mat-raised-button color="primary" (click)="enviar('crearValidar')" *ngIf="!dataEstudio">CREAR</button>

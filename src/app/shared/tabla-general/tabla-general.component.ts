@@ -52,8 +52,7 @@ export class TablaGeneralComponent implements OnInit {
     let reqParams = {
       token
     }
-    console.log(token);
-    this.estudiosAnalistaService.descargarPreliminar(reqParams).subscribe(console.log);
+    this.estudiosAnalistaService.descargarPreliminar(reqParams);
   }
 
   openDialogRechazar(): void {

@@ -17,7 +17,7 @@ export class EstudiosService {
 
   constructor(private http: HttpClient) { }
 
-  getEstudios(req): Observable<any> {
+  getEstudiosCliente(req): Observable<any> {
     let body = new HttpParams({fromObject: req})
     return this.http.post<any>(environment.urlProd, body);
   }
@@ -53,6 +53,16 @@ export class EstudiosService {
   }
 
   declinarSolicitud(params) {
+    let body = new HttpParams({fromObject: params})
+    return this.http.post(environment.urlProd, body);
+  }
+
+  getEstudiosClienteAdmin(params) {
+    let body = new HttpParams({fromObject: params})
+    return this.http.post(environment.urlProd, body);
+  }
+
+  getsolicitudCanceladaById(params) {
     let body = new HttpParams({fromObject: params})
     return this.http.post(environment.urlProd, body);
   }

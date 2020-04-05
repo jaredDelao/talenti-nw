@@ -32,6 +32,7 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
   @Input() esGNP: boolean = true;
   @Input() dataEstudio: any = false;
   @Input() regresar: any = '';
+  @Input() bSolicCancel: any = null;
 
   param = {
     sService: "getLstEstudios",
@@ -61,6 +62,10 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
     {nombre: 'NO', value: '0'},
   ];
 
+  // Datos cancelacion
+  controlComentarioCancel = new FormControl(null);
+  controlTokenCancel = new FormControl(null);
+
   subs = new Subscription();
   subs1 = new Subscription();
   subs2 = new Subscription();
@@ -72,12 +77,14 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
             private clienteService: ClientesService, public estudiosAnalistaService:EstudiosAnalistaService, public clientesService: ClienteService, private encryptService: EncriptarDesencriptarService) {}
 
   async ngOnInit() {
+    
    
     this.formInit();
     // this.catAnalistas();
     this.getCatalogoEstudios();
     this.consultaAnalista();
     this.getCatAnalistas();
+    this.solicitudCancelacion();
 
     this.catEmpresas = await this.getEmpresas();
     let clientes = await this.getClientes();
@@ -129,6 +136,7 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
     this.subs2.unsubscribe()
   }
 
+
   getCatAnalistas() {
    this.subs =  this.empleadosService.getEmpleados().pipe(
       pluck('Empleados'),
@@ -146,7 +154,6 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
     this.encryptService.desencriptar(idClienteD).subscribe((res) => {
       this.form.get('iIdCliente').patchValue(res);
       console.log('idCliente', res);
-      
     })
   }
 
@@ -255,7 +262,32 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
     if (!this.esCliente) {
       this.form.get('iIdAnalista').enable();
     }
-  } 
+
+    // solicitudCancelacion
+    if (this.bSolicCancel == '1') {
+      this.solicitudCancelacion(iIdSolicitud);
+    } 
+
+  }
+
+
+  solicitudCancelacion(iIdSolicitud) {
+    let req = {
+      sService: 'getSolicitudesCancela',
+      iIdSolicitud
+    }
+    this.estudiosService.getsolicitudCanceladaById(req).pipe(
+      filter((value: any) => value.LstEstudios.length > 0),
+      pluck('LstEstudios'),
+      // catchError((err) => of([]))
+    )
+    .subscribe((estudio) => {
+      console.log(estudio);
+      this.controlTokenCancel.patchValue(estudio[0].sTokenEvidencia);
+      this.controlComentarioCancel.patchValue(estudio[0].sComentarios);
+      this.controlComentarioCancel.disable();
+    })
+  }
 
 
   getDataArchivo(e) {
@@ -267,6 +299,7 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
   subirArchivo() {
     if (this.dataArchivo){
       this.loading = true;
+      let name = this.dataArchivo.target.files[0].name;
       let blob = this.dataArchivo.target.files[0];
       console.log(blob, name);
       
@@ -284,17 +317,18 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
       let req = {
         token: this.form.get('sTokenCV').value,
       }
-      this.estudiosAnalistaService.descargarPreliminar(req).subscribe((res) => {
-        console.log(res); 
-      })
+      this.estudiosAnalistaService.descargarPreliminar(req);
     }
   }
 
 
-  async enviar(param, row) {
+  async enviar(param: 'validar' | 'crearValidar' | 'solicitar', row) {
+
     // Archivo
 
-    if (this.dataArchivo == false) {
+    console.log(this.dataArchivo);
+    
+    if (param != 'validar') {
       try {
         const resp: any = await this.subirArchivo();
         if (!resp.Identificador || resp.resultado != 'Ok') {
@@ -302,16 +336,17 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
           this.controlCV.setValue(null)
           this.label1.nativeElement.innerText = 'Subir CV';
           this.loading = false;
-          return Swal.fire('Error al cargar archivo', 'Revisa que sea un formato DOCX o PDF', 'error');
+          return Swal.fire('Error al cargar archivo', 'Revisa que sea un formato DOCX o PDF' + resp, 'error');
         }
        console.log(resp);
         this.form.get('sTokenCV').patchValue(resp.Identificador);
         this.loading = false;
       } catch(err) {
         this.loading = false;
-        console.log(err);
+        return Swal.fire('Error al cargar archivo', 'Revisa que sea un formato DOCX o PDF' + err, 'error');
       }
     }
+    
 
     // this.form.get('sFolio').setValue(Math.floor(Math.random()*10));
     let req = this.form.getRawValue();
@@ -427,6 +462,11 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
       }
 
     })
+  }
+
+
+  descargarEvidencia() {    
+    this.estudiosAnalistaService.descargarPreliminar(this.controlTokenCancel.value);
   }
 }
 

@@ -340,9 +340,7 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy, After
     let req = {
       token: this.tokenPreliminar,
     }
-    this.estudiosAnalistaService.descargarPreliminar(req).subscribe((res) => {
-      console.log(res); 
-    })
+    this.estudiosAnalistaService.descargarPreliminar(req);
   }
   descargarComplemento() {
     console.log(this.tokenComplemento);
@@ -350,9 +348,7 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy, After
     let req = {
       token: this.tokenComplemento,
     }
-    this.estudiosAnalistaService.descargarPreliminar(req).subscribe((res) => {
-      console.log(res); 
-    })
+    this.estudiosAnalistaService.descargarPreliminar(req);
   }
   descargarDictamen(param) {
     let req: any = { token: ''};
@@ -362,9 +358,7 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy, After
     } else {
       req.token = this.tokenDictamen2;
     }
-    this.estudiosAnalistaService.descargarPreliminar(req).subscribe((res) => {
-      console.log(res); 
-    })
+    this.estudiosAnalistaService.descargarPreliminar(req);
   }
 
   color(id: 1 | 2 | 3) {

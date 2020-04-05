@@ -14,6 +14,7 @@ import { RevisarModalComponent } from './modals/revisar-modal/revisar-modal.comp
 import { SolicitarCancelacionEmpleadoComponent } from './modals/solicitar-cancelacion-empleado/solicitar-cancelacion-empleado.component';
 import { GraficasComponent } from './graficas/graficas.component';
 import { ChartsModule } from 'ng2-charts';
+import { TablaEstatusComponent } from './tabla-estatus/tabla-estatus.component';
 
 @NgModule({
   imports: [
@@ -24,7 +25,15 @@ import { ChartsModule } from 'ng2-charts';
       FormsModule,
       ChartsModule,
   ],
-  exports: [LoadingComponent, TitleComponent, TitleTablaComponent, TablaGeneralComponent, SolicitarEstudioSharedComponent, RevisarModalComponent],
+  exports: [
+    LoadingComponent, 
+    TitleComponent, 
+    TitleTablaComponent, 
+    TablaGeneralComponent, 
+    SolicitarEstudioSharedComponent, 
+    RevisarModalComponent,
+    TablaEstatusComponent,
+  ],
   declarations: [
     LoadingComponent, 
     TitleComponent, 
@@ -34,6 +43,7 @@ import { ChartsModule } from 'ng2-charts';
     RevisarModalComponent,
     SolicitarCancelacionEmpleadoComponent,
     GraficasComponent,
+    TablaEstatusComponent,
   ],
   entryComponents: [
     RevisarModalComponent,

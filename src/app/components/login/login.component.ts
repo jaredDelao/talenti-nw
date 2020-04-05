@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
     this.formInit();
   }
 
-  formInit() {
+  formInit() { 
     this.form = this.fb.group({
       sService: new FormControl('login'),
       correo: new FormControl("", [Validators.required, Validators.email]),

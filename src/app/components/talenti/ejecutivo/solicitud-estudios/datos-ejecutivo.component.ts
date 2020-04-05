@@ -14,6 +14,7 @@ import { DatePipe } from '@angular/common';
 import * as moment from 'moment'
 import { GenerateExcelService } from 'src/app/services/generate-excel.service';
 import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencriptar.service';
+import { VerificarEstatusService } from 'src/app/services/verificar-estatus.service';
 
 @Component({
   selector: "app-datos-ejecutivo",
@@ -23,9 +24,10 @@ import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencr
 export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [
-    'folio', 'estudio', 'nombre', 'fecha_solicitud', 'estatus_solicitud', 'estatus_estudio', 'comentarios'
+    'folio', 'nombre', 'estatus_solicitud', 'estatus_preliminar', 'estatus_dictamen', 'comentarios'
   ];
   dataSource: MatTableDataSource<Estudio>;
+  loader: boolean = false;
 
   req = {
     sService: 'getSolicitudesEjecutivo',
@@ -54,7 +56,7 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
   validarEstudio: any = 'PENDIENTE';
   validarPublicacionPreeliminar: boolean = false;
 
-  constructor(private estudiosService: EstudiosService, private fb: FormBuilder, private excelGenerate: GenerateExcelService,
+  constructor(private estudiosService: EstudiosService, private fb: FormBuilder, private excelGenerate: GenerateExcelService, public vEstatusService: VerificarEstatusService,
     public dialog: MatDialog, private cd: ChangeDetectorRef, private router: Router, private encryptService: EncriptarDesencriptarService) {
     this.pipe = new DatePipe('en');
   }
@@ -121,7 +123,8 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
 
   getEstudios() {
     console.log(this.req)
-    this.estudiosService.getEstudios(this.req).subscribe((estudiosList: any)=> {
+    this.loader = true;
+    this.estudiosService.getEstudiosCliente(this.req).subscribe((estudiosList: any)=> {
       console.log(estudiosList);
       const {resultado} = estudiosList;
       this.estudiosList = resultado;
@@ -145,6 +148,8 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
         }
         return true;
       }
+    }, (err) => {}, () => {
+      this.loader = false;
     });
   }
 
@@ -225,13 +230,13 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
   }
 
   color(row) {
-    if (row.bDeclinada == '1') {
-      return {'background-color': '#FEC6C0'}
-    }
-    if (row.bValidada == '1') {
-      return {'background-color': '#ABEBC6'}
-    }
-    return {'background-color': '#F9E79F'}
+    // if (row.bDeclinada == '1') {
+    //   return {'background-color': '#FEC6C0'}
+    // }
+    // if (row.bValidada == '1') {
+    //   return {'background-color': '#ABEBC6'}
+    // }
+    return {'background-color': '#transparent'}
   }
 
   verText(e: HTMLSpanElement) {
@@ -285,21 +290,15 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
   }
 
   verificarEstatusSolicitud(element) {
-    const { bDeclinada, bValidada } = element;
-    if (bDeclinada == '1') return 'Declinada';
-    if (bValidada == '1') return 'Validada';    
-    return 'Pendiente';
+    return this.vEstatusService.verificarEstatusSolicitud(element);
   }
 
-  verificarEstatusEstudio(element) {
-    const { bDeclinada, bValidada, bPublicarDictamen } = element;
+  verificarEstatusDictamen(bPublicarDictamen, iEstatusGeneral) {
+    return this.vEstatusService.verificarDictamen(bPublicarDictamen, iEstatusGeneral);
+  }
 
-    if (bPublicarDictamen == '3') return 'Publicado'
-    if (bPublicarDictamen == '4') return 'Rechazado'
-    // if (bValidada == '1') return 'En proceso';
-    // if (bDeclinada == '1') return 'Cancelada';
-    
-    return 'Pendiente';
+  verificarPreliminar(iPublicarPreliminar) {
+    return this.vEstatusService.verificarPreliminar(iPublicarPreliminar);
   }
 
 }

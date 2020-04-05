@@ -64,7 +64,6 @@ export class EstudiosAnalistaComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   ngAfterViewInit() {
-    
     this.form.get('fechaInicioForm').valueChanges.subscribe((v) => {
       if (v !== '' || v !== null) this.form.get('fechaFinalForm').enable();
       if (v == null || v == '') {

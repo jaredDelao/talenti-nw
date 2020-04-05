@@ -52,6 +52,11 @@ export class DetalleEstudioClienteComponent implements OnInit, AfterViewInit, On
     { estudios: "est2", documentos: "doc2" }
   ];
 
+  // Tabla estatus
+  dataTablaEstatus: any[] = [];
+  columnasTablaEstatus: any[];
+  tipoEstudio: any = null;
+
   // Estudios
   columnsEstudios = ["estudios", "documentos"];
   datosEstudios = [
@@ -75,6 +80,12 @@ export class DetalleEstudioClienteComponent implements OnInit, AfterViewInit, On
   idEstudio: any;
   mostrarEstudiosCompletos: boolean = false;
   solicitudEnProceso: boolean = false;
+  estatusSolicitud: any = null;
+
+  mostrarMensajeAlerta: any = {
+    desc: '',
+    id: null
+  };
 
   subs = new Subscription();
   subs1 = new Subscription();
@@ -120,7 +131,12 @@ export class DetalleEstudioClienteComponent implements OnInit, AfterViewInit, On
     if (idUrl) {
       this.loading = true;
       this.subs = this.estudiosService.getEstudioById(req).pipe(map((r) => r.resultado)).subscribe((datosUsuario) => {
-        console.log(datosUsuario[0]);
+        console.log('data:::', datosUsuario[0]);
+        // Datos tabla input Data
+        this.datosTablaEstatus(datosUsuario[0]);
+        this.showMessage(datosUsuario[0]);
+        this.tipoEstudio = datosUsuario[0].iIdEstudio;
+        this.estatusSolicitud = datosUsuario[0].iEstatusGeneral;
         this.idSolicitud = datosUsuario[0].iIdSolicitud;
         this.bDictamen = datosUsuario[0].bPublicarDictamen;
         this.verificarMessage(datosUsuario[0].bPublicarDictamen);
@@ -139,6 +155,15 @@ export class DetalleEstudioClienteComponent implements OnInit, AfterViewInit, On
       this.loading = false;
       return this.router.navigate(['/cliente/estudios-cliente']);
     }
+  }
+
+  datosTablaEstatus(data) {
+    const {bDeclinada, bValidada, iIdEmpleadoLogistica, iContadoAgendas, bAgendaRealizada, bEstatusAsignacion, iEstatusGeneral, iEstatusDictamen, bPublicarDictamen} = data;
+    this.dataTablaEstatus = [
+      {bDeclinada, bValidada, iIdEmpleadoLogistica, iContadoAgendas, bAgendaRealizada, 
+        bEstatusAsignacion, iEstatusGeneral, iEstatusDictamen, bPublicarDictamen
+      }
+    ]
   }
 
   setDatosEstudioDictamen(value) {
@@ -221,5 +246,21 @@ export class DetalleEstudioClienteComponent implements OnInit, AfterViewInit, On
       bCertificadoCalidad: value.bCertificadoCalidad,
       iPublicarPreliminar: value.iPublicarPreliminar
     })
+  }
+
+  showMessage(row) {
+    const {CancelSolic, iEstatusGeneral, bDeclinada, bValidada} = row;
+    if (iEstatusGeneral == '4') {
+      this.mostrarMensajeAlerta.id = 1;
+      return this.mostrarMensajeAlerta.desc = 'Solicitud cancelada';
+    }
+    if (CancelSolic > '0') {
+      this.mostrarMensajeAlerta.id = 2;
+      return this.mostrarMensajeAlerta.desc = 'Solicitud de cancelación enviada'; 
+    }
+    if (bDeclinada == '0' && bValidada == '0') return this.mostrarMensajeAlerta.desc = 'Solicitud en proceso';
+    if (bDeclinada == '1') return this.mostrarMensajeAlerta.desc = 'Solicitud declinada';
+
+    if (bValidada == '1') return this.mostrarMensajeAlerta = null;
   }
 }

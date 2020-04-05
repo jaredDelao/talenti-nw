@@ -5,6 +5,7 @@ import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencr
 import Swal from 'sweetalert2';
 import { EmpresasService } from 'src/app/services/coordinador/empresas.service';
 import { ClienteService } from 'src/app/services/cliente/cliente.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: "app-cancelar-solicitud-cliente",
@@ -27,7 +28,7 @@ export class CancelarSolicitudClienteComponent implements OnInit {
   catMotivo: any;
   dataArchivo: any = null;
 
-  constructor( private fb: FormBuilder, private encryptDecryptService: EncriptarDesencriptarService,
+  constructor( private fb: FormBuilder, private encryptDecryptService: EncriptarDesencriptarService, private router: Router,
     public dialogRef: MatDialogRef<any>, private empresasService: EmpresasService, private clienteService: ClienteService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
@@ -76,6 +77,9 @@ export class CancelarSolicitudClienteComponent implements OnInit {
       this.loadArchivo = true;
       let blob = this.dataArchivo.target.files[0];
       let name = this.dataArchivo.target.files[0].name;
+
+      console.log(blob, name);
+      
       return this.empresasService.subirArchivo(blob, name).toPromise();
     }
     //   if (!resp.Identificador || resp.resultado != 'Ok') {
@@ -103,6 +107,7 @@ export class CancelarSolicitudClienteComponent implements OnInit {
   async enviar() {
     this.loadArchivo = true;
 
+    // archivo
     try {
       let resp: any = await this.subirArchivo();
       if (!resp.Identificador || resp.resultado != 'Ok') {
@@ -119,11 +124,19 @@ export class CancelarSolicitudClienteComponent implements OnInit {
       return Swal.fire('Error', 'Falta cargar el archivo', 'error');
     }
 
+    // Request
     this.form.get('iIdClienteSolicitante').patchValue(this.idCliente);
     let req = this.form.getRawValue();
     console.log(req);
     this.clienteService.solicitarCancelacionCliente(req).subscribe((resp: any) => {
-      Swal.fire('Aviso', resp.resultado, 'warning');
+      if (resp.resultado != 'Ok') return Swal.fire('Aviso', 'La solicitud ya ha sido enviada anteriormente', 'warning').then(() => {
+        this.dialogRef.close();
+      })
+
+      return Swal.fire('Solicitud enviada', 'La solicitud se ha enviado exitosamente', 'success').then(() => {
+        this.dialogRef.close();
+        return this.router.navigate(['/cliente/detalle-estudio/', this.data.idSolicitud]);
+      })
     })
   }
 }

@@ -57,6 +57,10 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
     {token: null, token2: null},
   ];
 
+  // Bandera cancelacion
+  bSolicCancel: any = null;
+
+
   // Complemento
   columnsComplemento = ["estudios", "revision", 'publicar'];
   datosComplemento = [
@@ -89,6 +93,11 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
   bDictamen: any;
   bPreliminar: any;
   bComplemento: any;
+
+   // Tabla estatus
+  dataTablaEstatus: any[] = [];
+  columnasTablaEstatus: any[]= ['estatus_solicitud', 'estatus_asignacion', 'estatus_agenda', 'estatus_aplicacion', 'estatus_dictamen', 'estatus_preliminar','dictamen'];
+  tipoEstudio: any = null;
 
   subs = new Subscription();
   subs1 = new Subscription();
@@ -153,6 +162,9 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
       this.loading = true;
       this.subs = this.estudiosService.getEstudioById(req).pipe(map((r) => r.resultado)).subscribe((datosUsuario) => {
         console.log(datosUsuario[0]);
+        this.datosTablaEstatus(datosUsuario[0]);
+        this.bSolicCancel = datosUsuario[0].CancelSolic;
+        this.tipoEstudio = datosUsuario[0].iIdEstudio;
         this.idSolicitud = datosUsuario[0].iIdSolicitud;
         this.bDictamen = datosUsuario[0].bPublicarDictamen;
         this.bComplemento = datosUsuario[0].iEstatusComplemento;
@@ -175,6 +187,15 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
       this.loading = false;
       return this.router.navigate(['ejecutivo/estudios']);
     }    
+  }
+
+  datosTablaEstatus(data) {
+    const {bDeclinada, bValidada, iIdEmpleadoLogistica, iContadoAgendas, bAgendaRealizada, bEstatusAsignacion, iEstatusGeneral, iEstatusDictamen, bPublicarDictamen} = data;
+    this.dataTablaEstatus = [
+      {bDeclinada, bValidada, iIdEmpleadoLogistica, iContadoAgendas, bAgendaRealizada, 
+        bEstatusAsignacion, iEstatusGeneral, iEstatusDictamen, bPublicarDictamen
+      }
+    ]
   }
 
   getCatalogoEstudios() {

@@ -6,7 +6,10 @@ import { EstudiosService } from 'src/app/services/ejecutivo/estudios.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import * as moment from 'moment';
+import * as bcryptjs from 'bcryptjs';
 import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencriptar.service';
+import { clienteNormal, clienteGNP } from '../../../shared/docs/tiposDictamen';
+import { VerificarEstatusService } from 'src/app/services/verificar-estatus.service';
 
 @Component({
   selector: 'app-estudios-cliente',
@@ -16,15 +19,19 @@ import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencr
 export class EstudiosClienteComponent implements OnInit {
 
   displayedColumns: string[] = [
-    'folio', 'nombre', 'fecha_solicitud', 'estatus_solicitud', 'estatus_estudio', 'comentarios'
+    'folio', 'nombre', 'fecha_solicitud', 'estatus_solicitud', 'estatus_dictamen', 'dictamen', 'comentarios'
   ];
   dataSource: MatTableDataSource<any>;
 
   req = {
-    sService: 'getSolicitudesCliente',
+    sService: null,
     iIdCliente: null
   }
+  isPerfilAdmin: boolean = false;
+  isGNP: any = null;
+  estatusDictamenList = [...clienteNormal, ...clienteGNP];
 
+  loader: boolean = false;
   fechaInicio: Date;
   fechaFin: Date;
   pipe: DatePipe;
@@ -44,12 +51,19 @@ export class EstudiosClienteComponent implements OnInit {
   @ViewChild('togglePublicarDictamen', {static: false}) toggleDictamen: MatSlideToggle;
 
   constructor(private estudiosService: EstudiosService, private fb: FormBuilder, private encryptDecryptService: EncriptarDesencriptarService,
-    public dialog: MatDialog, private cd: ChangeDetectorRef, private router: Router) { }
+    public dialog: MatDialog, private cd: ChangeDetectorRef, private router: Router, public vEstatusService: VerificarEstatusService) { }
 
-  async ngOnInit() {
+  async ngOnInit() {    
     this.formInit();
+    // IdCliente
     this.req.iIdCliente = await this.getIdCliente();
+    // Perfil cliente - Admin o User
+    this.isPerfilAdmin = await this.getPerfil();
+    // IsGNP
+    this.isGNP = await this.getIsGnp();
+    console.log('GNP::', this.isGNP);
     this.getEstudios();
+    
   }
 
   get fromDate() {
@@ -62,6 +76,16 @@ export class EstudiosClienteComponent implements OnInit {
   getIdCliente() {
     let idClienteEncrypt = localStorage.getItem('idCliente');
     return this.encryptDecryptService.desencriptar(idClienteEncrypt).toPromise();
+  }
+
+  getIsGnp() {
+    let isGnp = localStorage.getItem('isGnp');
+    return this.encryptDecryptService.desencriptar(isGnp).toPromise();
+  }
+
+  getPerfil() {
+    let perfil = localStorage.getItem('perfil');
+    return bcryptjs.compare('Admin', perfil)
   }
 
   formInit() {
@@ -80,12 +104,15 @@ export class EstudiosClienteComponent implements OnInit {
   }
 
   getEstudios() {
+    this.loader = true;
 
-    console.log(this.req);
+    // console.log(this.isPerfilAdmin);
+    if (this.isPerfilAdmin) this.req.sService = 'getSolicitudesClienteAdmin';
+    if (this.isPerfilAdmin == false) this.req.sService = 'getSolicitudesCliente';
+    console.log('Request', this.req)
     
-    this.estudiosService.getEstudios(this.req).subscribe((estudiosList: any)=> {
-
-      console.log(estudiosList);
+    this.estudiosService.getEstudiosCliente(this.req).subscribe((estudiosList: any)=> {
+      console.log('DATA::', estudiosList);
       
       
       // Verificar estudios
@@ -112,7 +139,10 @@ export class EstudiosClienteComponent implements OnInit {
         }
         return true;
       }
-    }, (err) => Swal.fire('Error', 'Error al procesar las solicitudes ' + err, 'error'));
+    }, (err) => {
+      this.loader = false;
+      return Swal.fire('Error', 'Error al procesar las solicitudes ' + err, 'error')
+    }, () => this.loader = false);
   }
 
   clear() {
@@ -130,31 +160,27 @@ export class EstudiosClienteComponent implements OnInit {
     this.router.navigate(['cliente/solicitar-estudio/']);
   }
 
+  color(row) {
+    // if (row.bDeclinada == '1') {
+    //   return {'background-color': '#FEC6C0'}
+    // }
+    // if (row.bValidada == '1') {
+    //   return {'background-color': '#ABEBC6'}
+    // }
+    // return {'background-color': '#F9E79F'}
+    return {'background-color': 'transparent'}
+  }
 
   verificarEstatusSolicitud(element) {
-    const { bDeclinada, bValidada } = element;
-    if (bDeclinada == '1') return 'Declinada';
-    if (bValidada == '1') return 'Validada';    
-    return 'Pendiente';
-  }
-  verificarEstatusEstudio(element) {
-    const { bDeclinada, bValidada, bPublicarDictamen } = element;
-
-    if (bPublicarDictamen == '0') return 'Pendiente'
-    if (bPublicarDictamen == '3') return 'Publicado'
-    if (bPublicarDictamen == '4') return 'Rechazado'
-    
-    return 'En proceso';
+    return this.vEstatusService.verificarEstatusSolicitud(element);
   }
 
-  color(row) {
-    if (row.bDeclinada == '1') {
-      return {'background-color': '#FEC6C0'}
-    }
-    if (row.bValidada == '1') {
-      return {'background-color': '#ABEBC6'}
-    }
-    // return {'background-color': '#F9E79F'}
+  verificarDictamen(idDictamen, iEstatusGeneral) {
+    return this.vEstatusService.verificarDictamen(idDictamen, iEstatusGeneral);  
+  }
+
+  verificarEstatusDictamen(bPublicarDictamen, iEstatusGeneral) {
+    return this.vEstatusService.verificarEstatusDictamen(bPublicarDictamen, iEstatusGeneral);
   }
 
 }
