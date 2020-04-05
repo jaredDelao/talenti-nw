@@ -84,7 +84,6 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
     this.getCatalogoEstudios();
     this.consultaAnalista();
     this.getCatAnalistas();
-    this.solicitudCancelacion();
 
     this.catEmpresas = await this.getEmpresas();
     let clientes = await this.getClientes();
@@ -468,5 +467,7 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
   descargarEvidencia() {    
     this.estudiosAnalistaService.descargarPreliminar(this.controlTokenCancel.value);
   }
+
+  aprobarCancel() {}
 }
 
