@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
     
     this._loginService.login(req).subscribe(res => {
       console.log(res);
-      const { token, perfil, idPerfil, resultado, Nombre, iIdEmpleado, iIdCliente, bIsGnp }:any = res;
+      const { token, perfil, idPerfil, resultado, Nombre, iEmpresa, stipoFolio, iIdEmpleado, iIdCliente, bIsGnp }:any = res;
 
       if (resultado == 'Error') {
         this.loader = false;
@@ -57,11 +57,21 @@ export class LoginComponent implements OnInit {
       }
 
       // idEmpleado
-      if (iIdEmpleado) {
+      if (iIdEmpleado !== null) {
         this.encryptService.encriptarLocalStorage(iIdEmpleado, 'idEmpleado');
       }
       // isGnp
-      this.encryptService.encriptarLocalStorage(bIsGnp, 'isGnp');
+      if (bIsGnp !== null) {
+        this.encryptService.encriptarLocalStorage(bIsGnp.toString(), 'isGnp');
+      }
+      // Empresa
+      if (iEmpresa !== null) {
+        this.encryptService.encriptarLocalStorage(iEmpresa, 'idEmpresa');
+      }
+      // tipoFolio
+      if (stipoFolio) {
+        this.encryptService.encriptarLocalStorage(stipoFolio.toString(), 'tipoFolio');
+      }
       
       // Token
       if (token) localStorage.setItem('token', token);

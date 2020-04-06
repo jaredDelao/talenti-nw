@@ -12,6 +12,7 @@ import { EmpleadosService } from 'src/app/services/coordinador/empleados.service
 import { pluck, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencriptar.service';
+import { VerificarEstatusService } from 'src/app/services/verificar-estatus.service';
 
 
 @Component({
@@ -21,7 +22,7 @@ import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencr
 })
 export class EstudiosLogisticaComponent implements OnInit {
 
-  displayedColumns: string[] = ['folio', 'estudio', 'nombre', 'fecha_solicitud', 'estatus_agendado', 'estatus_solicitud', 'detalles'];
+  displayedColumns: string[] = [];
   dataSource: MatTableDataSource<any>;
 
   // request getEstudios
@@ -54,12 +55,12 @@ export class EstudiosLogisticaComponent implements OnInit {
 
   banderaSupervisor: boolean = false;
 
-  constructor(private fb: FormBuilder, private router: Router, public estudiosAnalistaService: EstudiosAnalistaService, public logisticaService: LogisticaService, private empleadosService: EmpleadosService, private encryptDecryptService: EncriptarDesencriptarService) { }
+  constructor(private fb: FormBuilder, private router: Router, public estudiosAnalistaService: EstudiosAnalistaService, public logisticaService: LogisticaService, private empleadosService: EmpleadosService, private encryptDecryptService: EncriptarDesencriptarService, public vEstatusService: VerificarEstatusService) { }
 
   async ngOnInit() {
+    this.formInit();
     this.idLogistica = await this.getIdLogistica();
     this.verificarRolLogistica();
-    this.formInit();
     this.getEmpleados();
     // this.getEstudios();
   }
@@ -77,34 +78,24 @@ export class EstudiosLogisticaComponent implements OnInit {
       bcryptjs.compare('4', idPerfil, (err, res) => {
         if (res) {
           console.log('Es supervisor: ',this.idLogistica);
-          this.displayedColumns = ['folio', 'estudio', 'nombre', 'fecha_solicitud', 'estatus_agendado', 'asignado', 'detalles'];
-          
+          this.displayedColumns = ['folio', 'nombre', 'fecha_solicitud', 'estatus_agendado', 'estatus_aplicacion', 'detalles'];
           this.banderaSupervisor = true;
           return this.getEstudiosSupervisor();
         }
-        console.log(res); 
       });
 
       // Rol logistica normal
       bcryptjs.compare('8', idPerfil, (err, res) => {
         if (res) {
           console.log('Es normal', this.idLogistica);
-          
+          this.displayedColumns = ['folio', 'nombre', 'fecha_solicitud', 'estatus_agendado','estatus_aplicacion', 'detalles'];
           this.banderaSupervisor = false;
           return this.getEstudiosByIdLogistica();
         }
-        console.log('Es logistica ord: ', res); 
       });
     } else {
       return this.router.navigate(['/login']);
     }
-
-    // if (idPerfil == '4') {
-    //   return this.getEstudiosSupervisor();
-    // }
-    // if (idPerfil == '8') {
-    //   return this.getEstudiosByIdLogistica();
-    // }
   }
 
   getEmpleados() {
@@ -133,6 +124,8 @@ export class EstudiosLogisticaComponent implements OnInit {
   getEstudiosSupervisor() {
     this.banderaSupervisor = true;
     this.logisticaService.getSolicitudesLogistica().subscribe((res: any) => {
+      console.log(res);
+      
       this.estudiosList = res.resultado;
       this.getEstudios(res.resultado);
     })
@@ -201,31 +194,18 @@ export class EstudiosLogisticaComponent implements OnInit {
     
   }
 
-  estatusAgenda(estatus) {
-    switch(estatus) {
-      case '0':
-        return 'Sin agenda'
-      case '1':
-        return 'Agendado'
-      case '2':
-        return 'Reagendado'
-      case '3':
-        return 'Reagendado'
-      case '4':
-        return 'Cancelado'
-
-      default:
-        return 'Sin estatus'
-    } 
+  verificarEstatusAgenda(iContadoAgendas) {
+    return this.vEstatusService.verificarEstatusAgenda(iContadoAgendas);
   }
 
-  empleadoAsignado(idempleado) {
-    const empleado = this.catEmpleados.find((value) => value.iIdEmpleado == idempleado);
-    if (empleado) {
-      return empleado.sNombres + ' ' + empleado.sApellidos;
-    } else {
-      return 'Sin asignar'
-    }
+  verificarEstatusAplicacion(bEstatusAsignacion, iEstatusGeneral) {
+    return this.vEstatusService.verificarEstatusAplicacion(bEstatusAsignacion, iEstatusGeneral);
+  }
+
+  verificarEstatusAsignacion(iIdEmpleadoLogistica) {
+    if (!iIdEmpleadoLogistica) return 'SIN ASIGNAR'
+    const empleadoLogistica = this.catEmpleados.find((value) => value.iIdEmpleado == iIdEmpleadoLogistica);
+    return empleadoLogistica.sNombres + ' ' + empleadoLogistica.sApellidos;
   }
 
   verificarEstatusSolicitud(element) {

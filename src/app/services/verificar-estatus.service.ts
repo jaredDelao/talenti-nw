@@ -7,6 +7,7 @@ import { clienteNormal, clienteGNP } from '../shared/docs/tiposDictamen';
 export class VerificarEstatusService {
 
   estatusDictamenList = [...clienteNormal, ...clienteGNP];
+  catEmpleados: any;
 
   constructor() { }
 
@@ -56,5 +57,29 @@ export class VerificarEstatusService {
       case '4':
         return 'REBOTADO';
     }
+  }
+
+  verificarEstatusAgenda(iContadoAgendas) {
+    switch(iContadoAgendas) {
+      case '0':
+        return 'PENDIENTE'
+      case '1':
+        return 'AGENDADO'
+      case '2':
+        return 'REAGENDADO'
+      case '3':
+        return 'REAGENDADO'
+      case '4':
+        return 'CANCELADO'
+
+      default:
+        return '-'
+    } 
+  }
+
+  verificarEstatusAplicacion(bEstatusAsignacion, iEstatusGeneral) {
+    if (iEstatusGeneral == '4') return 'CANCELADO';
+    if (!bEstatusAsignacion || bEstatusAsignacion == '0') return 'PENDIENTE'; 
+    if (bEstatusAsignacion == '1') return 'EXITOSO'; 
   }
 }

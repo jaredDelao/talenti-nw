@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { EstudiosAnalistaService } from 'src/app/services/analista/estudios-analista.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-revisar-modal',
@@ -36,7 +37,7 @@ export class RevisarModalComponent implements OnInit {
   // 1 preliminar - 2 estudio - 3 complemento
   sRechazo: any;
 
-  constructor(public dialogRef: MatDialogRef<any>, @Inject(MAT_DIALOG_DATA) public data: any, public estudiosAnalistaService: EstudiosAnalistaService) { }
+  constructor(public dialogRef: MatDialogRef<any>, @Inject(MAT_DIALOG_DATA) public data: any, public estudiosAnalistaService: EstudiosAnalistaService, public router: Router) { }
 
   ngOnInit() {
     this.titulo = this.data.titulo;
@@ -75,7 +76,8 @@ export class RevisarModalComponent implements OnInit {
         this.estudiosAnalistaService.rechazarEstudioSoc(this.request).subscribe((res: any) => {
           if (res.resultado != 'Ok') return Swal.fire('Error', 'Error al rechazar estudio', 'error');
           return Swal.fire('Estudio rechazado exitosamente', '', 'success').then(() => {
-            this.dialogRef.close();
+            location.reload();
+            // this.dialogRef.close();
           })
         });
         break;
@@ -87,7 +89,9 @@ export class RevisarModalComponent implements OnInit {
         this.estudiosAnalistaService.rechazarComplemento(this.request).subscribe((res: any) => {
           if (res.resultado != 'Ok') return Swal.fire('Error', 'Error al rechazar complemento', 'error');
           return Swal.fire('Complemento rechazado exitosamente', '', 'success').then(() => {
-            this.dialogRef.close();
+            // this.router.navigateByUrl('ejecutivo/detalle-estudio/' + this.data.idSolicitud);
+            // this.dialogRef.close();
+            location.reload();
           })
         });
         break;

@@ -16,6 +16,8 @@ export class TablaEstatusComponent implements OnInit, OnDestroy {
   @Input() data: any;
   @Input() titulo: string;
   @Input() tipoEstudio: string;
+  @Input() analista: boolean = false;
+  
 
   displayedColumns: Array<string> = [];
   dataSource: any;
@@ -32,8 +34,7 @@ export class TablaEstatusComponent implements OnInit, OnDestroy {
   constructor(public empleadosService: EmpleadosService) { }
 
   ngOnInit() {
-    this.getEmpleados();
-    
+    this.getEmpleados();    
   }
 
   ngOnDestroy() {
@@ -91,7 +92,7 @@ export class TablaEstatusComponent implements OnInit, OnDestroy {
     if (bEstatusAsignacion == '1') return 'EXITOSO';
   }
 
-  estatusDictamen(bPublicarDictamen, iEstatusGeneral) {
+  estatusDictamen(bPublicarDictamen, iEstatusGeneral) {    
     if (iEstatusGeneral == '4') return 'CANCELADO';
     switch(bPublicarDictamen) {
       case '0':
@@ -115,7 +116,7 @@ export class TablaEstatusComponent implements OnInit, OnDestroy {
     }
   }
 
-  estatusPreliminar(iPublicarPreliminar, iEstatusGeneral) {    
+  estatusPreliminar(iPublicarPreliminar, iEstatusGeneral) {
     if (iPublicarPreliminar == '0' || !iPublicarPreliminar) return 'N/A';
     if (iEstatusGeneral == '4') return 'CANCELADO';
     if (iPublicarPreliminar == '1') return 'PENDIENTE';

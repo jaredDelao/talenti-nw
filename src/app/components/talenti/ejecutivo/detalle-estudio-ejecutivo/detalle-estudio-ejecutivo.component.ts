@@ -7,6 +7,8 @@ import { Route } from '@angular/compiler/src/core';
 import { map, pluck, flatMap, filter, toArray, catchError } from 'rxjs/operators';
 import { Subscription, of } from 'rxjs';
 import { EmpleadosService } from 'src/app/services/coordinador/empleados.service';
+import { MatDialog } from '@angular/material';
+import { SolicitarCancelacionEjecutivoComponent } from '../modals/solicitar-cancelacion-ejecutivo/solicitar-cancelacion-ejecutivo.component';
 
 @Component({
   selector: 'app-detalle-estudio-ejecutivo',
@@ -93,6 +95,7 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
   bDictamen: any;
   bPreliminar: any;
   bComplemento: any;
+  estatusGeneral: any;
 
    // Tabla estatus
   dataTablaEstatus: any[] = [];
@@ -108,7 +111,7 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
 
   mostrarEstudiosCompletos: boolean = false;
 
-  constructor(public estudiosService: EstudiosService, public empresasService: EmpresasService, private router: Router, private fb: FormBuilder, 
+  constructor(public estudiosService: EstudiosService, public empresasService: EmpresasService, private router: Router, private fb: FormBuilder, public dialog: MatDialog,
               private cd: ChangeDetectorRef, private route: ActivatedRoute, private empleadosService: EmpleadosService) {
                 this.catSelectDisctamen = this.catDictamen;
                }
@@ -164,6 +167,7 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
         console.log(datosUsuario[0]);
         this.datosTablaEstatus(datosUsuario[0]);
         this.bSolicCancel = datosUsuario[0].CancelSolic;
+        this.estatusGeneral = datosUsuario[0].iEstatusGeneral;
         this.tipoEstudio = datosUsuario[0].iIdEstudio;
         this.idSolicitud = datosUsuario[0].iIdSolicitud;
         this.bDictamen = datosUsuario[0].bPublicarDictamen;
@@ -190,9 +194,9 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
   }
 
   datosTablaEstatus(data) {
-    const {bDeclinada, bValidada, iIdEmpleadoLogistica, iContadoAgendas, bAgendaRealizada, bEstatusAsignacion, iEstatusGeneral, iEstatusDictamen, bPublicarDictamen} = data;
+    const {bDeclinada, bValidada, iIdEmpleadoLogistica, iContadoAgendas, bAgendaRealizada, iPublicarPreliminar, bEstatusAsignacion, iEstatusGeneral, iEstatusDictamen, bPublicarDictamen} = data;
     this.dataTablaEstatus = [
-      {bDeclinada, bValidada, iIdEmpleadoLogistica, iContadoAgendas, bAgendaRealizada, 
+      {bDeclinada, bValidada, iIdEmpleadoLogistica, iContadoAgendas, bAgendaRealizada, iPublicarPreliminar,
         bEstatusAsignacion, iEstatusGeneral, iEstatusDictamen, bPublicarDictamen
       }
     ]
@@ -248,8 +252,6 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
   }
 
   setDatos(value) {
-    console.log(value.iIdCliente);
-
     // estatusDictamen
     this.controlEstatusDictamen.setValue(value.iEstatusDictamen);
     
@@ -305,5 +307,16 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
       if (estatus == 4) return 'En revisión';
       return 'No aplica';
     }
+  }
+
+  solicitarCancelacionEjecutivo() {
+    const dialogRef = this.dialog.open(SolicitarCancelacionEjecutivoComponent, {
+      width: '60%',
+      data: {idSolicitud: this.idSolicitud}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      
+    });
   }
 }

@@ -4,13 +4,13 @@
 </div>
 <div class="container" *ngIf="!loader">
     <div class="form-group" [formGroup]="form">
-        <title-tabla titulo="ACTUALIZAR ESTATUS DICTAMEN"></title-tabla>
+        <title-tabla titulo="SUBIR ARCHIVOS DICTAMEN"></title-tabla>
 
         <div class="custom-file mt-2">
             <input type="file" class="custom-file-input" id="customFileLang" (change)="subirArchivo($event, 1)" lang="es">
             <label class="custom-file-label" for="customFileLang" #label1>Seleccionar Archivo 1</label>
         </div>
-
+        
         <div class="custom-file mt-2">
             <input type="file" class="custom-file-input" id="customFileLang" (change)="subirArchivo($event, 2)" lang="es">
             <label class="custom-file-label" for="customFileLang" #label2>Seleccionar Archivo 2</label>
@@ -19,8 +19,8 @@
         <mat-form-field class="mt-4">
             <mat-label>Selecciona un estatus de dictamen</mat-label>
             <mat-select formControlName="estatusDictamen">
-              <mat-option *ngFor="let dictamen of catSelectDisctamen" [value]="dictamen.id">
-                {{dictamen.name}}
+              <mat-option *ngFor="let dictamen of catDictamenSelect" [value]="dictamen.id">
+                {{dictamen.nombre}}
               </mat-option>
             </mat-select>
         </mat-form-field>

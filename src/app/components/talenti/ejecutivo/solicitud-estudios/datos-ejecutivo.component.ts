@@ -55,6 +55,7 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
   element: any = {};
   validarEstudio: any = 'PENDIENTE';
   validarPublicacionPreeliminar: boolean = false;
+  bTipoFolio: 'e' | 'f' = null;
 
   constructor(private estudiosService: EstudiosService, private fb: FormBuilder, private excelGenerate: GenerateExcelService, public vEstatusService: VerificarEstatusService,
     public dialog: MatDialog, private cd: ChangeDetectorRef, private router: Router, private encryptService: EncriptarDesencriptarService) {
@@ -64,6 +65,7 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
   async ngOnInit() {
     this.formInit();
     this.req.iIdEjecutivo = await this.getIdEjecutivo();
+    this.bTipoFolio = await this.getTipoFolioUsuario();
     this.getEstudios();
   }
 
@@ -75,6 +77,12 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
         this.form.get('fechaFinalForm').disable();
       }
     })
+  }
+
+  getTipoFolioUsuario() {
+    let tipopFolio = localStorage.getItem('tipoFolio');
+    if (tipopFolio)
+    return this.encryptService.desencriptar(tipopFolio).toPromise();
   }
 
   getIdEjecutivo() {
@@ -294,7 +302,7 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
   }
 
   verificarEstatusDictamen(bPublicarDictamen, iEstatusGeneral) {
-    return this.vEstatusService.verificarDictamen(bPublicarDictamen, iEstatusGeneral);
+    return this.vEstatusService.verificarEstatusDictamen(bPublicarDictamen, iEstatusGeneral);
   }
 
   verificarPreliminar(iPublicarPreliminar) {

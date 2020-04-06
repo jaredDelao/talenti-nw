@@ -3,9 +3,17 @@
 <app-title titulo="SOLICITUD ESTUDIO"></app-title>
 <div class="container">
 
+    
+    
     <form [formGroup]="form">
-
+        <div class="alert alert-danger alert mb-4" role="alert" *ngIf="estatusGeneral == '4'"> La solicitud ha sido cancelada</div>
+        <ng-container *ngIf="dataEstudio">
+            <div class="alert alert-danger alert mb-4" role="alert" *ngIf="dataEstudio.bDeclinada == '1' && estatusGeneral != '4'"> La solicitud ha sido declinada</div>
+        </ng-container>
+        
+        
         <div class="box-container row d-flex justify-content-center">
+
             <div class="left col-5">
                 <p>Tipo de estudio:</p>
                 <div class="form-group">
@@ -19,7 +27,7 @@
                     </mat-form-field>
                 </div>
                 <!-- Mostrar solo gnp -->
-                <div class="form-group" *ngIf="esGNP">
+                <div class="form-group" *ngIf="bTipoFolio == 'e'">
                     <mat-form-field>
                         <mat-label>Folio</mat-label>
                         <input matInput type="text" formControlName="sFolio" />
@@ -78,18 +86,20 @@
                 </div>
 
                 <!-- CANCELACION -->
-                <div class="form-group">
-                    <mat-form-field>
-                        <mat-label>Comentario de cancelación</mat-label>
-                        <textarea matInput cdkTextareaAutosize [formControl]="controlComentarioCancel"></textarea>
-                    </mat-form-field>
-                </div>
-                <div class="form-group">
-                    <button mat-stroked-button color="warn" (click)="descargarEvidencia()">Descargar evidencia de cancelación</button>
-                </div>
-                <div class="form-group">
-                    <button mat-raised-button color="warn" (click)="aprobarCancel()">Aprobar cancelación</button>
-                </div>
+                <ng-container *ngIf="bSolicCancel == 1">
+                    <div class="form-group">
+                        <mat-form-field>
+                            <mat-label>Comentario de cancelación</mat-label>
+                            <textarea matInput cdkTextareaAutosize [formControl]="controlComentarioCancel"></textarea>
+                        </mat-form-field>
+                    </div>
+                    <div class="form-group">
+                        <button mat-stroked-button color="warn" (click)="descargarEvidencia()">Descargar evidencia de cancelación</button>
+                    </div>
+                    <div class="form-group">
+                        <button mat-raised-button color="warn" *ngIf="estatusGeneral != '4'" (click)="aprobarCancel()">Aprobar cancelación</button>
+                    </div>
+                </ng-container>
                 <!-- <div class="form-group mt-3" *ngIf="form.get('sTokenCV').value !== null">
                     <button mat-raised-button color="primary" (click)="descargarCV()">Descargar CV</button>
                 </div> -->
@@ -175,13 +185,21 @@
             <div class="buttons d-flex flex-column col-3">
                 <ng-container *ngIf="!esCliente">
                     <button mat-raised-button color="primary" (click)="enviar('crearValidar')" *ngIf="!dataEstudio">CREAR</button>
-                    <button mat-raised-button color="primary" (click)="enviar('validar')" *ngIf="dataEstudio">VALIDAR</button>
-                    <button mat-raised-button color="warn" (click)="declinarSolicitud()" *ngIf="dataEstudio">DECLINAR</button>
+                    <button mat-raised-button color="primary" (click)="enviar('validar')" *ngIf="dataEstudio && estatusGeneral != '4'">VALIDAR</button>
+                    <button mat-raised-button color="warn" (click)="declinarSolicitud()" *ngIf="dataEstudio && estatusGeneral != '4'">DECLINAR</button>
                     <button mat-raised-button color="warn" (click)="regresarFunc()" >REGRESAR</button>
                 </ng-container>
                 
                 <ng-container *ngIf="esCliente">
                     <button mat-raised-button color="primary" (click)="enviar('solicitar')">SOLICITAR</button>
+                    <button mat-raised-button color="warn" (click)="regresarFunc()" >REGRESAR</button>
+                </ng-container>
+            </div>
+        </div>
+
+        <div class="actions d-flex justify-content-center mt-3 mb-3" *ngIf="!analista && dataEstudio.bDeclinada == '1'">
+            <div class="buttons d-flex flex-column col-3">
+                <ng-container>
                     <button mat-raised-button color="warn" (click)="regresarFunc()" >REGRESAR</button>
                 </ng-container>
             </div>

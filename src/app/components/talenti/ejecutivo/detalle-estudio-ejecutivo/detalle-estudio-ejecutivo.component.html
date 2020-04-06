@@ -10,7 +10,12 @@
     <!-- <button class="align-self-center" mat-raised-button color="warn">REGRESAR</button> -->
 
     <div class="container justify-content-start mb-5" [formGroup]="form">
-        <button class="mt-3 mb-3 ml-3 btn-cancelar" mat-raised-button color="warn">
+
+        <!-- ALERTS -->
+        <div class="alert alert-danger" role="alert" *ngIf="estatusGeneral == '4'">La solicitud ha sido cancelada</div>
+        <!-- ...  -->
+
+        <button class="mt-3 mb-3 ml-3 btn-cancelar" mat-raised-button color="warn" (click)="solicitarCancelacionEjecutivo()">
             SOLICITAR CANCELACIÓN
         </button>
         <div class="contenido col-12 row justify-content-start align-items-baseline">

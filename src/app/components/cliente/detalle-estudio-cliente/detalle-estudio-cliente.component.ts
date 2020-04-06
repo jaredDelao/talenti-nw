@@ -261,6 +261,6 @@ export class DetalleEstudioClienteComponent implements OnInit, AfterViewInit, On
     if (bDeclinada == '0' && bValidada == '0') return this.mostrarMensajeAlerta.desc = 'Solicitud en proceso';
     if (bDeclinada == '1') return this.mostrarMensajeAlerta.desc = 'Solicitud declinada';
 
-    if (bValidada == '1') return this.mostrarMensajeAlerta = null;
+    if (bValidada == '1') return this.mostrarMensajeAlerta.id = null;
   }
 }

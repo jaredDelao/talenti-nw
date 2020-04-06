@@ -112,6 +112,10 @@
         </div>
 
         <div class="contenido row col-12 mt-2">
+
+            <app-tabla-estatus *ngIf="dataTablaEstatus.length > 0" [data]="dataTablaEstatus" [tipoEstudio]="tipoEstudio" [columnas]="columnasTablaEstatus"></app-tabla-estatus>
+
+            
             <div class="contenido2 col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <!-- SUBIR PRELIMINAR -->
                 <title-tabla titulo="PRELIMINAR"></title-tabla>
@@ -189,6 +193,7 @@
             </div>
             <!-- SUBIR COMPLEMENTO -->
             <div class="contenido2 col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-3">
+
                 <title-tabla titulo="COMPLEMENTO"></title-tabla>
                 <div class="custom-file">
                     <input type="file" class="custom-file-input" id="customFileLang" (change)="subirArchivo($event, 'subirComplemento')" lang="es" 
@@ -222,7 +227,7 @@
                 </table>
             </div>
             <!-- table -->
-            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-5 mt-3">
+            <!-- <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-5 mt-3">
                 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
                     <ng-container matColumnDef="proceso">
@@ -251,11 +256,7 @@
                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                 </table>
-            </div>
-
-            <!-- <div class="contenido2 col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <app-tabla-general [titulo]="'preliminar'" [columns]="columnsPreliminar"></app-tabla-general>
-        </div> -->
+            </div> -->
 
         </div>
 

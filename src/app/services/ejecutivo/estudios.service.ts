@@ -67,4 +67,19 @@ export class EstudiosService {
     return this.http.post(environment.urlProd, body);
   }
 
+  solicitarCancelacion(params) {
+    let body = new HttpParams({fromObject: params})
+    return this.http.post(environment.urlProd, body);
+  }
+
+  aprobarCancelacion(params) {
+    let body = new HttpParams({fromObject: params})
+    return this.http.post(environment.urlProd, body);
+  }
+
+  solicitarCancelEjecutivo(params) {
+    let body = new HttpParams({fromObject: params})
+    return this.http.post(environment.urlProd, body);
+  }
+
 }

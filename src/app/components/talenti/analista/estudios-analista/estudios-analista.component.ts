@@ -8,6 +8,7 @@ import * as moment from 'moment';
 import { EstudiosAnalistaService } from 'src/app/services/analista/estudios-analista.service';
 import { GenerateExcelService } from 'src/app/services/generate-excel.service';
 import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencriptar.service';
+import { VerificarEstatusService } from 'src/app/services/verificar-estatus.service';
 
 @Component({
   selector: 'app-estudios-analista',
@@ -16,7 +17,7 @@ import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencr
 })
 export class EstudiosAnalistaComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  displayedColumns: string[] = ['folio', 'estudio', 'nombre', 'fecha_solicitud', 'estatus_solicitud', 'estatus_estudio', 'comentarios'];
+  displayedColumns: string[] = ['folio', 'nombre', 'fecha_solicitud', 'estatus_solicitud', 'estatus_preliminar', 'estatus_dictamen', 'comentarios'];
   dataSource: MatTableDataSource<any>;
   loading: boolean = false;
 
@@ -46,7 +47,8 @@ export class EstudiosAnalistaComponent implements OnInit, OnDestroy, AfterViewIn
   validarEstudio: any = 'PENDIENTE';
   validarPublicacionPreeliminar: boolean = false;
 
-  constructor(private fb: FormBuilder, private router: Router, public estudiosAnalistaService: EstudiosAnalistaService, private cd: ChangeDetectorRef, private excelGenerate: GenerateExcelService, private encryptService: EncriptarDesencriptarService) { }
+  constructor(private fb: FormBuilder, private router: Router, public estudiosAnalistaService: EstudiosAnalistaService, private cd: ChangeDetectorRef, 
+    private excelGenerate: GenerateExcelService, private encryptService: EncriptarDesencriptarService, public vEstatusService: VerificarEstatusService) { }
 
   async ngOnInit() {
     this.formInit();
@@ -96,6 +98,7 @@ export class EstudiosAnalistaComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   getEstudios() {
+    this.loading = true;
     this.estudiosAnalistaService.getEstudios(this.req).subscribe((estudiosList: any)=> {
       console.log(estudiosList);
       const {resultado} = estudiosList;
@@ -120,7 +123,7 @@ export class EstudiosAnalistaComponent implements OnInit, OnDestroy, AfterViewIn
         }
         return true;
       }
-    });
+    }, (err) => {}, () => this.loading = false);
   }
 
   clear() {
@@ -150,11 +153,15 @@ export class EstudiosAnalistaComponent implements OnInit, OnDestroy, AfterViewIn
   //   return 'Pendiente';
   // }
 
+
   verificarEstatusSolicitud(element) {
-    const { bDeclinada, bValidada } = element;
-    if (bDeclinada == '1') return 'Declinada';
-    if (bValidada == '1') return 'Validada';    
-    return 'Pendiente por validar';
+    return this.vEstatusService.verificarEstatusSolicitud(element);
+  }
+  verificarEstatusPreliminar(iPublicarPreliminar) {
+    return this.vEstatusService.verificarPreliminar(iPublicarPreliminar);
+  }
+  verificarEstatusDictamen(bPublicarDictamen, iEstatusGeneral) {
+    return this.vEstatusService.verificarEstatusDictamen(bPublicarDictamen, iEstatusGeneral);
   }
 
   verificarEstatusEstudio(element) {
@@ -168,13 +175,13 @@ export class EstudiosAnalistaComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   color(row) {
-    if (row.bDeclinada == '1') {
-      return {'background-color': '#FEC6C0'}
-    }
-    if (row.bValidada == '1') {
-      return {'background-color': '#ABEBC6'}
-    }
-    return {'background-color': '#F9E79F'}
+    // if (row.bDeclinada == '1') {
+    //   return {'background-color': '#FEC6C0'}
+    // }
+    // if (row.bValidada == '1') {
+    //   return {'background-color': '#ABEBC6'}
+    // }
+    return {'background-color': '#transparent'}
   }
 
   verText(e: HTMLSpanElement) {

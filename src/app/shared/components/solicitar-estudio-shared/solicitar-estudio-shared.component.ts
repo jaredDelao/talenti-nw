@@ -16,6 +16,8 @@ import { ClienteService } from 'src/app/services/cliente/cliente.service';
 import { EstudiosAnalistaService } from 'src/app/services/analista/estudios-analista.service';
 import { ClientesService } from 'src/app/services/coordinador/clientes.service';
 import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencriptar.service';
+import { MatDialog } from '@angular/material';
+import { AprobarCancelacionModalComponent } from 'src/app/components/talenti/ejecutivo/modals/aprobar-cancelacion-modal/aprobar-cancelacion-modal.component';
 
 @Component({
   selector: 'app-solicitar-estudio-shared',
@@ -29,7 +31,7 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
   @ViewChild('label', {static: false}) label1: ElementRef;
   @Input() esCliente: boolean = false;
   @Input() analista: boolean = false;
-  @Input() esGNP: boolean = true;
+  // @Input() esGNP: boolean = true;
   @Input() dataEstudio: any = false;
   @Input() regresar: any = '';
   @Input() bSolicCancel: any = null;
@@ -73,14 +75,21 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
   mostrarEstudiosCompletos: boolean = false;
   folioEditable: boolean = false;
 
-  constructor(private fb: FormBuilder, public estudiosService: EstudiosService, public router: Router, public empresasService: EmpresasService, public empleadosService: EmpleadosService,
+  bTipoFolio: 'e' | 'f' = null;
+
+  // estatus
+  estatusGeneral: any = null;
+
+  constructor(private fb: FormBuilder, public estudiosService: EstudiosService, public router: Router, public empresasService: EmpresasService, public empleadosService: EmpleadosService, private modal: MatDialog,
             private clienteService: ClientesService, public estudiosAnalistaService:EstudiosAnalistaService, public clientesService: ClienteService, private encryptService: EncriptarDesencriptarService) {}
 
   async ngOnInit() {
     
-   
     this.formInit();
     // this.catAnalistas();
+    this.bTipoFolio = await this.getTipoFolioUsuario();
+    // console.log(this.bTipoFolio);
+    
     this.getCatalogoEstudios();
     this.consultaAnalista();
     this.getCatAnalistas();
@@ -127,6 +136,12 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
         }
       }      
     })
+  }
+
+  getTipoFolioUsuario() {
+    let tipopFolio = localStorage.getItem('tipoFolio');
+    if (tipopFolio)
+    return this.encryptService.desencriptar(tipopFolio).toPromise();
   }
 
   ngOnDestroy() {
@@ -219,13 +234,17 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
 
   setValue() {
 
-    const { iIdSolicitud, iIdCliente, iIdEstudio, iPublicarPreliminar,
+    const { iIdSolicitud, iIdCliente, iIdEstudio, iPublicarPreliminar, iEstatusGeneral,
       sFolio, bPreliminar, iIdAnalista, sComentarios, sNombres, sApellidos, sPuesto, 
       sTokenCV, sTelefono, sNss, sCurp, sCalleNumero, sColonia, sCp, sMunicipio, sEstado,
     } = this.dataEstudio;
 
     this.idSolicitud = iIdSolicitud;
     this.controlCV.disable();
+    this.estatusGeneral = iEstatusGeneral;
+    if (iEstatusGeneral == '4')  {
+      this.form.get('iIdAnalista').disable();
+    }
 
     // setCliente
     let cliente = this.catClientes.filter((cl) => {
@@ -281,7 +300,6 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
       // catchError((err) => of([]))
     )
     .subscribe((estudio) => {
-      console.log(estudio);
       this.controlTokenCancel.patchValue(estudio[0].sTokenEvidencia);
       this.controlComentarioCancel.patchValue(estudio[0].sComentarios);
       this.controlComentarioCancel.disable();
@@ -304,9 +322,7 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
       
       return this.empresasService.subirArchivo(blob, name).toPromise();
     }
-
     this.loading = false;
-    // return Swal.fire('Error', 'El archivo no ha sido seleccionado', 'error');
   }
 
 
@@ -464,10 +480,26 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
   }
 
 
-  descargarEvidencia() {    
-    this.estudiosAnalistaService.descargarPreliminar(this.controlTokenCancel.value);
+  descargarEvidencia() {
+    
+    let reqToken = {
+      id: '',
+      token: this.controlTokenCancel.value
+    }
+    
+    this.estudiosAnalistaService.descargarPreliminar(reqToken);
   }
 
-  aprobarCancel() {}
+  aprobarCancel() {
+    const dialogRef = this.modal.open(AprobarCancelacionModalComponent, {
+      width: '60%',
+      maxWidth: "90%",
+      data: {idSolicitud: this.idSolicitud}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.ngOnInit();
+    });
+  }
 }
 

@@ -91,6 +91,11 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy, After
     p: '()_A81523[]'
   }
 
+   // Tabla estatus
+   dataTablaEstatus: any[] = [];
+   columnasTablaEstatus: any[]= ['estatus_solicitud', 'estatus_asignacion', 'estatus_agenda', 'estatus_aplicacion', 'estatus_dictamen', 'estatus_preliminar','dictamen'];
+   tipoEstudio: any = null;
+
   controlEstatusDictamen = new FormControl({value: null, disabled: true});
   controlPreliminar = new FormControl({value: '', disabled: false});
   controlDictamen = new FormControl('');
@@ -179,6 +184,12 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy, After
         filter((r) => r.resultado != undefined ),
         map((r) => r.resultado))
         .subscribe(datosUsuario => {
+
+          // tabla estatus
+        this.datosTablaEstatus(datosUsuario[0]);
+        this.tipoEstudio = datosUsuario[0].iIdEstudio;
+        // ...
+
         this.datosSolicitud = datosUsuario[0];
         this.bDictamen = datosUsuario[0].bPublicarDictamen;
         this.bComplemento = datosUsuario[0].iEstatusComplemento;
@@ -203,6 +214,15 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy, After
     } else {
       return this.router.navigate(['analista/estudios']);
     }
+  }
+
+  datosTablaEstatus(data) {
+    const {bDeclinada, bValidada, iIdEmpleadoLogistica, iContadoAgendas, iPublicarPreliminar, bAgendaRealizada, bEstatusAsignacion, iEstatusGeneral, iEstatusDictamen, bPublicarDictamen} = data;
+    this.dataTablaEstatus = [
+      {bDeclinada, bValidada, iIdEmpleadoLogistica, iContadoAgendas, bAgendaRealizada, 
+        bEstatusAsignacion, iEstatusGeneral, iEstatusDictamen, bPublicarDictamen, iPublicarPreliminar
+      }
+    ]
   }
 
   formInit() {
@@ -282,17 +302,17 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy, After
     })
   }
 
-  openDialogPreliminarComplemento(token, id): void {
-    const dialogRef = this.dialog.open(SubirPreliminarModalComponent, {
-      width: '400px',
-      data: {token, idSolicitud: this.idSolicitud, id}
-    });
+  // openDialogPreliminarComplemento(token, id): void {
+  //   const dialogRef = this.dialog.open(SubirPreliminarModalComponent, {
+  //     width: '400px',
+  //     data: {token, idSolicitud: this.idSolicitud, id}
+  //   });
 
-    dialogRef.afterClosed().subscribe(result => {
-      this.controlComplemento.reset();
-      this.getDatosId();
-    });
-  }
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     this.controlComplemento.reset();
+  //     this.getDatosId();
+  //   });
+  // }
   openDialogDictamen(): void {
     const dialogRef = this.dialog.open(SubirDictamenModalComponent, {
       width: '400px',
@@ -318,10 +338,24 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy, After
         this.loader = false;
         // this.reqArchivo.ArchivoPreliminar = null;
         this.controlPreliminar.setValue(null)
-        return Swal.fire('Error al cargar archivo', 'Revisa que sea un formato DOCX o PDF', 'error');
+        return Swal.fire('Error al cargar archivo', 'Revisa que sea un formato DOCX o PDF' + resp, 'error');
+      }
+
+      let req = {
+        sService: id,
+        iIdSolicitud: this.idSolicitud,
+        sToken: resp.Identificador
       }
       this.loader = false;
-      this.openDialogPreliminarComplemento(resp.Identificador, id);
+      this.estudiosAnalistaService.subirArchivo(req).subscribe((resp: any) => {
+        console.log(resp);
+        if (resp.resultado != 'Ok') return Swal.fire('Error', 'Erro al subir archivo complemento', 'error');
+        
+        return Swal.fire('Archivo subido exitosamente', '', 'success').then(() => {
+          location.reload();
+        })
+      })
+
       
     }, (err) => {
       this.loader = false;

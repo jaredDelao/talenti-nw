@@ -14,8 +14,12 @@
         <div class="alert alert-warning col-12" role="alert" *ngIf="contadorAgendas == '3'">
             El estudio ya fue reagendado 3 veces
         </div>
-        <div class="actions d-flex justify-content-start mb-4 col-12">
-            <button mat-raised-button color="warn" (click)="solicitarCancelacion()">SOLICITAR CANCELACIÓN</button>    
+        <div class="alert alert-warning col-12" role="alert" *ngIf="textMensaje">
+            {{textMensaje}}
+        </div>
+        <div class="actions d-flex justify-content-between mb-4 col-12">
+            <button mat-raised-button color="warn" (click)="solicitarCancelacion()">SOLICITAR CANCELACIÓN</button>   
+            <mat-checkbox color="primary" [formControl]="controlAplicado" (change)="verificarAplicado()">Marcar como aplicado</mat-checkbox>
         </div>
     </ng-container>
     
@@ -205,6 +209,12 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="container mt-4 mb-4">
+       <!-- Tabla estatus -->
+       <app-tabla-estatus *ngIf="dataTablaEstatus.length > 0" [columnas]="columnasTablaEstatus" [data]="dataTablaEstatus" [tipoEstudio]="tipoEstudio"></app-tabla-estatus>
+       <!-- ··· -->
     </div>
 
     <div class="actions d-flex justify-content-center mb-4" *ngIf="mostrarBtnAgendar">

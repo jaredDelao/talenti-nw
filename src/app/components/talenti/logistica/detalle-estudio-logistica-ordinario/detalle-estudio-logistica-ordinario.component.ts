@@ -45,6 +45,7 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
   esGNP: boolean = false;
   esCliente: boolean = false;
   contadorAgendas: any;
+  textMensaje: any = null;
 
   subs = new Subscription();
   subs1 = new Subscription();
@@ -59,6 +60,12 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
   sComentariosAgenda = new FormControl(null, Validators.required);
   pagosVisita = new FormControl(null, Validators.required);
   viaticosVisita = new FormControl(null, Validators.required);
+  controlAplicado = new FormControl(false);
+
+  // Tabla estatus
+  dataTablaEstatus: any[] = [];
+  columnasTablaEstatus: any[] = ['estatus_agenda', 'estatus_aplicacion'];
+  tipoEstudio: any = null;
 
   constructor(private fb: FormBuilder, private atp: AmazingTimePickerService, public empresasService: EmpresasService, public logisticaService: LogisticaService,
               private route: ActivatedRoute, private estudiosService: EstudiosService, private router: Router, public dialog: MatDialog) { }
@@ -99,6 +106,15 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
       this.subs = this.estudiosService.getEstudioById(req).pipe(map((r) => r.resultado)).subscribe((datosUsuario) => {
         if (datosUsuario[0]){
           console.log(datosUsuario[0]);
+          this.datosTablaEstatus(datosUsuario[0]);
+          this.tipoEstudio = datosUsuario[0].iIdEstudio;
+
+          // checkAplicado
+          if (datosUsuario[0].bEstatusAsignacion == '1'){
+            this.controlAplicado.setValue(true);
+            this.controlAplicado.disable();
+          }
+
           this.idCliente = datosUsuario[0].iIdCliente;
           this.idSolicitud = datosUsuario[0].iIdSolicitud;
           this.datosSolicitud = datosUsuario[0];
@@ -125,7 +141,20 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
     }    
   }
 
+  datosTablaEstatus(data) {
+    const {bDeclinada, bValidada, iIdEmpleadoLogistica, iContadoAgendas, bAgendaRealizada, bEstatusAsignacion, iEstatusGeneral, iEstatusDictamen, bPublicarDictamen} = data;
+    this.dataTablaEstatus = [
+      {bDeclinada, bValidada, iIdEmpleadoLogistica, iContadoAgendas, bAgendaRealizada, 
+        bEstatusAsignacion, iEstatusGeneral, iEstatusDictamen, bPublicarDictamen
+      }
+    ]
+  }
+
   mostrarBtnAgenda(contador: string) {
+
+    if (contador == '1') this.textMensaje = 'AGENDADO'
+    if (contador == '2') this.textMensaje = 'REAGENDADO'
+
     let cont = parseInt(contador);
     if (cont >= 0 && cont <= 2) {
       return this.mostrarBtnAgendar = true
@@ -305,6 +334,53 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
       data: {idSolicitud: this.idSolicitud}
     });
 
+  }
+
+  verificarAplicado() {
+    let checked = this.controlAplicado.value;
+    console.log(this.controlAplicado.value);
+
+    if (checked) {
+      const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+          confirmButton: 'btn btn-success ml-3',
+          cancelButton: 'btn btn-danger mr-3'
+        },
+        buttonsStyling: false
+      })
+      
+      swalWithBootstrapButtons.fire({
+        title: 'AVISO',
+        text: "¿Seguro que deseas marcarlo como aplicado?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Aceptar',
+        cancelButtonText: 'Cancelar',
+        reverseButtons: true
+      }).then((result) => {
+        if (result.value) {
+          let req = {
+            sService: 'AprobarAsignacion',
+            iIdSolicitud: this.idSolicitud
+          }
+          this.logisticaService.AprobarAsignacion(req).subscribe((resp: any) => {
+            if (resp.resultado != 'Ok') {
+              this.controlAplicado.setValue(false);
+              return Swal.fire('Error', 'Hubo un error al marcar la solicitud como aplicado'+ resp.resultado, 'error')
+            }
+
+            this.controlAplicado.disable();
+          })
+         
+        } else if (
+          /* Read more about handling dismissals below */
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          return this.controlAplicado.setValue(false);
+        }
+      })
+    }
+    
   }
 }
 

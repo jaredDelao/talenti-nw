@@ -52,6 +52,11 @@ export class DetalleEstudioLogisticaSupervisorComponent implements OnInit, After
   controlLogistica = new FormControl(null, Validators.required);
   controlComentarios = new FormControl(null, Validators.required);
 
+  // Tabla estatus
+  dataTablaEstatus: any[] = [];
+  columnasTablaEstatus: any[] = ['estatus_asignacion', 'estatus_agenda', 'estatus_aplicacion'];
+  tipoEstudio: any = null;
+
   constructor(private fb: FormBuilder, private atp: AmazingTimePickerService, public empresasService: EmpresasService, public logisticaService: LogisticaService,
               private route: ActivatedRoute, private estudiosService: EstudiosService, private router: Router, public empleadosService: EmpleadosService) { }
 
@@ -106,6 +111,8 @@ export class DetalleEstudioLogisticaSupervisorComponent implements OnInit, After
       this.subs = this.estudiosService.getEstudioById(req).pipe(map((r) => r.resultado)).subscribe((datosUsuario) => {
         if (datosUsuario[0]){
           console.log(datosUsuario[0]);
+          this.datosTablaEstatus(datosUsuario[0]);
+          this.tipoEstudio = datosUsuario[0].iIdEstudio;
           this.idSolicitud = datosUsuario[0].iIdSolicitud;
           this.datosSolicitud = datosUsuario[0];
           this.contadorAgendas = datosUsuario[0].iContadoAgendas;
@@ -130,6 +137,15 @@ export class DetalleEstudioLogisticaSupervisorComponent implements OnInit, After
       this.loading = false;
       return this.router.navigate(['/logistica/estudios-logistica']);
     }    
+  }
+
+  datosTablaEstatus(data) {
+    const {bDeclinada, bValidada, iIdEmpleadoLogistica, iContadoAgendas, bAgendaRealizada, bEstatusAsignacion, iEstatusGeneral, iEstatusDictamen, bPublicarDictamen} = data;
+    this.dataTablaEstatus = [
+      {bDeclinada, bValidada, iIdEmpleadoLogistica, iContadoAgendas, bAgendaRealizada, 
+        bEstatusAsignacion, iEstatusGeneral, iEstatusDictamen, bPublicarDictamen
+      }
+    ]
   }
 
   getCatalogoEstudios() {

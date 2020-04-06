@@ -161,6 +161,12 @@
         </div>
     </div>
 
+    <div class="container mt-4 mb-4">
+        <!-- Tabla estatus -->
+        <app-tabla-estatus *ngIf="dataTablaEstatus.length > 0" [columnas]="columnasTablaEstatus" [data]="dataTablaEstatus" [tipoEstudio]="tipoEstudio"></app-tabla-estatus>
+        <!-- ··· -->
+     </div>
+
     <div class="actions d-flex justify-content-center mb-4">
         <div class="buttons d-flex flex-column col-3">
             <button mat-raised-button color="primary" (click)="asignar()">ASIGNAR</button>

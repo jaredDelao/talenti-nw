@@ -41,5 +41,10 @@ export class LogisticaService {
     return this.http.post(environment.urlProd, body);
   }
 
+  AprobarAsignacion(params) {
+    let body = new HttpParams({fromObject: params});
+    return this.http.post(environment.urlProd, body);
+  }
+
   
 }

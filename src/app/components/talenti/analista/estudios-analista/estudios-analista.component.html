@@ -72,11 +72,6 @@
                 <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.sFolio}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="estudio">
-                <th mat-header-cell *matHeaderCellDef> ESTUDIO </th>
-                <td mat-cell *matCellDef="let element"> {{element.iIdEstudio}} </td>
-            </ng-container>
-
             <ng-container matColumnDef="nombre">
                 <th mat-header-cell *matHeaderCellDef> NOMBRE </th>
                 <td mat-cell *matCellDef="let element">
@@ -106,118 +101,30 @@
                 <th mat-header-cell *matHeaderCellDef > ESTATUS SOLICITUD </th>
                 <td mat-cell *matCellDef="let element">
                     <div class="content-estatus">
-                        <!-- <mat-icon class="mr-2" [ngStyle]="verColor(textE)">{{verText(textE)}}</mat-icon> -->
                         <span #textE>{{verificarEstatusSolicitud(element)}} </span>
                     </div>
                 </td>
             </ng-container>
 
-             <!-- Estatus-estudio -->
-             <ng-container matColumnDef="estatus_estudio">
-                <th mat-header-cell *matHeaderCellDef> ESTATUS ESTUDIO </th>
-                <td mat-cell *matCellDef="let element">
-                    <div class="content-estatus">
-                        <!-- <mat-icon class="mr-2" [ngStyle]="verColor(textE)">{{verText(textE)}}</mat-icon> -->
-                        <span #textE>{{verificarEstatusEstudio(element)}} </span>
-                    </div>
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="estatus_agendado">
-                <th mat-header-cell *matHeaderCellDef> ESTATUS AGENDADO </th>
-                <td mat-cell *matCellDef="let element"> {{element.agendado}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="fecha_agenda">
-                <th mat-header-cell *matHeaderCellDef> FECHA AGENDADO </th>
-                <td mat-cell *matCellDef="let element"> {{element.fechaagenda}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="estatus_aplicacion">
-                <th mat-header-cell *matHeaderCellDef> ESTATUS APLICACION </th>
-                <td mat-cell *matCellDef="let element"> {{element.fechaagenda}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="preliminar">
-                <th mat-header-cell *matHeaderCellDef> PRELIMINAR </th>
-                <td mat-cell *matCellDef="let element"> {{element.bPreliminar}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="publicacion_preliminar">
-                <th mat-header-cell *matHeaderCellDef> PUBLICACIÓN PRELIMINAR </th>
-                <td mat-cell *matCellDef="let element"> {{element.bPublicarPreliminar}} </td>
-            </ng-container>
-
             <ng-container matColumnDef="estatus_preliminar">
                 <th mat-header-cell *matHeaderCellDef> ESTATUS PRELIMINAR</th>
-                <td mat-cell *matCellDef="let element"> {{element.estatus}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="publicacion_estudio">
-                <th mat-header-cell *matHeaderCellDef> PUBLICACION ESTUDIO </th>
-                <td mat-cell *matCellDef="let element"> {{element.publicacion}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="fecha_aplicacion">
-                <th mat-header-cell *matHeaderCellDef> FECHA APLICACION </th>
-                <td mat-cell *matCellDef="let element"> {{element.fechaaplicacion}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="descarga">
-                <th mat-header-cell *matHeaderCellDef> DESCARGA </th>
-                <td mat-cell *matCellDef="let element"> {{element.descarga}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="publicacion_dictamen">
-                <th mat-header-cell *matHeaderCellDef> PUBLICACION DICTAMEN </th>
-                <td mat-cell *matCellDef="let element"> {{element.dictamen}} </td>
+                <td mat-cell *matCellDef="let element"> {{verificarEstatusPreliminar(element.iPublicarPreliminar)}} </td>
             </ng-container>
 
             <ng-container matColumnDef="estatus_dictamen">
                 <th mat-header-cell *matHeaderCellDef> ESTATUS DICTAMEN </th>
-                <td mat-cell *matCellDef="let element"> {{element.dictamen}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="solicitar_calidad">
-                <th mat-header-cell *matHeaderCellDef> SOLICITAR CALIDAD </th>
-                <td mat-cell *matCellDef="let element"> {{element.bSolicitarCalidad}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="certificado_calidad">
-                <th mat-header-cell *matHeaderCellDef> CERTIFICADO CALIDAD </th>
-                <td mat-cell *matCellDef="let element"> {{element.bCertificadoCalidad}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="solicitud_cancelacion">
-                <th mat-header-cell *matHeaderCellDef> SOLICITUD CANCELACIÓN </th>
-                <td mat-cell *matCellDef="let element"> {{element.certificadocalidad}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="tipo_cancelacion">
-                <th mat-header-cell *matHeaderCellDef> TIPO CANCELACIÓN </th>
-                <td mat-cell *matCellDef="let element"> {{element.certificadocalidad}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="aprobar_cancelacion">
-                <th mat-header-cell *matHeaderCellDef> APROBAR CANCELACIÓN </th>
-                <td mat-cell *matCellDef="let element"> {{element.certificadocalidad}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="evidencia">
-                <th mat-header-cell *matHeaderCellDef> EVIDENCIA </th>
-                <td mat-cell *matCellDef="let element"> {{element.certificadocalidad}} </td>
+                <td mat-cell *matCellDef="let element"> {{verificarEstatusDictamen(element.bPublicarDictamen, element.iEstatusGeneral)}} </td>
             </ng-container>
 
             <ng-container matColumnDef="comentarios">
                 <th mat-header-cell *matHeaderCellDef style="text-align: center;"> VER DETALLES </th>
                 <td mat-cell *matCellDef="let element" style="text-align: center;">
-                    <!-- {{element.sComentarios}} -->
-                    <mat-icon class="detalle-estudio-icon">info</mat-icon>
+                    <mat-icon class="detalle-estudio-icon" (click)="detalles(element)">info</mat-icon>
                 </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-            <tr mat-row (click)="detalles(row)" [ngStyle]="color(row)" *matRowDef="let row; columns: displayedColumns;"></tr>
+            <tr mat-row [ngStyle]="color(row)" *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
 
         <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 25, 50 ]"> </mat-paginator>
