@@ -9,6 +9,8 @@ import { Subscription, of } from 'rxjs';
 import { EmpleadosService } from 'src/app/services/coordinador/empleados.service';
 import { MatDialog } from '@angular/material';
 import { SolicitarCancelacionEjecutivoComponent } from '../modals/solicitar-cancelacion-ejecutivo/solicitar-cancelacion-ejecutivo.component';
+import { EstudiosAnalistaService } from 'src/app/services/analista/estudios-analista.service';
+import { AprobarCancelacionModalComponent } from '../modals/aprobar-cancelacion-modal/aprobar-cancelacion-modal.component';
 
 @Component({
   selector: 'app-detalle-estudio-ejecutivo',
@@ -106,13 +108,17 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
   subs1 = new Subscription();
   subs2 = new Subscription();
 
+  // Cancelacion
+  controlComentarioCancel = new FormControl(null);
+  controlTokenCancel = new FormControl(null);
+
   controlEstatusDictamen = new FormControl({value: null, disabled: true});
 
 
   mostrarEstudiosCompletos: boolean = false;
 
   constructor(public estudiosService: EstudiosService, public empresasService: EmpresasService, private router: Router, private fb: FormBuilder, public dialog: MatDialog,
-              private cd: ChangeDetectorRef, private route: ActivatedRoute, private empleadosService: EmpleadosService) {
+              private cd: ChangeDetectorRef, private route: ActivatedRoute, private empleadosService: EmpleadosService, public estudiosAnalistaService: EstudiosAnalistaService) {
                 this.catSelectDisctamen = this.catDictamen;
                }
 
@@ -179,6 +185,7 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
         this.setDatosEstudioDictamen(datosUsuario[0]);
         this.setDatosComplemento(datosUsuario[0]);
         this.setDatos(this.datosSolicitud);
+        
 
         // Tabla estatus
         this.ELEMENT_DATA[0].status = datosUsuario[0].iPublicarPreliminar;
@@ -191,6 +198,23 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
       this.loading = false;
       return this.router.navigate(['ejecutivo/estudios']);
     }    
+  }
+
+  solicitudCancelacion(iIdSolicitud) {
+    let req = {
+      sService: 'getSolicitudesCancela',
+      iIdSolicitud
+    }
+    this.estudiosService.getsolicitudCanceladaById(req).pipe(
+      filter((value: any) => value.LstEstudios.length > 0),
+      pluck('LstEstudios'),
+      // catchError((err) => of([]))
+    )
+    .subscribe((estudio) => {
+      this.controlTokenCancel.patchValue(estudio[0].sTokenEvidencia);      
+      this.controlComentarioCancel.patchValue(estudio[0].sComentarios);
+      this.controlComentarioCancel.disable();
+    })
   }
 
   datosTablaEstatus(data) {
@@ -283,6 +307,11 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
       bCertificadoCalidad: value.bCertificadoCalidad,
       iPublicarPreliminar: value.iPublicarPreliminar
     })
+
+    // solicitudCancelacion
+    if (this.bSolicCancel == '1') {
+      this.solicitudCancelacion(value.iIdSolicitud);
+    } 
   }
 
   update($event) {
@@ -319,4 +348,25 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
       
     });
   }
+
+  descargarEvidencia() {
+    let reqToken = {
+      id: '',
+      token: this.controlTokenCancel.value
+    }
+    this.estudiosAnalistaService.descargarPreliminar(reqToken);
+  }
+
+  aprobarCancel() {
+    const dialogRef = this.dialog.open(AprobarCancelacionModalComponent, {
+      width: '60%',
+      maxWidth: "90%",
+      data: {idSolicitud: this.idSolicitud}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.ngOnInit();
+    });
+  }
+
 }

@@ -11,6 +11,8 @@ import { LogisticaService } from 'src/app/services/logistica/logistica.service';
 import { EmpleadosService } from 'src/app/services/coordinador/empleados.service';
 import { pluck, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { EstudiosService } from 'src/app/services/ejecutivo/estudios.service';
+import { VerificarEstatusService } from 'src/app/services/verificar-estatus.service';
 
 
 @Component({
@@ -20,7 +22,7 @@ import { of } from 'rxjs';
 })
 export class EstudiosCalidadComponent implements OnInit {
 
-  displayedColumns: string[] = ['folio', 'estudio', 'nombre', 'fecha_solicitud', 'estatus_agendado', 'estatus_solicitud', 'detalles'];
+  displayedColumns: string[] = ['folio', 'nombre', 'fecha_solicitud', 'estatus_dictamen', 'dictamen', 'certificado_calidad', 'detalles'];
   dataSource: MatTableDataSource<any>;
 
   // request getEstudios
@@ -50,13 +52,12 @@ export class EstudiosCalidadComponent implements OnInit {
   validarEstudio: any = 'PENDIENTE';
   validarPublicacionPreeliminar: boolean = false;
 
-  banderaSupervisor: boolean = false;
-
-  constructor(private fb: FormBuilder, private router: Router, public estudiosAnalistaService: EstudiosAnalistaService, public logisticaService: LogisticaService, private empleadosService: EmpleadosService) { }
+  constructor(private fb: FormBuilder, private router: Router, public estudiosAnalistaService: EstudiosAnalistaService, public logisticaService: LogisticaService, 
+    private empleadosService: EmpleadosService, public estudiosService: EstudiosService, public vEstatusService: VerificarEstatusService) { }
 
   ngOnInit() {
     this.formInit();
-    this.getEstudiosSupervisor();
+    this.getEstudiosCalidad();
     this.getEmpleados();
     // this.getEstudios();
   }
@@ -71,12 +72,11 @@ export class EstudiosCalidadComponent implements OnInit {
     })
   }
 
-  getEstudiosSupervisor() {
-    this.banderaSupervisor = true;
-    this.logisticaService.getSolicitudesLogistica().subscribe((res: any) => {
+  getEstudiosCalidad() {
+    this.estudiosService.getSolicitudesCalidad().subscribe((res: any) => {
       console.log('res', res);
-      this.estudiosList = res.resultado;
-      this.getEstudios(res.resultado);
+      this.estudiosList = res.LstEstudios;
+      this.getEstudios(res.LstEstudios);
     })
 
   }
@@ -179,12 +179,7 @@ export class EstudiosCalidadComponent implements OnInit {
   }
 
   color(row) {
-    if (row.bDeclinada == '1') {
-      return {'background-color': '#FEC6C0'}
-    }
-    if (row.bValidada == '1') {
-      return {'background-color': '#D5F5E3'}
-    }
+    return {'background-color': 'transparent'}
   }
 
   verText(e: HTMLSpanElement) {
@@ -200,6 +195,14 @@ export class EstudiosCalidadComponent implements OnInit {
     if (text == 'Pendiente') return {'color': 'red'};
     if (text == 'Validado') return {'color': '#27AE60'};
     if (text == 'Revisar') return {'color': '#F5B041'};
+  }
+
+  verificarEstatusDictamen(bPublicarDictamen, iEstatusGeneral) {
+    return this.vEstatusService.verificarEstatusDictamen(bPublicarDictamen, iEstatusGeneral);
+  }
+
+  verificarDictamen(idDictamen, iEstatusGeneral) {
+    return this.vEstatusService.verificarDictamen(idDictamen, iEstatusGeneral);  
   }
 
 }

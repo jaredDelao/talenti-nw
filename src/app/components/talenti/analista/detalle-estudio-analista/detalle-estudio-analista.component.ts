@@ -115,6 +115,8 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy, After
   mostrarEstudiosCompletos = false;
   subs1 = new Subscription();
 
+  gnpEstudio: '0' | '1' = null;
+
   constructor(public estudiosAnalistaService: EstudiosAnalistaService, private router: Router, private fb: FormBuilder,
               public empresasService: EmpresasService, private estudiosService: EstudiosService ,public dialog: MatDialog, private route: ActivatedRoute) {
                 this.catSelectDisctamen = this.catDictamen;
@@ -194,6 +196,7 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy, After
         this.bDictamen = datosUsuario[0].bPublicarDictamen;
         this.bComplemento = datosUsuario[0].iEstatusComplemento;
         this.bPreliminar = datosUsuario[0].iPublicarPreliminar;
+        this.gnpEstudio = datosUsuario[0].isGnp;
         console.log(datosUsuario[0]);
 
         // Tabla estatus
@@ -316,7 +319,7 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy, After
   openDialogDictamen(): void {
     const dialogRef = this.dialog.open(SubirDictamenModalComponent, {
       width: '400px',
-      data: {idSolicitud: this.idSolicitud}
+      data: {idSolicitud: this.idSolicitud, isGnp: this.gnpEstudio}
     });
 
     dialogRef.afterClosed().subscribe(result => {

@@ -82,4 +82,15 @@ export class EstudiosService {
     return this.http.post(environment.urlProd, body);
   }
 
+  aprobarCalidad(params) {
+    let body = new HttpParams({fromObject: params})
+    return this.http.post(environment.urlProd, body);
+  }
+
+  getSolicitudesCalidad() {
+    let body = new HttpParams();
+    body = body.append('sService', 'getSolicitudesCalidad');
+    return this.http.post(environment.urlProd, body);
+  }
+
 }

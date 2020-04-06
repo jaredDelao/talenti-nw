@@ -47,6 +47,8 @@ export class EstudiosLogisticaComponent implements OnInit {
   idLogistica: any = '19';
   idPerfil: any;
 
+  loader: boolean = false;
+
   catEmpleados = [];
 
   element: any = {};
@@ -78,7 +80,7 @@ export class EstudiosLogisticaComponent implements OnInit {
       bcryptjs.compare('4', idPerfil, (err, res) => {
         if (res) {
           console.log('Es supervisor: ',this.idLogistica);
-          this.displayedColumns = ['folio', 'nombre', 'fecha_solicitud', 'estatus_agendado', 'estatus_aplicacion', 'detalles'];
+          this.displayedColumns = ['folio', 'nombre', 'fecha_solicitud', 'estatus_aplicacion','estatus_agendado', 'detalles'];
           this.banderaSupervisor = true;
           return this.getEstudiosSupervisor();
         }
@@ -109,6 +111,7 @@ export class EstudiosLogisticaComponent implements OnInit {
   }
 
   getEstudiosByIdLogistica() {
+    this.loader = true;
     this.banderaSupervisor = false;
     let params = {
       sService: 'getSolicitudesLogisticabyId',
@@ -117,18 +120,21 @@ export class EstudiosLogisticaComponent implements OnInit {
     this.logisticaService.getSolicitudesLogisticaById(params).subscribe((res: any) => {
       this.estudiosList = res.resultado;
       this.getEstudios(res.resultado);
-    })
+      this.loader = false;
+    }, (err) => {this.loader = false}, () => this.loader = false)
 
   }
 
   getEstudiosSupervisor() {
+    this.loader = true;
     this.banderaSupervisor = true;
     this.logisticaService.getSolicitudesLogistica().subscribe((res: any) => {
       console.log(res);
       
       this.estudiosList = res.resultado;
       this.getEstudios(res.resultado);
-    })
+      this.loader = false;
+    }, (err) => {this.loader = false}, () => this.loader = false)
 
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators, FormArray } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,6 +8,7 @@ import { EmpresasService } from 'src/app/services/coordinador/empresas.service';
 import Swal from 'sweetalert2';
 import { LogisticaService } from 'src/app/services/logistica/logistica.service';
 import { EmpleadosService } from 'src/app/services/coordinador/empleados.service';
+import { MatChip, MatSlideToggle } from '@angular/material';
 
 @Component({
   selector: 'app-detalle-estudio-calidad',
@@ -15,6 +16,9 @@ import { EmpleadosService } from 'src/app/services/coordinador/empleados.service
   styleUrls: ['./detalle-estudio-calidad.component.scss']
 })
 export class DetalleEstudioCalidadComponent implements OnInit {
+
+  @ViewChild('chip', {static: false}) chip: MatChip;  
+  @ViewChild('slideToggle', {static: false}) slideToggle: MatSlideToggle;  
 
   preliminarList = [
     {nombre: 'SI', value: '1'},
@@ -37,6 +41,9 @@ export class DetalleEstudioCalidadComponent implements OnInit {
     iIdEmpresa: 0
   }
 
+  textCalidad: boolean = false;
+  controlToggleCalidad = new FormControl(null, Validators.requiredTrue)
+
   estudiosData = [];
   esGNP: boolean = false;
   esCliente: boolean = false;
@@ -47,8 +54,12 @@ export class DetalleEstudioCalidadComponent implements OnInit {
   subs1 = new Subscription();
   subs2 = new Subscription();
 
+   // Tabla estatus
+   dataTablaEstatus: any[] = [];
+   columnasTablaEstatus: any[]= ['estatus_solicitud', 'estatus_asignacion', 'estatus_agenda', 'estatus_aplicacion', 'estatus_dictamen', 'estatus_preliminar','dictamen'];
+   tipoEstudio: any = null;
+
   // Fecha hora
-  controlLogistica = new FormControl(null, Validators.required);
   controlComentarios = new FormControl(null, Validators.required);
 
   constructor(private fb: FormBuilder, public empresasService: EmpresasService, public logisticaService: LogisticaService,
@@ -103,11 +114,20 @@ export class DetalleEstudioCalidadComponent implements OnInit {
       this.subs = this.estudiosService.getEstudioById(req).pipe(map((r) => r.resultado)).subscribe((datosUsuario) => {
         if (datosUsuario[0]){
           console.log(datosUsuario[0]);
+          this.datosTablaEstatus(datosUsuario[0]);
+          this.tipoEstudio = datosUsuario[0].iIdEstudio;
 
           this.idSolicitud = datosUsuario[0].iIdSolicitud;
+          // toggle calidad
+          if (datosUsuario[0].bSolicitarCalidad == '2') {
+            this.controlToggleCalidad.patchValue(true);
+            this.controlToggleCalidad.disable();
+          } else {
+            this.controlToggleCalidad.setValue(false);
+          }
+
           this.datosSolicitud = datosUsuario[0];
           this.contadorAgendas = datosUsuario[0].iContadoAgendas;
-          this.controlLogistica.patchValue(datosUsuario[0].iIdEmpleadoLogistica);
           this.controlComentarios.patchValue(datosUsuario[0].sComentariosAsignacion);
   
           // Consulta datos
@@ -128,6 +148,15 @@ export class DetalleEstudioCalidadComponent implements OnInit {
       this.loading = false;
       return this.router.navigate(['/calidad/estudios-calidad']);
     }    
+  }
+
+  datosTablaEstatus(data) {
+    const {bDeclinada, bValidada, iIdEmpleadoLogistica, iContadoAgendas, bAgendaRealizada, iPublicarPreliminar, bEstatusAsignacion, iEstatusGeneral, iEstatusDictamen, bPublicarDictamen} = data;
+    this.dataTablaEstatus = [
+      {bDeclinada, bValidada, iIdEmpleadoLogistica, iContadoAgendas, bAgendaRealizada, iPublicarPreliminar,
+        bEstatusAsignacion, iEstatusGeneral, iEstatusDictamen, bPublicarDictamen
+      }
+    ]
   }
 
   getCatalogoEstudios() {
@@ -213,12 +242,25 @@ export class DetalleEstudioCalidadComponent implements OnInit {
     this.router.navigate(['/calidad/estudios-calidad']);
   }
 
-  estaAsignado() {
-    return this.controlLogistica.value ? true : false;
-  }
+  aprobar() {
 
-  aprobar(e) {
-    console.log(e);
+    if (this.controlToggleCalidad.value == true) {
+      let req = {
+        sService: 'aprobarCalidad',
+        iIdSolicitud: this.idSolicitud
+      }
+      this.estudiosService.aprobarCalidad(req).subscribe((resp: any) => {
+        console.log(resp);
+        if (resp.resultado != 'Ok') {
+          this.controlToggleCalidad.patchValue(false);
+          return Swal.fire('Error', 'Error al aprobar calidad ' + resp.resultado, 'error')
+        };
+        this.controlToggleCalidad.disable();
+      })
+    } else {
+      event.preventDefault();
+    }
+
     
   }
 

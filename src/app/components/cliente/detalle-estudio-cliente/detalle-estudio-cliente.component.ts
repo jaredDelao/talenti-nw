@@ -101,14 +101,18 @@ export class DetalleEstudioClienteComponent implements OnInit, AfterViewInit, On
   }
 
   ngAfterViewInit() {
-      let value = this.idEstudio;
+    console.log(this.idEstudio);
+
+    this.form.get('iIdEstudio').valueChanges.subscribe((value) => {
       if (value == 1 || value == 3 || value == 4 || value == 5 || value == 7|| 
           value == 10 || value == 11 || value == 12) {
             this.mostrarEstudiosCompletos = true;
       }
       else { this.mostrarEstudiosCompletos = false; }
+    })
+    
     // this.verificarMessage();
-    this.cd.detectChanges();
+    // this.cd.detectChanges();
   }
     
   // Mostrar message

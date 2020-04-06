@@ -25,6 +25,8 @@ import { TablaGeneralComponent } from './shared/tabla-general/tabla-general.comp
 import { EstudiosAnalistaComponent } from './components/talenti/analista/estudios-analista/estudios-analista.component';
 import { EstudiosClienteComponent } from './components/cliente/estudios-cliente/estudios-cliente.component';
 import { ChartsModule } from 'ng2-charts';
+import { GraficaTalentiComponent } from './components/graficas/general/grafica-talenti/grafica-talenti.component';
+import { GraficaClienteComponent } from './components/graficas/general/grafica-cliente/grafica-cliente.component';
 
 @NgModule({
   declarations: [

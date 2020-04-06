@@ -8,6 +8,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginGuard } from './guards/login.guard';
 import { EstudiosClienteComponent } from './components/cliente/estudios-cliente/estudios-cliente.component';
 import { GraficasComponent } from './shared/graficas/graficas.component';
+import { GraficaClienteComponent } from './components/graficas/general/grafica-cliente/grafica-cliente.component';
 
 const routes: Routes = [
   // { path: "", component: MenuCoordinadorComponent, pathMatch: "full" },
@@ -43,7 +44,7 @@ const routes: Routes = [
         path: "calidad",
         loadChildren: './components/talenti/calidad/calidad.module#CalidadModule'
       },
-      { path: 'graficas', component: GraficasComponent},
+      { path: 'graficas', component: GraficaClienteComponent},
       { path: "**", redirectTo: '/dashboard' }
     ]
   }

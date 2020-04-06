@@ -62,11 +62,14 @@
                 </mat-form-field>
             </div>
 
-            <ng-container>
+            <ng-container *ngIf="datosSolicitud && datosSolicitud?.bValidada == 1">
 
                 <p>Aprobar calidad:</p>
-                <div class="form-group">
-                    <mat-slide-toggle color="primary" (change)="aprobar($event)"></mat-slide-toggle>
+                <div class="form-group box-calidad d-flex flex-row align-items-center">
+                    <mat-slide-toggle class="mr-3" color="primary" #slideToggle [formControl]="controlToggleCalidad" (change)="aprobar()"></mat-slide-toggle>
+                    <mat-chip-list aria-label="Fish selection">
+                        <mat-chip color="primary" [selected]="controlToggleCalidad.value == true" #chip>{{controlToggleCalidad.value == true? 'Calidad aprobada' : 'Calidad pendiente'}}</mat-chip>
+                    </mat-chip-list>
                 </div>
 
             </ng-container>
@@ -147,8 +150,13 @@
         </div>
     </div>
 
-    <div class="container text-center mt-3 mb-3">
-        <button mat-raised-button class="btn-aprobar" *ngIf="datosSolicitud?.bValidada == 1">APROBAR CALIDAD</button>
+    <div class="container mb-5">
+        <app-tabla-estatus *ngIf="dataTablaEstatus.length > 0" [data]="dataTablaEstatus" [tipoEstudio]="tipoEstudio" [columnas]="columnasTablaEstatus"></app-tabla-estatus>
     </div>
+
+
+    <!-- <div class="container text-center mt-3 mb-3">
+        <button mat-raised-button class="btn-aprobar" *ngIf="datosSolicitud?.bValidada == 1">APROBAR CALIDAD</button>
+    </div> -->
 
 </form>

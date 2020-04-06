@@ -162,6 +162,10 @@ export class PagesComponent implements OnInit, DoCheck {
     bcryptjs.compare('8', idPerfil, (err, res) => {
       res ? this.menuList = menuLogistica : '';
     });
+    // Calidad
+    bcryptjs.compare('5', idPerfil, (err, res) => {
+      res ? this.menuList = menuCalidad : '';
+    });
 
     if (idCliente) {
       this.menuList = menuCliente;

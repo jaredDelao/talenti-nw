@@ -30,16 +30,12 @@ export class SubirDictamenModalComponent implements OnInit {
   }
 
   isGnp() {
-    let bGnp = localStorage.getItem('isGnp');
-    this.encriptarService.desencriptar(bGnp).subscribe((value) => {
-      console.log(value);
-      
-      if (value == '1') {
-        this.catDictamenSelect = clienteGNP;
-      } else {
-        this.catDictamenSelect = clienteNormal;
-      }      
-    })
+  let bGnp = this.data.isGnp;
+    if (bGnp == '1') {
+      this.catDictamenSelect = clienteGNP;
+    } else {
+      this.catDictamenSelect = clienteNormal;
+    }      
   }
 
   formInit() {
@@ -58,17 +54,12 @@ export class SubirDictamenModalComponent implements OnInit {
     let blob = e.target.files[0];
     let name = e.target.files[0].name;
 
-    console.log(idLabel);
-    
-
     // Set value en label
     if (idLabel == 1) this.label1.nativeElement.innerText = name;
     if (idLabel == 2) this.label2.nativeElement.innerText = name;
   
     this.empresasService.subirArchivo(blob, name).subscribe((resp: any ) => { 
 
-      console.log(resp);
-      
       if (!resp.Identificador || resp.resultado != 'Ok' || resp.Identificador == '') {
         if (idLabel == 1) {
           this.label1.nativeElement.innerText = 'Seleccionar Archivo 1';

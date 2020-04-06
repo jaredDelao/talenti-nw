@@ -15,6 +15,8 @@ import { SolicitarCancelacionEmpleadoComponent } from './modals/solicitar-cancel
 import { GraficasComponent } from './graficas/graficas.component';
 import { ChartsModule } from 'ng2-charts';
 import { TablaEstatusComponent } from './tabla-estatus/tabla-estatus.component';
+import { GraficaClienteComponent } from '../components/graficas/general/grafica-cliente/grafica-cliente.component';
+import { GraficaTalentiComponent } from '../components/graficas/general/grafica-talenti/grafica-talenti.component';
 
 @NgModule({
   imports: [
@@ -33,6 +35,8 @@ import { TablaEstatusComponent } from './tabla-estatus/tabla-estatus.component';
     SolicitarEstudioSharedComponent, 
     RevisarModalComponent,
     TablaEstatusComponent,
+    GraficaClienteComponent,
+    GraficaTalentiComponent,
   ],
   declarations: [
     LoadingComponent, 
@@ -44,6 +48,8 @@ import { TablaEstatusComponent } from './tabla-estatus/tabla-estatus.component';
     SolicitarCancelacionEmpleadoComponent,
     GraficasComponent,
     TablaEstatusComponent,
+    GraficaClienteComponent,
+    GraficaTalentiComponent,
   ],
   entryComponents: [
     RevisarModalComponent,
