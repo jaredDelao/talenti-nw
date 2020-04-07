@@ -77,7 +77,7 @@ const menuEjecutivo: Array<Object> = [
     titulo: "EJECUTIVO",
     list: [
       { title: "Estudios", link: "ejecutivo/estudios" },
-      // { title: "Solicitud de cancelación", link: "ejecutivo/solicitud-cancelacion" }
+      { title: "Gráficas", link: "ejecutivo/grafica-ejecutivo" }
     ]
   },
 ];
@@ -97,7 +97,7 @@ const menuCliente: Array<Object> = [
       titulo: "CLIENTE",
       list: [
         { title: "Estudios", link: "cliente/estudios-cliente" },
-        // { title: "Solicitud de estudio", link: "cliente/solicitud-estudio" }
+        { title: "Gráfica", link: "cliente/grafica-cliente" }
       ]
   }
 ]

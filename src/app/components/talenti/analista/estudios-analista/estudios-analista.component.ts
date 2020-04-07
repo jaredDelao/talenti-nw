@@ -203,7 +203,7 @@ export class EstudiosAnalistaComponent implements OnInit, OnDestroy, AfterViewIn
     this.loading = true;
     this.jsonExportExcel = this.dataSource.filteredData;
 
-    this.jsonExportExcel.forEach((element, i) => {
+    this.jsonExportExcel.map((element, i) => {
       delete element['iIdSolicitud'];
       delete element['iEstatusGeneral'];
       delete element['iIdCliente'];
@@ -230,10 +230,30 @@ export class EstudiosAnalistaComponent implements OnInit, OnDestroy, AfterViewIn
       delete element['sTokenComplemento'];
     });
     
-    console.log(this.jsonExportExcel);
     this.excelGenerate.exportAsExcelFile(this.jsonExportExcel, 'sample');
     this.loading = false;
-    
+    this.ngOnInit();
+  }
+
+  reload() {
+    this.ngOnInit();
+  }
+
+  verificarRol(bPublicarDictamen, iEstatusGeneral, bValidada, bDeclinada) {
+
+    if (iEstatusGeneral != 4 && bPublicarDictamen && bValidada == 1 && bDeclinada != 1 ) {
+      switch(bPublicarDictamen) {
+        case '0':
+          return {'background-color': '#F9E79F'};;
+        case '1':
+          return {'background-color': '#F9E79F'};;
+        case '4':
+          return {'background-color': '#F9E79F'};;
+        default:
+          return {'background-color': 'transparent'};
+      }
+    }
+
   }
 
 }

@@ -133,7 +133,6 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
     console.log(this.req)
     this.loader = true;
     this.estudiosService.getEstudiosCliente(this.req).subscribe((estudiosList: any)=> {
-      console.log(estudiosList);
       const {resultado} = estudiosList;
       this.estudiosList = resultado;
       this.jsonExportExcel = resultado;
@@ -292,9 +291,8 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
       delete element['sTokenComplemento'];
     });
     
-    console.log(this.jsonExportExcel);
-    
     this.excelGenerate.exportAsExcelFile(this.jsonExportExcel, 'sample');
+    this.ngOnInit();
   }
 
   verificarEstatusSolicitud(element) {
@@ -307,6 +305,26 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
 
   verificarPreliminar(iPublicarPreliminar) {
     return this.vEstatusService.verificarPreliminar(iPublicarPreliminar);
+  }
+
+  verificarRol(bPublicarDictamen, iEstatusGral, bDeclinada) {
+    if (iEstatusGral != '4' && bPublicarDictamen && bDeclinada != '1') {
+
+      switch(bPublicarDictamen) {
+        case '0':
+          return {'background-color': '#F9E79F'};
+        case '1':
+          return {'background-color': '#F9E79F'};
+        case '2':
+          return {'background-color': '#F9E79F'};
+        default:
+          return {'background-color': 'transparent'}
+      }
+    }
+  }
+
+  reload() {
+    this.ngOnInit();
   }
 
 }

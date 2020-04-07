@@ -9,7 +9,7 @@ import { EstudiosAnalistaService } from 'src/app/services/analista/estudios-anal
 import * as bcryptjs from 'bcryptjs';
 import { LogisticaService } from 'src/app/services/logistica/logistica.service';
 import { EmpleadosService } from 'src/app/services/coordinador/empleados.service';
-import { pluck, catchError } from 'rxjs/operators';
+import { pluck, catchError, flatMap, filter, tap, toArray } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencriptar.service';
 import { VerificarEstatusService } from 'src/app/services/verificar-estatus.service';
@@ -117,9 +117,17 @@ export class EstudiosLogisticaComponent implements OnInit {
       sService: 'getSolicitudesLogisticabyId',
       iIdLogistica: this.idLogistica
     }
-    this.logisticaService.getSolicitudesLogisticaById(params).subscribe((res: any) => {
-      this.estudiosList = res.resultado;
-      this.getEstudios(res.resultado);
+    this.logisticaService.getSolicitudesLogisticaById(params).pipe(
+      pluck('resultado'),
+      flatMap((v: any) => v),
+      // tap((v) => console.log(v)),
+      filter((row: any) => row.iIdEstudio != '2'),
+      toArray(),
+      catchError((err) => of([]))
+    )
+    .subscribe((res: any) => {
+      this.estudiosList = res;
+      this.getEstudios(res);
       this.loader = false;
     }, (err) => {this.loader = false}, () => this.loader = false)
 
@@ -128,11 +136,21 @@ export class EstudiosLogisticaComponent implements OnInit {
   getEstudiosSupervisor() {
     this.loader = true;
     this.banderaSupervisor = true;
-    this.logisticaService.getSolicitudesLogistica().subscribe((res: any) => {
+    this.logisticaService.getSolicitudesLogistica().pipe(
+      pluck('resultado'),
+      flatMap((v: any) => v),
+      // tap((v) => console.log(v)),
+      filter((row: any) => row.iIdEstudio != '2'),
+      toArray(),
+      catchError((err) => of([]))
+    )
+    .subscribe((res: any) => {
       console.log(res);
+
+      if (res.length <= 0) return Swal.fire('Aviso', 'No se encontraron resultados', 'warning');
       
-      this.estudiosList = res.resultado;
-      this.getEstudios(res.resultado);
+      this.estudiosList = res;
+      this.getEstudios(res);
       this.loader = false;
     }, (err) => {this.loader = false}, () => this.loader = false)
 
@@ -255,5 +273,18 @@ export class EstudiosLogisticaComponent implements OnInit {
     if (text == 'Revisar') return {'color': '#F5B041'};
   }
 
+  reload() {
+    this.ngOnInit();
+  }
+
+  verificarRol(iIdEmpleadoLogistica) {
+    if (this.banderaSupervisor) {
+      if (!iIdEmpleadoLogistica) return {'background-color': '#F9E79F'} 
+    }
+
+    if (!this.banderaSupervisor) {
+      if (!iIdEmpleadoLogistica) return {'background-color': '#F9E79F'} 
+    }
+  }
 
 }

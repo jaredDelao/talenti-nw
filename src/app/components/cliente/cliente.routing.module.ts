@@ -3,6 +3,7 @@ import { Routes, RouterModule } from "@angular/router";
 import { EstudiosClienteComponent } from './estudios-cliente/estudios-cliente.component';
 import { DetalleEstudioClienteComponent } from './detalle-estudio-cliente/detalle-estudio-cliente.component';
 import { SolicitudEstudioClienteComponent } from './solicitud-estudio-cliente/solicitud-estudio-cliente.component';
+import { GraficaClienteComponent } from '../graficas/general/grafica-cliente/grafica-cliente.component';
 
 // Components
 
@@ -10,6 +11,7 @@ import { SolicitudEstudioClienteComponent } from './solicitud-estudio-cliente/so
 const routes: Routes = [
     { path: '', redirectTo: '/dashboard', pathMatch: 'full'},
     { path: "estudios-cliente", component: EstudiosClienteComponent },
+    { path: "grafica-cliente", component: GraficaClienteComponent },
     { path: "solicitar-estudio", component: SolicitudEstudioClienteComponent },
     { path: "detalle-estudio/:id", component: DetalleEstudioClienteComponent },
 ];

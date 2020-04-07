@@ -5,7 +5,7 @@
     <div class="header">
         <form [formGroup]="form">
             <span>Búsqueda por periodo</span>
-            <div class="row col-12">
+            <div class="row">
 
                 <!-- Fecha inicio -->
                 <div class="form-group col-3">
@@ -33,19 +33,24 @@
                     <button mat-icon-button color="primary" (click)="filterFechas()" class="find">
                         <mat-icon>find_in_page</mat-icon>
                     </button>
-                    <button mat-icon-button (click)="clear()" class="ml-2">
+                    <button mat-icon-button (click)="reload()" class="ml-2">
                         <mat-icon color="warn">replay</mat-icon>
                     </button>
                 </div>
             </div>
 
-            <div class="row col-12">
+            <div class="row">
                 <!-- nombre encuestado -->
                 <div class="form-group col-4">
                     <mat-form-field class="nombre-encuestado">
                         <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscar">
                     </mat-form-field>
                 </div>
+
+                <div class="form-group col-4">
+                    <button mat-raised-button class="btn-limpiar" (click)="clear()">Limpiar campos</button>
+                </div>
+
                 <div class="form-group col-4">
                     <button mat-raised-button class="excel-btn" (click)="exportExcel()">Exportar a Excel</button>
                 </div>
@@ -124,7 +129,8 @@
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-            <tr mat-row [ngStyle]="color(row)" *matRowDef="let row; columns: displayedColumns;"></tr>
+            <tr mat-row [ngStyle]="verificarRol(row.bPublicarDictamen, row.iEstatusGeneral, row.bValidada, row.bDeclinada)"
+             *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
 
         <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 25, 50 ]"> </mat-paginator>

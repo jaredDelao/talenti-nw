@@ -6,6 +6,9 @@ import * as moment from 'moment'
 import { GraficasService } from 'src/app/services/graficas.service';
 import { pluck, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencriptar.service';
+import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 type Theme = 'light-theme' | 'dark-theme';
 
@@ -18,10 +21,10 @@ type Theme = 'light-theme' | 'dark-theme';
 export class GraficaClienteComponent implements OnInit, AfterViewInit {
 
   request: any = {
-    sService: 'getGraficaGralbyEjec',
-    iIdEjecutivo: '24',
-    dfechaInicio: '2020-01-19',
-    dFechaFin: '2020-04-21'
+    sService: 'getGraficaGralbyCte',
+    iIdCliente: '',
+    dfechaInicio: '',
+    dFechaFin: ''
   };
 
   private _selectedTheme: Theme = 'light-theme';
@@ -32,9 +35,6 @@ export class GraficaClienteComponent implements OnInit, AfterViewInit {
     { backgroundColor: '#CB4335' },
     { backgroundColor: '#7D3C98' },
   ];
-
-  fechaInicio: any;
-  fechaFin: any;
 
   public barChartOptions: ChartOptions = {
     responsive: true,
@@ -62,10 +62,14 @@ export class GraficaClienteComponent implements OnInit, AfterViewInit {
   fechaInicioForm = new FormControl(null);
   fechaFinalForm = new FormControl(null);
 
-  constructor(public themeService: ThemeService, public graficasService: GraficasService) { }
+  // Date
+  dateNow: any = new Date();
+
+  constructor(public themeService: ThemeService, public graficasService: GraficasService, public encriptarService: EncriptarDesencriptarService, private router: Router) { }
 
   ngOnInit() {
-    this.setCurrentTheme('dark-theme');
+    this.setCurrentTheme('dark-theme'); 
+    this.getIdCliente();  
   }
 
   setCurrentTheme(theme: Theme) {
@@ -104,23 +108,38 @@ export class GraficaClienteComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() { 
     this.fechaInicioForm.valueChanges.subscribe((fecha) => {
       // console.log(fecha);
-      this.fechaInicio = moment(fecha).format("YYYY-MM-DD");      
+      this.request.dfechaInicio  = moment(fecha).format("YYYY-MM-DD");
     })
     this.fechaFinalForm.valueChanges.subscribe((fecha) => {
       // console.log(fecha);
-      this.fechaFin = moment(fecha).format("YYYY-MM-DD");      
+      this.request.dFechaFin  = moment(fecha).format("YYYY-MM-DD");      
+    })
+  }
+
+  getIdCliente() {
+    let idCliente = localStorage.getItem('idCliente');
+    if (!idCliente) return this.router.navigate(['/']);
+    this.encriptarService.desencriptar(idCliente).subscribe((id) => {
+      this.request.iIdCliente = id;
+    }, (err) => {
+      this.router.navigate(['/']);
     })
   }
 
   buscar() {
 
-    this.barChartLabels = [this.fechaInicio + ' - ' + this.fechaFin];
-
+    let fechaInicio = moment(this.request.dfechaInicio).format('DD-MMMM-YYYY').toString()
+    let fechaFin =  moment(this.request.dFechaFin).format('DD-MMMM-YYYY').toString()
+    this.barChartLabels = [fechaInicio + '   -   '+ fechaFin];
+    
     this.graficasService.getGraficaCliente(this.request).pipe(
       pluck('LstDatos'),
       catchError((err) => of([]))
     )
     .subscribe((value: any[]) => {
+      
+      if (value.length <= 0) return Swal.fire('Aviso', 'Resultados no encontrados', 'warning');
+      
       var resp = [];
       value.map((row) => {
         let label;
@@ -152,6 +171,12 @@ export class GraficaClienteComponent implements OnInit, AfterViewInit {
       this.barChartData = resp;
       
     })
+  }
+
+  limpiar() {
+    this.fechaInicioForm.reset();
+    this.fechaFinalForm.reset();
+    this.barChartData = [];
   }
 
 }

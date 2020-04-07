@@ -4,10 +4,12 @@ import { DatosEjecutivoComponent } from './solicitud-estudios/datos-ejecutivo.co
 import { SolicitarEstudioComponent } from './solicitar-estudio/solicitar-estudio.component';
 import { SolicitudCancelacionComponent } from './solicitud-cancelacion/solicitud-cancelacion.component';
 import { DetalleEstudioEjecutivoComponent } from './detalle-estudio-ejecutivo/detalle-estudio-ejecutivo.component';
+import { GraficaTalentiComponent } from '../../graficas/general/grafica-talenti/grafica-talenti.component';
 
 const routes: Routes = [
   { path: "", redirectTo: "/dashboard", pathMatch: "full" },
   { path: "estudios", component: DatosEjecutivoComponent },
+  { path: "grafica-ejecutivo", component: GraficaTalentiComponent },
   { path: "solicitar-estudio", component: SolicitarEstudioComponent },
   { path: "solicitud-cancelacion", component: SolicitudCancelacionComponent },
   { path: "detalle-estudio/:id", component: DetalleEstudioEjecutivoComponent },

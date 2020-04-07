@@ -183,4 +183,8 @@ export class EstudiosClienteComponent implements OnInit {
     return this.vEstatusService.verificarEstatusDictamen(bPublicarDictamen, iEstatusGeneral);
   }
 
+  reload() {
+    this.ngOnInit();
+  }
+
 }

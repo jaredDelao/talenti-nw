@@ -15,10 +15,18 @@
         <div class="alert alert-danger" role="alert" *ngIf="estatusGeneral == '4'">La solicitud ha sido cancelada</div>
         <!-- ...  -->
 
-        <button class="mt-3 mb-3 ml-3 btn-cancelar" *ngIf="bSolicCancel != 1" mat-raised-button color="warn" (click)="solicitarCancelacionEjecutivo()">
+        
+
+        <button class="mt-3 mb-3 btn-cancelar" *ngIf="bSolicCancel != 1" mat-raised-button color="warn" (click)="solicitarCancelacionEjecutivo()">
             SOLICITAR CANCELACIÓN
         </button>
-        <div class="contenido col-12 row justify-content-start align-items-baseline">
+
+        <!-- CALIDAD -->
+        <mat-chip-list aria-label="Certificado" class="mt-3">
+            <mat-chip class="chip-certificado" style="background-color: #F39C12;" selected>Certificado de Calidad</mat-chip>
+        </mat-chip-list>
+
+        <div class="contenido row justify-content-start align-items-baseline">
 
             <div class="form-group col-lg-4 col-sm-6 col-xs-12">
                 <mat-form-field>
@@ -135,14 +143,10 @@
                 <div class="form-group col-4">
                     <button mat-stroked-button color="warn" (click)="descargarEvidencia()">Descargar evidencia de cancelación</button>
                 </div>
-                <div class="form-group col-3">
-                    <button mat-raised-button color="warn" *ngIf="estatusGeneral != '4'" (click)="aprobarCancel()">Aprobar cancelación</button>
+                <div class="form-group col-3" *ngIf="estatusGeneral != '4'">
+                    <button mat-raised-button color="warn" (click)="aprobarCancel()">Aprobar cancelación</button>
                 </div>
             </ng-container>
-
-            <div class="form-group col-lg-2 col-sm-2 col-xs-2" *ngIf="datosSolicitud">
-                <mat-icon color="primary" *ngIf="datosSolicitud.bSolicitarCalidad == 2">verified_user</mat-icon>
-            </div>
         </div>
 
         <div class="contenido row col-12">

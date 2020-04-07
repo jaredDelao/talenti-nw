@@ -17,8 +17,8 @@
         <div class="form-group col-4">
             <mat-form-field>
                 <input matInput #fechaF [matDatepicker]="fechaFinal"
-                    [min]="fechaInicio.value" [formControl]="fechaFinalForm"
-                    placeholder="Fecha de termino">
+                    [max]="dateNow" [formControl]="fechaFinalForm" [min]="fechaInicioForm.value"
+                    placeholder="Fecha de término">
                 <mat-datepicker-toggle matSuffix [for]="fechaFinal"></mat-datepicker-toggle>
                 <mat-datepicker startView="year"  #fechaFinal></mat-datepicker>
             </mat-form-field>
@@ -26,6 +26,7 @@
 
         <div class="form-group col-4">
             <button mat-raised-button color="primary" (click)="buscar()">Buscar</button>
+            <button mat-raised-button class="btn-limpiar ml-3" (click)="limpiar()">Limpiar</button>
         </div>
     </div>
 

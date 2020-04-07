@@ -253,7 +253,6 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
       this.fecha.disable();
       this.hora.disable();
     }
-
   }
 
   setDatosAgenda(value) {
@@ -261,6 +260,8 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
     this.sCorreoEncuestador.patchValue(value.sCorreoEncuestador);
     this.sTelefonoEncuestador.patchValue(value.sTelefonoEncuestador);
     this.sComentariosAgenda.patchValue(value.sComentariosAgenda);
+    this.viaticosVisita.patchValue(value.viaticosVisita);
+    this.pagosVisita.patchValue(value.pagosVisita);
   }
 
   insertarFecha(fechaHora) {

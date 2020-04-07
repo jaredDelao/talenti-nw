@@ -5,10 +5,10 @@
     <div class="header">
         <form [formGroup]="form">
             <span>Búsqueda por periodo</span>
-            <div class="row col-12">
+            <div class="row">
 
                 <!-- Fecha inicio -->
-                <div class="form-group col-3">
+                <div class="form-group col-lg-3 col-md-4 col-sm-5 col-3">
                     <mat-form-field>
                         <input matInput #fechaI disabled [matDatepicker]="fechaInicio" formControlName="fechaInicioForm"
                             placeholder="Fecha de inicio">
@@ -18,7 +18,7 @@
                 </div>
 
                 <!-- Fecha termino -->
-                <div class="form-group col-3">
+                <div class="form-group col-lg-3 col-md-4 col-sm-5 col-3">
                     <mat-form-field>
                         <input matInput #fechaF disabled [matDatepicker]="fechaFinal"
                             [min]="form.get('fechaInicioForm').value" formControlName="fechaFinalForm"
@@ -30,22 +30,26 @@
                     </mat-form-field>
                 </div>
 
-                <div class="form-group row col-3">
+                <div class="form-group row col-lg-3 col-md-4 col-sm-2 col-3">
                     <button mat-icon-button color="primary" (click)="filterFechas()" class="find">
                         <mat-icon>find_in_page</mat-icon>
                     </button>
-                    <button mat-icon-button (click)="clear()" class="ml-2">
+                    <button mat-icon-button (click)="reload()"  class="ml-2">
                         <mat-icon color="warn">replay</mat-icon>
                     </button>
                 </div>
             </div>
 
-            <div class="row col-12">
+            <div class="row">
                 <!-- nombre encuestado -->
                 <div class="form-group col-4">
                     <mat-form-field class="nombre-encuestado">
                         <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscar">
                     </mat-form-field>
+                </div>
+
+                <div class="form-group col-4">
+                    <button mat-raised-button class="btn-limpiar" (click)="clear()">Limpiar campos</button>
                 </div>
 
             </div>
@@ -104,7 +108,7 @@
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <tr mat-row [ngStyle]="verificarRol(row.iIdEmpleadoLogistica)" *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
 
         <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 25, 50 ]"> </mat-paginator>
