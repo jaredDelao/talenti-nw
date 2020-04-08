@@ -50,8 +50,8 @@ import { GraficaClienteComponent } from './components/graficas/general/grafica-c
     HttpClientModule,
   ],
   providers: [
-    { provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
-    { provide: LOCALE_ID, useValue: 'es'},
+    // { provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
+    // { provide: LOCALE_ID, useValue: 'es'},
   ],
   entryComponents: [
     // CancelarSolicitudClienteComponent,

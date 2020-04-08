@@ -1,4 +1,3 @@
-
 <app-loading *ngIf="loader"></app-loading>
 <div class="container">
     <div class="title">
@@ -9,14 +8,14 @@
         <div class="formg-group col-3">
             <mat-form-field>
                 <mat-label>Nombre de la empresa</mat-label>
-                <input matInput type="text" [(ngModel)]="registerEmpresa.sNombreEmpresa">
+                <input matInput type="text" [(ngModel)]="registerEmpresa.sNombreEmpresa" [disabled]="idEmpresa">
             </mat-form-field>
         </div>
 
         <div class="form-group col-3">
             <mat-form-field>
                 <mat-label>Tipo folio</mat-label>
-                <mat-select [(ngModel)]="registerEmpresa.sTipoFolio">
+                <mat-select [(ngModel)]="registerEmpresa.sTipoFolio" [disabled]="idEmpresa">
                     <mat-option *ngFor="let folio of dataFolio" [value]="folio.id">
                         {{folio.descripcion}}
                     </mat-option>
@@ -24,68 +23,106 @@
             </mat-form-field>
         </div>
 
-        <div class="form-group col-3">
-            <input type="file" [(ngModel)]="reqArchivo.Archivo" (change)="subirImagen($event)" placeholder="Subir imagen"/>
-            <!-- <label for="file" class="btn-3"><span>SUBIR IMAGEN</span></label> -->
-            <img [src]="previewImg" height="150px" *ngIf="previewImg">
-        </div>
-
-        <div class="form-group col-3">
-            <!-- imagen -->
+        <div class="form-group col-6" *ngIf="!idEmpresa">
+            <div class="custom-file mb-3">
+                <input type="file" class="custom-file-input" id="customFileLang" [(ngModel)]="reqArchivo.Archivo"
+                    (change)="subirImagen($event)" lang="es">
+                <label class="custom-file-label" for="customFileLang">Seleccionar Imagen</label>
+            </div>
+            <img [src]="previewImg" height="150px" width="auto" *ngIf="previewImg">
         </div>
 
     </div>
 
-    <div class="col-12">
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z15">
-
-            <!-- Checkbox Column -->
-            <ng-container matColumnDef="select">
-                <th mat-header-cell *matHeaderCellDef>
-                    <mat-checkbox (change)="$event ? masterToggle() : null"
-                        [checked]="selection.hasValue() && isAllSelected()" color="primary"
-                        [indeterminate]="selection.hasValue() && !isAllSelected()">
-                    </mat-checkbox>
-                </th>
-                <td mat-cell *matCellDef="let row">
-                    <mat-checkbox (click)="$event.stopPropagation()" color="primary"
-                        (change)="$event ? selectRow(row) : null" [checked]="selection.isSelected(row)"
-                        >
-                    </mat-checkbox>
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="descripcion">
-                <th mat-header-cell *matHeaderCellDef> PERMISOS PARA ESTUDIOS </th>
-                <td mat-cell *matCellDef="let element" (click)="stop($event)"> {{element.sNombreEstudio}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="costoReal">
-                <th mat-header-cell *matHeaderCellDef> COSTO DE ESTUDIO </th>
-                <td mat-cell *matCellDef="let element" (click)="stop($event)">
-                    <mat-form-field>
-                        <mat-icon matPrefix>attach_money</mat-icon>
-                        <input matInput type="text" [(ngModel)]="element.dCosto1">
-                    </mat-form-field>
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="costoCancelado">
-                <th mat-header-cell *matHeaderCellDef> COSTO ESTUDIO CANCELADO </th>
-                <td mat-cell *matCellDef="let element" (click)="stop($event)">
-                    <mat-form-field>
-                        <mat-icon matPrefix>attach_money</mat-icon>
-                        <input matInput type="text" [(ngModel)]="element.dCosto2">
-                    </mat-form-field>
-                </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
-            </tr>
-        </table>
-        <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator> -->
+    <div class="box" *ngIf="idEmpresa">
+        <button mat-raised-button color="primary" *ngIf="editarEstudio" (click)="toggleEditarEstudio()">  Editar </button>
+        <button mat-raised-button color="warn" *ngIf="!editarEstudio" (click)="toggleEditarEstudio()">  Ver estudios asignados </button>
     </div>
+
+    <ng-container *ngIf="!editarEstudio">
+
+        <div class="content">
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z15">
+
+                <!-- Checkbox Column -->
+                <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <mat-checkbox (change)="$event ? masterToggle() : null"
+                            [checked]="selection.hasValue() && isAllSelected()" color="primary"
+                            [indeterminate]="selection.hasValue() && !isAllSelected()">
+                        </mat-checkbox>
+                    </th>
+                    <td mat-cell *matCellDef="let row">
+                        <mat-checkbox (click)="$event.stopPropagation()" color="primary"
+                            (change)="$event ? selectRow(row) : null" [checked]="selection.isSelected(row)">
+                        </mat-checkbox>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="descripcion">
+                    <th mat-header-cell *matHeaderCellDef> PERMISOS PARA ESTUDIOS </th>
+                    <td mat-cell *matCellDef="let element" (click)="stop($event)"> {{element.sNombreEstudio}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="costoReal">
+                    <th mat-header-cell *matHeaderCellDef> COSTO DE ESTUDIO </th>
+                    <td mat-cell *matCellDef="let element" (click)="stop($event)">
+                        <mat-form-field>
+                            <mat-icon matPrefix>attach_money</mat-icon>
+                            <input matInput type="text" [(ngModel)]="element.dCosto1">
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="costoCancelado">
+                    <th mat-header-cell *matHeaderCellDef> COSTO ESTUDIO CANCELADO </th>
+                    <td mat-cell *matCellDef="let element" (click)="stop($event)">
+                        <mat-form-field>
+                            <mat-icon matPrefix>attach_money</mat-icon>
+                            <input matInput type="text" [(ngModel)]="element.dCosto2">
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
+                </tr>
+            </table>
+            <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator> -->
+        </div>
+
+    </ng-container>
+
+
+    <!-- Consulta -->
+
+    <ng-container *ngIf="editarEstudio">
+
+        <mat-table [dataSource]="dataSourceConsulta" cdkDropList
+        cdkDropListOrientation="horizontal" class="mat-elevation-z8">
+   
+            <ng-container matColumnDef="estudio" >
+              <mat-header-cell *matHeaderCellDef> Estudio </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.sNombreEstudio}} </mat-cell>
+            </ng-container>
+          
+            <ng-container matColumnDef="costo1">
+              <mat-header-cell *matHeaderCellDef> Costo de Estudio </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.dCosto1 | currency}} </mat-cell>
+            </ng-container>
+          
+            <ng-container matColumnDef="costo2">
+              <mat-header-cell *matHeaderCellDef> Costo de Cancelación </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.dCosto2 | currency: 'MXN':'$': '2.2-2'}} </mat-cell>
+            </ng-container>
+          
+            <mat-header-row *matHeaderRowDef="displayedColumnsConsulta"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumnsConsulta;"></mat-row>
+          </mat-table>
+
+    </ng-container>
+    
+    <!-- end consulta -->
 
     <!-- FOOTER -->
     <div class="actions col-12 mt-4 mb-4 d-flex justify-content-center">
@@ -93,7 +130,8 @@
             <button mat-raised-button color="warn" [routerLink]="['/coordinador/empresas']"
                 routerLinkActive="router-link-active">CANCELAR</button>
             <!-- <button mat-raised-button color="primary" (click)="registraEmpresa()">REGISTRAR</button> -->
-            <button mat-raised-button color="primary" (click)="enviar()">REGISTRAR</button>
+            <button *ngIf="!editarEmpresa && !idEmpresa" mat-raised-button color="primary" (click)="enviar()">REGISTRAR</button>
+            <button mat-raised-button color="primary" *ngIf="idEmpresa && !editarEstudio" (click)="actualizar()">ACTUALIZAR</button>
         </div>
     </div>
 </div>

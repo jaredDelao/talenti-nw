@@ -42,6 +42,14 @@ table {
     width: 100%;
 }
 
+.box {
+    width: 100%;
+    text-align: end;
+    button {
+        width: auto;
+    }
+}
+
 // app-loading {
 //     z-index: 99999;
 //     border: 3px solid black;

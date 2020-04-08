@@ -6,7 +6,8 @@ import Swal from "sweetalert2";
 import { ActivatedRoute, Router } from '@angular/router';
 import { EmpresasService } from 'src/app/services/coordinador/empresas.service';
 import { CatalogoEstudios, CatalogoEstudio } from 'src/app/interfaces/talenti/coordinador/catalogo-estudios';
-import { pluck } from 'rxjs/operators';
+import { pluck, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
   selector: "app-registro-empresa",
@@ -35,6 +36,11 @@ export class RegistroEmpresaComponent implements OnInit {
     logotipo: '',
   };
 
+  public reqTarifasEmpresa = {
+    sService: 'getTarifasxempresa',
+    iIdEmpresa: ''
+  }
+
   public reqArchivo = {
     sService: 'subirArchivo',
     Archivo: '',
@@ -48,6 +54,11 @@ export class RegistroEmpresaComponent implements OnInit {
 
   empresaById: any;
 
+  // Tabla consulta
+  displayedColumnsConsulta: string[] = ['estudio', 'costo1', 'costo2'];
+  dataSourceConsulta: any = [];
+  editarEstudio: boolean = false;
+
   constructor(private _route: ActivatedRoute, private empresasService: EmpresasService, private router: Router) {}
 
   ngOnInit() {
@@ -56,12 +67,16 @@ export class RegistroEmpresaComponent implements OnInit {
     this.getAllEstudios();
   }
 
+  
+
   getIdEmpresa() {
     this.idEmpresa = this._route.snapshot.paramMap.get('id');
-    console.log(this.idEmpresa);
+    console.log('IdEmpresa::', this.idEmpresa);
     if (this.idEmpresa) {
       this.empresasService.getEmpresaById(this.idEmpresa).subscribe((empresa: any) => {
         this.empresaById = empresa.Empresas[0];
+        this.setValue(this.empresaById);
+        this.consultarEmpresa();
         // Validacion error
         if (empresa.status !== 'Ok') return Swal.fire('Error', 'Error al consultar empresa', 'error').then(() => {
           return this.router.navigate(['/coordinador/empresas']);
@@ -72,42 +87,25 @@ export class RegistroEmpresaComponent implements OnInit {
 
   setValue(value) {
     this.registerEmpresa.sNombreEmpresa = value.sNombreEmpresa;
-    this.registerEmpresa.sTipoFolio = value.sTipoFolio;
-
-    // for (let i = 0; i < this.catalogoEstudios.length; i++) {
-    //   let iIdEstudio = this.catalogoEstudios[i].iIdEstudio;
-    //   let req = {
-    //     sService: 'getTarifas',
-    //     iIdEstudio,
-    //     iIdEmpresa: this.idEmpresa
-    //   }
-    //   this.empresasService.getTarifas(req).subscribe((tarifa:any)=> {
-    //     if (tarifa.resultado.length > 0) {
-    //       let setterValue = {
-    //         iIdEstudio,
-    //         sNombreEstudio: this.catalogoEstudios[i].sNombreEstudio,
-    //         sDescripcion: this.catalogoEstudios[i].sDescripcion,
-    //         dCosto1: tarifa.resultado[0].dCosto1,
-    //         dCosto2: tarifa.resultado[0].dCosto2,
-    //       }
-    //       this.selection.toggle(setterValue);
-    //       this.selection.isSelected(setterValue);
-    //     }
-    //   })
-    // }    
-    
+    this.registerEmpresa.sTipoFolio = value.sTipoFolio; 
   }
 
   selectRow(row) {
-    console.log(row);
-    console.log(this.selection);
-    
-    
     this.selection.toggle(row)
   }
 
   consultarEmpresa() {
-
+    this.loader = true;
+    this.editarEstudio = true;
+    this.reqTarifasEmpresa.iIdEmpresa = this.idEmpresa;
+    this.empresasService.getTarifas(this.reqTarifasEmpresa).pipe(
+      pluck('resultado'),
+      catchError((err) => of([]))
+    )
+    .subscribe((estudios) => {
+      this.dataSourceConsulta = estudios;
+      this.loader = false;
+    })
   }
   
   InitMatTable() {
@@ -126,10 +124,7 @@ export class RegistroEmpresaComponent implements OnInit {
   masterToggle() {
     this.isAllSelected()
       ? this.selection.clear()
-      : this.dataSource.data.forEach((row: any) => this.selection.select(row));
-
-      console.log(this.selection);
-      
+      : this.dataSource.data.forEach((row: any) => this.selection.select(row));      
   }
 
   /** The label for the checkbox on the passed row */
@@ -159,14 +154,7 @@ export class RegistroEmpresaComponent implements OnInit {
       .subscribe((res: any) => {
         this.catalogoEstudios = res;
         this.InitMatTable();
-      }, (err) => Swal.fire('Error', 'Error al mostrar lista de estudios', 'error'), (() => {
-        // SetValue
-        if (this.idEmpresa) {
-          setTimeout(() => {
-            this.setValue(this.empresaById);
-          }, 500)
-        }
-      }));
+      }, (err) => Swal.fire('Error', 'Error al mostrar lista de estudios', 'error'));
   }
 
   stop() {
@@ -214,7 +202,6 @@ export class RegistroEmpresaComponent implements OnInit {
   }
 
   registraEmpresa() {
-    console.log(this.registerEmpresa);
     return this.empresasService.registrarEmpresa(this.registerEmpresa).toPromise();
   }
 
@@ -253,19 +240,14 @@ export class RegistroEmpresaComponent implements OnInit {
     //     text: "Campos guardados correctamente",   
     //   });
     // }
-
-    // Request
-    console.log(selection);
-    console.log('IdEmpresa:: ', this.idEmpresa);
     
-
     // Validación campos empresa
     if (this.idEmpresa == 'Error') {
       return Swal.fire({
             icon: 'warning',
             title: "Campos incompletos",
             text: "Faltan llenar campos de empresa"   
-          });
+      });
     }
 
     selection.map((estudio: any) => {
@@ -279,12 +261,44 @@ export class RegistroEmpresaComponent implements OnInit {
       };
 
       // Subscribe
-      console.log(request);
       
-      this.empresasService.registraTarifa(request).subscribe(resp => {
-        console.log(resp);
+      this.empresasService.registraTarifa(request).subscribe((resp:any)=> {
+        if (resp.resultado != 'Ok') return Swal.fire('Alerta', 'Error al registrar la empresa', 'error');
+
+        return Swal.fire('Registro exitoso', 'La empresa se ha registrado correctamente', 'success').then(() => {
+          this.router.navigate(['/coordinador/empresas']);
+        })
       });
 
     });
+  }
+
+  actualizar() {    
+    const selection = this.selection.selected;
+    selection.map((estudio: any) => {
+      const {iIdEstudio, dCosto1, dCosto2} = estudio;
+      let request = {
+        sService: 'registraTarifas',
+        iIdEmpresa: this.idEmpresa,
+        iIdEstudio,
+        dCosto1,
+        dCosto2
+      };
+
+      // Subscribe
+      
+      this.empresasService.registraTarifa(request).subscribe((resp:any)=> {
+        if (resp.resultado != 'Ok') return Swal.fire('Alerta', 'Error al registrar la empresa', 'error');
+        return Swal.fire('Actualizacion exitosa', 'Los estudios se han actualizado exitosamente', 'success').then(() => {
+          this.router.navigate(['/coordinador/empresas']);
+        })
+      });
+
+    });
+
+  }
+
+  toggleEditarEstudio() {
+    this.editarEstudio = !this.editarEstudio;
   }
 }
