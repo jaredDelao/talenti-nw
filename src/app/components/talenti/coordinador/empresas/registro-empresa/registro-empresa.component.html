@@ -130,7 +130,7 @@
             <button mat-raised-button color="warn" [routerLink]="['/coordinador/empresas']"
                 routerLinkActive="router-link-active">CANCELAR</button>
             <!-- <button mat-raised-button color="primary" (click)="registraEmpresa()">REGISTRAR</button> -->
-            <button *ngIf="!editarEmpresa && !idEmpresa" mat-raised-button color="primary" (click)="enviar()">REGISTRAR</button>
+            <button *ngIf="!idEmpresa" mat-raised-button color="primary" (click)="enviar()">REGISTRAR</button>
             <button mat-raised-button color="primary" *ngIf="idEmpresa && !editarEstudio" (click)="actualizar()">ACTUALIZAR</button>
         </div>
     </div>
