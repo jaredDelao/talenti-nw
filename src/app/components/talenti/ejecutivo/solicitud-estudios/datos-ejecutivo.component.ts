@@ -72,7 +72,11 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.form.get('fechaInicioForm').valueChanges.subscribe((v) => {
       if (v !== '' || v !== null) this.form.get('fechaFinalForm').enable();
+      console.log('enable');
+      
       if (v == null || v == '') {
+        console.log('disabled');
+        
         this.form.get('fechaFinalForm').patchValue(null);
         this.form.get('fechaFinalForm').disable();
       }
@@ -130,10 +134,11 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
   }
 
   getEstudios() {
-    console.log(this.req)
+    console.log('Request:: ',this.req)
     this.loader = true;
     this.estudiosService.getEstudiosCliente(this.req).subscribe((estudiosList: any)=> {
       const {resultado} = estudiosList;
+      console.log(resultado);
       this.estudiosList = resultado;
       this.jsonExportExcel = resultado;
       this.dataSource = new MatTableDataSource(this.estudiosList);

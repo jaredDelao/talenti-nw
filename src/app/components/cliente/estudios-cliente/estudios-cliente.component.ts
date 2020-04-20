@@ -10,6 +10,8 @@ import * as bcryptjs from 'bcryptjs';
 import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencriptar.service';
 import { clienteNormal, clienteGNP } from '../../../shared/docs/tiposDictamen';
 import { VerificarEstatusService } from 'src/app/services/verificar-estatus.service';
+import { GenerateExcelService } from 'src/app/services/generate-excel.service';
+
 
 @Component({
   selector: 'app-estudios-cliente',
@@ -17,6 +19,8 @@ import { VerificarEstatusService } from 'src/app/services/verificar-estatus.serv
   styleUrls: ['./estudios-cliente.component.scss']
 })
 export class EstudiosClienteComponent implements OnInit {
+
+  jsonExportExcel: any;
 
   displayedColumns: string[] = [
     'folio', 'nombre', 'fecha_solicitud', 'estatus_solicitud', 'estatus_dictamen', 'dictamen', 'comentarios'
@@ -51,7 +55,8 @@ export class EstudiosClienteComponent implements OnInit {
   @ViewChild('togglePublicarDictamen', {static: false}) toggleDictamen: MatSlideToggle;
 
   constructor(private estudiosService: EstudiosService, private fb: FormBuilder, private encryptDecryptService: EncriptarDesencriptarService,
-    public dialog: MatDialog, private cd: ChangeDetectorRef, private router: Router, public vEstatusService: VerificarEstatusService) { }
+    public dialog: MatDialog, private cd: ChangeDetectorRef, private router: Router, public vEstatusService: VerificarEstatusService,
+    private excelGenerate: GenerateExcelService) { }
 
   async ngOnInit() {    
     this.formInit();
@@ -61,7 +66,6 @@ export class EstudiosClienteComponent implements OnInit {
     this.isPerfilAdmin = await this.getPerfil();
     // IsGNP
     this.isGNP = await this.getIsGnp();
-    console.log('GNP::', this.isGNP);
     this.getEstudios();
     
   }
@@ -106,19 +110,16 @@ export class EstudiosClienteComponent implements OnInit {
   getEstudios() {
     this.loader = true;
 
-    // console.log(this.isPerfilAdmin);
     if (this.isPerfilAdmin) this.req.sService = 'getSolicitudesClienteAdmin';
     if (this.isPerfilAdmin == false) this.req.sService = 'getSolicitudesCliente';
-    console.log('Request', this.req)
     
-    this.estudiosService.getEstudiosCliente(this.req).subscribe((estudiosList: any)=> {
-      console.log('DATA::', estudiosList);
-      
-      
+    this.estudiosService.getEstudiosCliente(this.req).subscribe((estudiosList: any)=> {      
+  
       // Verificar estudios
       if(estudiosList.resultado.length <= 0) return Swal.fire('Error', 'No se encontraron estudios registrados', 'warning');
 
       const {resultado} = estudiosList;
+      this.jsonExportExcel = resultado;
       this.estudiosList = resultado;
       this.dataSource = new MatTableDataSource(this.estudiosList);
       this.dataSource.paginator = this.paginator;
@@ -184,6 +185,40 @@ export class EstudiosClienteComponent implements OnInit {
   }
 
   reload() {
+    this.ngOnInit();
+  }
+
+  exportExcel() {
+    this.jsonExportExcel = this.dataSource.filteredData;
+
+    this.jsonExportExcel.forEach((element, i) => {
+      delete element['iIdSolicitud'];
+      delete element['iEstatusGeneral'];
+      delete element['iIdCliente'];
+      delete element['iIdSolicitud'];
+      delete element['iIdAnalista'];
+      delete element['sTokenCV'];
+      delete element['bDeclinada'];
+      delete element['bValidada'];
+      delete element['bDeclinada'];
+      delete element['bDeclinada'];
+      delete element['bPublicarDictamen'];
+      delete element['bSolicitarCalidad'];
+      delete element['bCertificadoCalidad'];
+      delete element['iPublicarPreliminar'];
+      delete element['iEstatusDictamen'];
+      delete element['sArchivoPreliminar'];
+      delete element['sArch1Dictamen'];
+      delete element['sArch2Dictamen'];
+      delete element['sArchComplemento'];
+      delete element['iEstatusComplemento'];
+      delete element['sMotivoPreliminar'];
+      delete element['sMotivoDictamen'];
+      delete element['sMotivoComplemento'];
+      delete element['sTokenComplemento'];
+    });
+    
+    this.excelGenerate.exportAsExcelFile(this.jsonExportExcel, 'sample');
     this.ngOnInit();
   }
 

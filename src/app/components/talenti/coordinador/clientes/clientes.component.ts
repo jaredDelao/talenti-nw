@@ -51,7 +51,7 @@ const ELEMENT_DATA = [
   styleUrls: ["./clientes.component.scss"]
 })
 export class ClientesComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ["empresa", "usuario", "nombre", "ejecutivo", "editar"];
+  displayedColumns: string[] = ["usuario", "nombre", "editar"];
   dataSource;
   listaEmpresas: Array<TipoEmpresa>;
   subscription: Subscription;

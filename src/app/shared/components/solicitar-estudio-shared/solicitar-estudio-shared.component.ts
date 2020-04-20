@@ -41,6 +41,11 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
     iIdEmpresa: 0
   }
 
+  reqTarifasEmpresa = {
+    sService: 'getTarifasxempresa',
+    iIdEmpresa: ''
+  }
+
   // Archivo
   dataArchivo: any = null;
 
@@ -86,9 +91,7 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
   async ngOnInit() {
     
     this.formInit();
-    // this.catAnalistas();
     this.bTipoFolio = await this.getTipoFolioUsuario();
-    // console.log(this.bTipoFolio);
     
     this.getCatalogoEstudios();
     this.consultaAnalista();
@@ -100,19 +103,20 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
     this.catClientes = clientes.Clientes;
     
     if (this.dataEstudio) {this.setValue()};
-    if (this.esCliente) {this.getIdCliente()};
+    if (this.esCliente) {
+      this.getIdCliente()
+      this.getTarifasCliente();
+    };
   }
 
   ngAfterViewInit() {
     this.form.get('iIdEstudio').valueChanges.subscribe(value => {
       
-      if (value == 1 || value == 3 || value == 4 || value == 5 || value == 7|| 
-          value == 10 || value == 11 || value == 12) {
-            this.mostrarEstudiosCompletos = true;
-          }
-          else {
-            this.mostrarEstudiosCompletos = false;
-          }
+      if (value == 1 || value == 3 || value == 4 || value == 5 || value == 7 || value == 10 || value == 11 || value == 12) {
+          this.mostrarEstudiosCompletos = true;
+        } else {
+          this.mostrarEstudiosCompletos = false;
+      }
     })
 
     // controlCliente
@@ -142,6 +146,24 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
     let tipopFolio = localStorage.getItem('tipoFolio');
     if (tipopFolio)
     return this.encryptService.desencriptar(tipopFolio).toPromise();
+  }
+
+  getTarifasCliente() {
+    let idEmpresaStorage = localStorage.getItem('idEmpresa');
+    if (idEmpresaStorage) {
+      this.encryptService.desencriptar(idEmpresaStorage).subscribe((idEmpresa) => {
+        this.reqTarifasEmpresa.iIdEmpresa = idEmpresa;
+        this.empresasService.getTarifas(this.reqTarifasEmpresa).pipe(
+          pluck('resultado'),
+          catchError((err) => of([]))
+        )
+        .subscribe((tarifas: any) => {
+          if (!tarifas) return Swal.fire('Alerta', 'No se pudo encontrar la empresa perteneciente', 'warning');
+          this.estudiosData = tarifas;
+        })
+        
+      })
+    }
   }
 
   ngOnDestroy() {
@@ -278,6 +300,7 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
     });
 
     if (!this.esCliente) {
+      this.form.get('iPublicarPreliminar').enable();
       this.form.get('iIdAnalista').enable();
     }
 
@@ -386,18 +409,6 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
           return Swal.fire('Error', `Error al registrar Estudio`, "error");
         })
         break;
-    
-        // this.estudiosService.validarSolicitud(reqValidar).subscribe((res:any) => {
-        //   console.log(res);
-        //   if (res.resultado == "Ok") {
-        //     return Swal.fire('Validación exitosa', `Se ha valdiado el estudio con folio ${req.sFolio}`, "success").then(r => {
-        //       this.router.navigate(['analista/estudios']);
-        //     })
-        //   }
-        //   return Swal.fire('Error', `Error al validar estudio`, "error");
-        // }, err => {
-        //   return Swal.fire('Error', `Error al validar estudio`, "error");
-        // })
 
         // SOLO VALIDAR - EJECUTIVO
         case 'validar':
@@ -441,11 +452,7 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
       }
   }
     
-
-    // SOLICITAR - CLIENTE
-   
-
-
+  
   declinarSolicitud() {
     Swal.fire({
       title: 'Declinar solicitud',
@@ -481,7 +488,6 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
 
 
   descargarEvidencia() {
-    
     let reqToken = {
       id: '',
       token: this.controlTokenCancel.value

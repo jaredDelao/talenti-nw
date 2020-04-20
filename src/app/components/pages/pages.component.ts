@@ -92,6 +92,17 @@ const menuCalidad: Array<Object> = [
   },
 ];
 
+const menuCoordinador: Array<Object> = [
+  {
+    titulo: "COORDINADOR",
+    list: [
+      { title: "Clientes", link: "coordinador/clientes" },
+      { title: "Empleados", link: "coordinador/empleados" },
+      { title: "Empresas", link: "coordinador/empresas" },
+    ]
+  },
+];
+
 const menuCliente: Array<Object> = [
   {
       titulo: "CLIENTE",
@@ -153,6 +164,10 @@ export class PagesComponent implements OnInit, DoCheck {
     });
     bcryptjs.compare('Analista', perfil, (err, res) => {
       res ? this.menuList = menuAnalista : '';
+    });
+    // Coordinador
+    bcryptjs.compare('1', idPerfil, (err, res) => {
+      res ? this.menuList = menuCoordinador : '';
     });
     // Supervisor logistica
     bcryptjs.compare('4', idPerfil, (err, res) => {

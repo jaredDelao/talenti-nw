@@ -42,17 +42,21 @@
 
             <div class="row col-12">
                 <!-- nombre encuestado -->
-                <div class="form-group col-4">
+                <div class="form-group col-3">
                     <mat-form-field class="nombre-encuestado">
                         <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscar">
                     </mat-form-field>
                 </div>
 
-                <div class="form-group col-4">
+                <div class="form-group col-3">
                     <button mat-raised-button class="btn-limpiar" (click)="clear()">Limpiar campos</button>
                 </div>
 
-                <div class="form-group col-8 text-right">
+                <div class="form-group col-3">
+                    <button mat-raised-button class="excel-btn" (click)="exportExcel()">Exportar a Excel</button>
+                </div>
+
+                <div class="form-group col-3 text-right">
                     <button mat-raised-button color="primary" (click)="crearEstudio()">
                         CREAR ESTUDIO
                     </button>
