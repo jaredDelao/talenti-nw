@@ -98,4 +98,12 @@ export class LoginComponent implements OnInit {
       Swal.fire('Error', err.message, 'error');
     });
   }
+
+  desc() {
+    let v = this.form.get('md5pass').value;
+    console.log(v);
+    
+    this.encryptService.desencriptar(v).subscribe(console.log)
+  }
 }
+// 81dc9bdb52d04dc20036dbd8313ed055
