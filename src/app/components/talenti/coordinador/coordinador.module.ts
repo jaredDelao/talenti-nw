@@ -17,6 +17,7 @@ import { EmpleadosService } from 'src/app/services/coordinador/empleados.service
 import { EmpresasService } from 'src/app/services/coordinador/empresas.service';
 import { LoadingComponent } from 'src/app/shared/loading/loading.component';
 import { CustomComponentsModule } from 'src/app/shared/customComponents.module';
+import { DisableControlDirective } from 'src/app/shared/directives/disable-control.directive';
 
 @NgModule({
   imports: [
@@ -35,7 +36,7 @@ import { CustomComponentsModule } from 'src/app/shared/customComponents.module';
     EmpresasComponent,
     EmpleadosComponent,
     RegistroEmpleadoComponent,
-    
+    DisableControlDirective,
   ],
   providers: [ClientesService, EmpleadosService, EmpresasService],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]

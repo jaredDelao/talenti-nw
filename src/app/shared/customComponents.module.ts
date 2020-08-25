@@ -17,6 +17,7 @@ import { ChartsModule } from 'ng2-charts';
 import { TablaEstatusComponent } from './tabla-estatus/tabla-estatus.component';
 import { GraficaClienteComponent } from '../components/graficas/general/grafica-cliente/grafica-cliente.component';
 import { GraficaTalentiComponent } from '../components/graficas/general/grafica-talenti/grafica-talenti.component';
+import { DisableControlDirective } from './directives/disable-control.directive';
 
 @NgModule({
   imports: [

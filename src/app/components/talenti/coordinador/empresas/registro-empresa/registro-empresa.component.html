@@ -8,7 +8,7 @@
         <div class="formg-group col-3">
             <mat-form-field>
                 <mat-label>Nombre de la empresa</mat-label>
-                <input matInput type="text" [(ngModel)]="registerEmpresa.sNombreEmpresa" [disabled]="idEmpresa">
+                <input matInput type="text" [(ngModel)]="registerEmpresa.sNombreEmpresa" [disabled]="idEmpresa" autocomplete="off">
             </mat-form-field>
         </div>
 
@@ -34,104 +34,50 @@
 
     </div>
 
-    <div class="box" *ngIf="idEmpresa">
-        <button mat-raised-button color="primary" *ngIf="editarEstudio" (click)="toggleEditarEstudio()">  Editar </button>
-        <button mat-raised-button color="warn" *ngIf="!editarEstudio" (click)="toggleEditarEstudio()">  Ver estudios asignados </button>
-    </div>
-
-    <ng-container *ngIf="!editarEstudio">
-
-        <div class="content">
-            <table mat-table [dataSource]="dataSource" class="mat-elevation-z15">
-
-                <!-- Checkbox Column -->
-                <ng-container matColumnDef="select">
-                    <th mat-header-cell *matHeaderCellDef>
-                        <mat-checkbox (change)="$event ? masterToggle() : null"
-                            [checked]="selection.hasValue() && isAllSelected()" color="primary"
-                            [indeterminate]="selection.hasValue() && !isAllSelected()">
-                        </mat-checkbox>
-                    </th>
-                    <td mat-cell *matCellDef="let row">
-                        <mat-checkbox (click)="$event.stopPropagation()" color="primary"
-                            (change)="$event ? selectRow(row) : null" [checked]="selection.isSelected(row)">
-                        </mat-checkbox>
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="descripcion">
-                    <th mat-header-cell *matHeaderCellDef> PERMISOS PARA ESTUDIOS </th>
-                    <td mat-cell *matCellDef="let element" (click)="stop($event)"> {{element.sNombreEstudio}} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="costoReal">
-                    <th mat-header-cell *matHeaderCellDef> COSTO DE ESTUDIO </th>
-                    <td mat-cell *matCellDef="let element" (click)="stop($event)">
-                        <mat-form-field>
-                            <mat-icon matPrefix>attach_money</mat-icon>
-                            <input matInput type="text" [(ngModel)]="element.dCosto1">
-                        </mat-form-field>
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="costoCancelado">
-                    <th mat-header-cell *matHeaderCellDef> COSTO ESTUDIO CANCELADO </th>
-                    <td mat-cell *matCellDef="let element" (click)="stop($event)">
-                        <mat-form-field>
-                            <mat-icon matPrefix>attach_money</mat-icon>
-                            <input matInput type="text" [(ngModel)]="element.dCosto2">
-                        </mat-form-field>
-                    </td>
-                </ng-container>
-
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
-                </tr>
-            </table>
-            <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator> -->
-        </div>
-
-    </ng-container>
-
-
-    <!-- Consulta -->
-
-    <ng-container *ngIf="editarEstudio">
-
-        <mat-table [dataSource]="dataSourceConsulta" cdkDropList
-        cdkDropListOrientation="horizontal" class="mat-elevation-z8">
-   
-            <ng-container matColumnDef="estudio" >
-              <mat-header-cell *matHeaderCellDef> Estudio </mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.sNombreEstudio}} </mat-cell>
-            </ng-container>
-          
-            <ng-container matColumnDef="costo1">
-              <mat-header-cell *matHeaderCellDef> Costo de Estudio </mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.dCosto1 | currency}} </mat-cell>
-            </ng-container>
-          
-            <ng-container matColumnDef="costo2">
-              <mat-header-cell *matHeaderCellDef> Costo de Cancelación </mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.dCosto2 | currency: 'MXN':'$': '2.2-2'}} </mat-cell>
-            </ng-container>
-          
-            <mat-header-row *matHeaderRowDef="displayedColumnsConsulta"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: displayedColumnsConsulta;"></mat-row>
-          </mat-table>
-
-    </ng-container>
+    <form [formGroup]="form" autocomplete="off" *ngIf="getEstudios.length > 0">
+        <div class="w-100" formArrayName="estudios">
     
-    <!-- end consulta -->
+            <div class="row align-items-end col-12" *ngFor="let item of form.controls['estudios']['controls']; let i=index; let first = first"
+                [formGroupName]="i">
+            
+                <div class="col-md-1" style="margin-bottom: 12px;">
+                    <mat-checkbox color="primary"  [checked]="item.value.check" formControlName="check" ></mat-checkbox>
+                </div>
 
+                <div class="col-md-7">
+                    <p class="check-hint" *ngIf="first">Estudio</p>
+                    <p>{{ item.value.descripcion }}</p>
+                </div>
+
+                <div class="col-md-2">
+                    <p class="check-hint" *ngIf="first">Costo de Estudio</p>
+                    <mat-form-field class="miniForm">
+                        <input class="text-right" type="text" matInput formControlName="costo" [disableControl]="item.value.check">
+                        <mat-error>El campo es requerido</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md-2">
+                    <p class="check-hint" *ngIf="first">Costo de Estudio Cancelado</p>
+                    <mat-form-field class="miniForm">
+                        <input class="text-right" type="text" matInput formControlName="costoCancelado" [disableControl]="item.value.check">
+                        <mat-error>El campo es requerido</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+    
+        </div>
+    </form>
+
+
+    
     <!-- FOOTER -->
     <div class="actions col-12 mt-4 mb-4 d-flex justify-content-center">
         <div class="buttons col-6 d-flex justify-content-around">
             <button mat-raised-button color="warn" [routerLink]="['/coordinador/empresas']"
                 routerLinkActive="router-link-active">CANCELAR</button>
-            <!-- <button mat-raised-button color="primary" (click)="registraEmpresa()">REGISTRAR</button> -->
-            <button *ngIf="!idEmpresa" mat-raised-button color="primary" (click)="enviar()">REGISTRAR</button>
-            <button mat-raised-button color="primary" *ngIf="idEmpresa && !editarEstudio" (click)="actualizar()">ACTUALIZAR</button>
+            <button *ngIf="!idEmpresa" mat-raised-button color="primary" (click)="enviar()" [disabled]="form.invalid">REGISTRAR</button>
+            <button mat-raised-button color="primary" *ngIf="idEmpresa" (click)="actualizar()" [disabled]="form.invalid">ACTUALIZAR</button>
         </div>
     </div>
 </div>

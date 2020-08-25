@@ -5,6 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { Empresas } from 'src/app/interfaces/talenti/coordinador/empresas';
 import { CatalogoEstudios } from 'src/app/interfaces/talenti/coordinador/catalogo-estudios';
 import { map } from 'rxjs/operators';
+import { Empresa } from 'src/app/models/empresas.model';
 
 @Injectable({
   providedIn: 'root'
@@ -42,9 +43,9 @@ export class EmpresasService {
     return this._http.post<CatalogoEstudios>(environment.urlProd, body);
   }
 
-  getAllEstudios(){
+  getAllEstudios(): Observable<Empresa[]> {
     let body = new HttpParams().set('sService', 'getAllEstudios');
-    return this._http.post(environment.urlProd, body);
+    return this._http.post<Empresa[]>(environment.urlProd, body);
   }
 
   subirArchivo(blob, nombre) {

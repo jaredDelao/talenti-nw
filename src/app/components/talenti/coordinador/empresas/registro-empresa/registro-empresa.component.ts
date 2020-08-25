@@ -6,8 +6,11 @@ import Swal from "sweetalert2";
 import { ActivatedRoute, Router } from '@angular/router';
 import { EmpresasService } from 'src/app/services/coordinador/empresas.service';
 import { CatalogoEstudios, CatalogoEstudio } from 'src/app/interfaces/talenti/coordinador/catalogo-estudios';
-import { pluck, catchError } from 'rxjs/operators';
+import { pluck, catchError, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import { Empresa } from 'src/app/models/empresas.model';
+import { Estudio } from 'src/app/interfaces/talenti/ejecutivo/estudios';
 
 @Component({
   selector: "app-registro-empresa",
@@ -21,13 +24,15 @@ export class RegistroEmpresaComponent implements OnInit {
   idEmpresa: any;
   displayedColumns: string[] = ["select","descripcion","costoReal","costoCancelado"];
   selection = new SelectionModel<CatalogoEstudios>(true, []);
-  catalogoEstudios: Array<CatalogoEstudio>;
+  catalogoEstudios: Array<Empresa>;
   dataSource: MatTableDataSource<CatalogoEstudio>;
   loader: boolean = false;
 
   //Token img
   tokenImg: string = '';
   previewImg: any = null;
+
+  form: FormGroup;
 
   public registerEmpresa = {
     sService: 'registraEmpresa',
@@ -57,26 +62,31 @@ export class RegistroEmpresaComponent implements OnInit {
   // Tabla consulta
   displayedColumnsConsulta: string[] = ['estudio', 'costo1', 'costo2'];
   dataSourceConsulta: any = [];
-  editarEstudio: boolean = false;
 
-  constructor(private _route: ActivatedRoute, private empresasService: EmpresasService, private router: Router) {}
+  constructor(private _route: ActivatedRoute, private empresasService: EmpresasService, private router: Router,
+    private fb: FormBuilder) {}
 
   ngOnInit() {
+    this.formInit();
     this.getIdEmpresa();
-    // this.getCatalogoEstudios();
     this.getAllEstudios();
   }
 
-  
+  formInit() {
+    this.form = this.fb.group({
+      estudios: new FormArray([])
+    })
+  }
 
   getIdEmpresa() {
     this.idEmpresa = this._route.snapshot.paramMap.get('id');
+    this.reqTarifasEmpresa.iIdEmpresa = this.idEmpresa;
     console.log('IdEmpresa::', this.idEmpresa);
     if (this.idEmpresa) {
       this.empresasService.getEmpresaById(this.idEmpresa).subscribe((empresa: any) => {
         this.empresaById = empresa.Empresas[0];
         this.setValue(this.empresaById);
-        this.consultarEmpresa();
+        // this.consultarEmpresa();
         // Validacion error
         if (empresa.status !== 'Ok') return Swal.fire('Error', 'Error al consultar empresa', 'error').then(() => {
           return this.router.navigate(['/coordinador/empresas']);
@@ -90,79 +100,67 @@ export class RegistroEmpresaComponent implements OnInit {
     this.registerEmpresa.sTipoFolio = value.sTipoFolio; 
   }
 
-  selectRow(row) {
-    this.selection.toggle(row)
+  get getEstudios(): Array<any> {
+    return this.form.get('estudios').value;
   }
 
-  consultarEmpresa() {
-    this.loader = true;
-    this.editarEstudio = true;
-    this.reqTarifasEmpresa.iIdEmpresa = this.idEmpresa;
-    this.empresasService.getTarifas(this.reqTarifasEmpresa).pipe(
-      pluck('resultado'),
-      catchError((err) => of([]))
-    )
-    .subscribe((estudios) => {
-      this.dataSourceConsulta = estudios;
-      this.loader = false;
-    })
-  }
-  
-  InitMatTable() {
-    this.dataSource = new MatTableDataSource(this.catalogoEstudios);
-    // this.dataSource.paginator = this.paginator;
-  }
-
-  /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
-  }
-
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
-    this.isAllSelected()
-      ? this.selection.clear()
-      : this.dataSource.data.forEach((row: any) => this.selection.select(row));      
-  }
-
-  /** The label for the checkbox on the passed row */
-  // checkboxLabel(row?: PeriodicElement): string {
-  //   if (!row) {
-  //     return `${this.isAllSelected() ? "select" : "deselect"} all`;
-  //   }
-  //   return `${
-  //     this.selection.isSelected(row) ? "deselect" : "select"
-  //   } row ${row.position + 1}`;
-
-  //   console.log(this.selection)
-  // }
-
-  // getCatalogoEstudios() {
-  //   this.empresasService.getCatalogoEstudios().subscribe((estudios: CatalogoEstudios) => {
-  //     this.catalogoEstudios = estudios.estudios;
-  //     this.InitMatTable();
-  //   });
-  // }
 
   // Lista de estudios
   getAllEstudios() {
     this.empresasService.getAllEstudios().pipe(
-      pluck('LstEstudios')
-    )
-      .subscribe((res: any) => {
+      pluck('LstEstudios'),
+      catchError((err) => of([])),
+      switchMap((res: Empresa[]) => {
+        if (res.length <= 0) return;
+        this.agregarEstudios(res);
         this.catalogoEstudios = res;
-        this.InitMatTable();
-      }, (err) => Swal.fire('Error', 'Error al mostrar lista de estudios', 'error'));
+
+        return this.empresasService.getTarifas(this.reqTarifasEmpresa)
+      }),
+      pluck('resultado')
+    ).subscribe((empresa: Empresa[]) => {
+      console.log(empresa);
+
+      this.getEstudios.forEach((estudio, i) => {
+        empresa.forEach((emp) => {
+          if (estudio.id == emp.iIdEstudio) {
+            (<FormArray>this.form.get('estudios')).at(i).patchValue({
+              check: true,
+              costo: emp.dCosto1,
+              costoCancelado: emp.dCosto3,
+            })
+          }
+        })
+      })
+
+      this.loader = false;
+    }, (err) => Swal.fire('Error', 'Error al mostrar lista de estudios', 'error'));
   }
+
+
+  agregarEstudios(estudios: Empresa[]) {
+    estudios.map(estudio => {
+      const group = this.crearGroup(estudio);
+      (<FormArray>this.form.get('estudios')).push(group);
+    })
+  }
+
+  crearGroup(estudio): FormGroup {
+    return this.fb.group({
+      id: [estudio.iIdEstudio],
+      check: [false],
+      descripcion: [estudio.sNombreEstudio],
+      costo: [null],
+      costoCancelado: [null],
+    });
+  }
+
 
   stop() {
     event.stopPropagation();
   }
 
   subirImagen(e) {
-
     let blob = e.target.files[0];
     let name = e.target.files[0].name;
     
@@ -205,44 +203,26 @@ export class RegistroEmpresaComponent implements OnInit {
     return this.empresasService.registrarEmpresa(this.registerEmpresa).toPromise();
   }
 
-  async enviar() {
-    let respEmpresa: any = await this.registraEmpresa();
-    // Falta validar si falla el registraEmpresa
+  validacionCampos() {
     
-    this.idEmpresa = respEmpresa.iIdEmpresa;    
-    const selection = this.selection.selected;
+  }
 
-    // Validar campos vacios
-    // if (selection.length > 0) {
-    //   for (let i = 0; i < selection.length; i++) {
-    //     if (selection[i].costoEstudio !== null && selection[i].costoCancelado !== null) {
-    //       this.validEstudios = true;
-    //     } else {
-    //       this.validEstudios = false;
-    //       break;
-    //     }
-    //   }
-    // } else {
-    //   this.validEstudios = false;
-    // }
+  async enviar() {
+    
+    this.loader = true;
 
-    // if (!this.validEstudios || this.empresa.nombre === null || this.empresa.nombre === '' 
-    //     || this.empresa.imagen === null || this.empresa.tipo_folio === null) {
-    //   Swal.fire({
-    //     icon: "error",
-    //     title: "Faltan campos...",
-    //     text: "Aún faltan campos requeridos por llenar"   
-    //   });
-    // } else {
-    //   Swal.fire({
-    //     icon: "success",
-    //     title: "Listo",   
-    //     text: "Campos guardados correctamente",   
-    //   });
-    // }
+    const estudios = this.getEstudios.filter((std) => std.check == true);
+    if (estudios.length <= 0) {
+      this.loader = false;
+      return Swal.fire('Alerta', 'Campos incompletos', 'error');
+    }
+
+    let respEmpresa: any = await this.registraEmpresa();
+    this.idEmpresa = respEmpresa.iIdEmpresa;
     
     // Validación campos empresa
-    if (this.idEmpresa == 'Error') {
+    if (this.idEmpresa == 'Error' || estudios.length <= 0) {
+      this.loader = false;
       return Swal.fire({
             icon: 'warning',
             title: "Campos incompletos",
@@ -250,19 +230,19 @@ export class RegistroEmpresaComponent implements OnInit {
       });
     }
 
-    selection.map((estudio: any) => {
-      const {iIdEstudio, dCosto1, dCosto2} = estudio;
+    
+    estudios.map((estudio: any) => {
+      const {id, costo, costoCancelado} = estudio;
       let request = {
         sService: 'registraTarifas',
         iIdEmpresa: this.idEmpresa,
-        iIdEstudio,
-        dCosto1,
-        dCosto2
+        iIdEstudio: id,
+        dCosto1: costo,
+        dCosto2: costoCancelado
       };
-
-      // Subscribe
       
       this.empresasService.registraTarifa(request).subscribe((resp:any)=> {
+        this.loader = false;
         if (resp.resultado != 'Ok') return Swal.fire('Alerta', 'Error al registrar la empresa', 'error');
 
         return Swal.fire('Registro exitoso', 'La empresa se ha registrado correctamente', 'success').then(() => {
@@ -274,18 +254,18 @@ export class RegistroEmpresaComponent implements OnInit {
   }
 
   actualizar() {    
-    const selection = this.selection.selected;
-    selection.map((estudio: any) => {
-      const {iIdEstudio, dCosto1, dCosto2} = estudio;
+    const estudios = this.getEstudios.filter((std) => std.check == true);
+    if (estudios.length <= 0) return Swal.fire('Alerta', 'Campos incompletos', 'error');
+
+    estudios.map((estudio: any) => {
+      const {id, costo, costoCancelado} = estudio;
       let request = {
         sService: 'registraTarifas',
         iIdEmpresa: this.idEmpresa,
-        iIdEstudio,
-        dCosto1,
-        dCosto2
+        iIdEstudio: id,
+        dCosto1: costo,
+        dCosto2: costoCancelado
       };
-
-      // Subscribe
       
       this.empresasService.registraTarifa(request).subscribe((resp:any)=> {
         if (resp.resultado != 'Ok') return Swal.fire('Alerta', 'Error al registrar la empresa', 'error');
@@ -295,10 +275,6 @@ export class RegistroEmpresaComponent implements OnInit {
       });
 
     });
-
   }
 
-  toggleEditarEstudio() {
-    this.editarEstudio = !this.editarEstudio;
-  }
 }
