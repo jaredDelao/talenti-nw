@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, DoCheck, Output, EventEmitter, AfterViewI
 import { DatosEjecutivo } from "../../../../interfaces/datos-ejecutivo";
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from "@angular/material/table";
-import { MatDatepicker, MatDatepickerInputEvent, MatSidenav, MatSlideToggle } from '@angular/material';
+import { MatDatepicker, MatDatepickerInputEvent, MatSidenav, MatSlideToggle, Sort, MatSort } from '@angular/material';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { EstudiosService } from 'src/app/services/ejecutivo/estudios.service';
 import { Estudios, Estudio } from 'src/app/interfaces/talenti/ejecutivo/estudios';
@@ -23,8 +23,10 @@ import { VerificarEstatusService } from 'src/app/services/verificar-estatus.serv
 })
 export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
 
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
+
   displayedColumns: string[] = [
-    'folio', 'nombre', 'estatus_solicitud', 'estatus_preliminar', 'estatus_dictamen', 'comentarios'
+    'sFolio', 'sNombres', 'estatus_solicitud', 'iPublicarPreliminar', 'bPublicarDictamen', 'comentarios'
   ];
   dataSource: MatTableDataSource<Estudio>;
   loader: boolean = false;
@@ -56,6 +58,8 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
   validarEstudio: any = 'PENDIENTE';
   validarPublicacionPreeliminar: boolean = false;
   bTipoFolio: 'e' | 'f' = null;
+
+  sortedData: any[];
 
   constructor(private estudiosService: EstudiosService, private fb: FormBuilder, private excelGenerate: GenerateExcelService, public vEstatusService: VerificarEstatusService,
     public dialog: MatDialog, private cd: ChangeDetectorRef, private router: Router, private encryptService: EncriptarDesencriptarService) {
@@ -139,9 +143,11 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
     this.estudiosService.getEstudiosCliente(this.req).subscribe((estudiosList: any)=> {
       const {resultado} = estudiosList;
       console.log(resultado);
+      this.sortedData = resultado.slice();
       this.estudiosList = resultado;
       this.jsonExportExcel = resultado;
       this.dataSource = new MatTableDataSource(this.estudiosList);
+      this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
 
       // Filtro fecha - texto
@@ -266,67 +272,65 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
     if (text == 'Revisar') return {'color': '#F5B041'};
   }
 
+  renameKey(object, key, newKey) {
+
+    const clone = (obj) => Object.assign({}, obj);
+
+    const clonedObj = clone(object);
+  
+    const targetKey = clonedObj[key];
+  
+    delete clonedObj[key];
+    clonedObj[newKey] = targetKey;  
+    return clonedObj;
+  }
+
   exportExcel() {
     this.jsonExportExcel = this.dataSource.filteredData;
 
-    this.jsonExportExcel.forEach((element, i) => {
-      delete element['iIdSolicitud'];
-      delete element['iEstatusGeneral'];
-      delete element['iIdCliente'];
-      delete element['iIdSolicitud'];
-      delete element['iIdAnalista'];
-      delete element['sTokenCV'];
-      delete element['bDeclinada'];
-      delete element['bValidada'];
-      delete element['bDeclinada'];
-      delete element['bDeclinada'];
-      delete element['bPublicarDictamen'];
-      delete element['bSolicitarCalidad'];
-      delete element['bCertificadoCalidad'];
-      delete element['iPublicarPreliminar'];
-      delete element['iEstatusDictamen'];
-      delete element['sArchivoPreliminar'];
-      delete element['sArch1Dictamen'];
-      delete element['sArch2Dictamen'];
-      delete element['sArchComplemento'];
-      delete element['iEstatusComplemento'];
-      delete element['sMotivoPreliminar'];
-      delete element['sMotivoDictamen'];
-      delete element['sMotivoComplemento'];
-      delete element['sTokenComplemento'];
-    });
+    const exportExc = this.jsonExportExcel.reduce((acc, v) => {
+        let arr = [v.dFechaSolicitud, v.sFolio, v.sComentarios, v.sNombres, v.sApellidos, v.sPuesto, v.sTelefono, v.sNss,
+          v.sCurp, v.sCalleNumero, v.sColonia, v.sCp, v.sMunicipio, v.sEstado, v.dfechahoraultAgenda, v.sComentariosAsignacion];
+        acc.push(arr);
+        return acc;
+    }, [])
     
-    this.excelGenerate.exportAsExcelFile(this.jsonExportExcel, 'sample');
+    let headers = ['Fecha de Solicitud', 'Folio', 'Comentarios', 'Nombre(s)', 'Apellidos', 'Puesto', 
+      'Teléfono', 'NSS', 'Curp', 'Calle y Número', 'Colonia', 'CP', 'Municipio', 'Estado', 'Fecha Agenda', 'Comentarios de Asignación'];
+
+    this.excelGenerate.createExcel('exportExc', headers, exportExc );
     this.ngOnInit();
   }
 
-  verificarEstatusSolicitud(element) {
-    return this.vEstatusService.verificarEstatusSolicitud(element);
-  }
+  // verificarEstatusSolicitud(element) {
+  //   return this.vEstatusService.verificarEstatusSolicitud(element);
+  // }
 
-  verificarEstatusDictamen(bPublicarDictamen, iEstatusGeneral) {
-    return this.vEstatusService.verificarEstatusDictamen(bPublicarDictamen, iEstatusGeneral);
-  }
+  // verificarEstatusDictamen(bPublicarDictamen, iEstatusGeneral) {
+  //   return this.vEstatusService.verificarEstatusDictamen(bPublicarDictamen, iEstatusGeneral);
+  // }
 
-  verificarPreliminar(iPublicarPreliminar) {
-    return this.vEstatusService.verificarPreliminar(iPublicarPreliminar);
-  }
+  // verificarPreliminar(iPublicarPreliminar) {
+  //   console.log(iPublicarPreliminar);
+    
+  //   return this.vEstatusService.verificarPreliminar(iPublicarPreliminar);
+  // }
 
-  verificarRol(bPublicarDictamen, iEstatusGral, bDeclinada) {
-    if (iEstatusGral != '4' && bPublicarDictamen && bDeclinada != '1') {
+  // verificarRol(bPublicarDictamen, iEstatusGral, bDeclinada) {
+  //   if (iEstatusGral != '4' && bPublicarDictamen && bDeclinada != '1') {
 
-      switch(bPublicarDictamen) {
-        case '0':
-          return {'background-color': '#F9E79F'};
-        case '1':
-          return {'background-color': '#F9E79F'};
-        case '2':
-          return {'background-color': '#F9E79F'};
-        default:
-          return {'background-color': 'transparent'}
-      }
-    }
-  }
+  //     switch(bPublicarDictamen) {
+  //       case '0':
+  //         return {'background-color': '#F9E79F'};
+  //       case '1':
+  //         return {'background-color': '#F9E79F'};
+  //       case '2':
+  //         return {'background-color': '#F9E79F'};
+  //       default:
+  //         return {'background-color': 'transparent'}
+  //     }
+  //   }
+  // }
 
   reload() {
     this.ngOnInit();

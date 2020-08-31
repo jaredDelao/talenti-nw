@@ -21,6 +21,10 @@ import { TablaGeneralComponent } from '../../../shared/tabla-general/tabla-gener
 import { ActualizarDictamenComponent } from './modals/actualizar-dictamen/actualizar-dictamen.component';
 import { AprobarCancelacionModalComponent } from './modals/aprobar-cancelacion-modal/aprobar-cancelacion-modal.component';
 import { SolicitarCancelacionEjecutivoComponent } from './modals/solicitar-cancelacion-ejecutivo/solicitar-cancelacion-ejecutivo.component';
+import { EstatusSolicitudPipe } from 'src/app/shared/pipes/estatus-solicitud.pipe';
+import { VerificarPreliminarPipe } from 'src/app/shared/pipes/verificar-preliminar.pipe';
+import { EstatusDictamenPipe } from 'src/app/shared/pipes/estatus-dictamen.pipe';
+import { VerificarRolPipe } from 'src/app/shared/pipes/verificar-rol.pipe';
 
 @NgModule({
   imports: [

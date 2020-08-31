@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { MatTableDataSource, MatPaginator, MatDatepicker, MatSidenav, MatSlideToggle, MatDialog } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatDatepicker, MatSidenav, MatSlideToggle, MatDialog, MatSort } from '@angular/material';
 import { DatePipe } from '@angular/common';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { EstudiosService } from 'src/app/services/ejecutivo/estudios.service';
@@ -20,10 +20,12 @@ import { GenerateExcelService } from 'src/app/services/generate-excel.service';
 })
 export class EstudiosClienteComponent implements OnInit {
 
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
+
   jsonExportExcel: any;
 
   displayedColumns: string[] = [
-    'folio', 'nombre', 'fecha_solicitud', 'estatus_solicitud', 'estatus_dictamen', 'dictamen', 'comentarios'
+    'sFolio', 'sNombres', 'dFechaSolicitud', 'estatus_solicitud', 'iEstatusGeneral', 'dictamen', 'comentarios'
   ];
   dataSource: MatTableDataSource<any>;
 
@@ -66,6 +68,8 @@ export class EstudiosClienteComponent implements OnInit {
     this.isPerfilAdmin = await this.getPerfil();
     // IsGNP
     this.isGNP = await this.getIsGnp();
+    console.log(this.isGNP);
+    
     this.getEstudios();
     
   }
@@ -123,6 +127,8 @@ export class EstudiosClienteComponent implements OnInit {
       this.estudiosList = resultado;
       this.dataSource = new MatTableDataSource(this.estudiosList);
       this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+
 
       // Filtro fecha - texto
       this.dataSource.filterPredicate = (data: any, filter) => {
@@ -172,17 +178,17 @@ export class EstudiosClienteComponent implements OnInit {
     return {'background-color': 'transparent'}
   }
 
-  verificarEstatusSolicitud(element) {
-    return this.vEstatusService.verificarEstatusSolicitud(element);
-  }
+  // verificarEstatusSolicitud(element) {
+  //   return this.vEstatusService.verificarEstatusSolicitud(element);
+  // }
 
-  verificarDictamen(idDictamen, iEstatusGeneral) {
-    return this.vEstatusService.verificarDictamen(idDictamen, iEstatusGeneral);  
-  }
+  // verificarDictamen(idDictamen, iEstatusGeneral) {
+  //   return this.vEstatusService.verificarDictamen(idDictamen, iEstatusGeneral);  
+  // }
 
-  verificarEstatusDictamen(bPublicarDictamen, iEstatusGeneral) {
-    return this.vEstatusService.verificarEstatusDictamen(bPublicarDictamen, iEstatusGeneral);
-  }
+  // verificarEstatusDictamen(bPublicarDictamen, iEstatusGeneral) {
+  //   return this.vEstatusService.verificarEstatusDictamen(bPublicarDictamen, iEstatusGeneral);
+  // }
 
   reload() {
     this.ngOnInit();
@@ -191,34 +197,17 @@ export class EstudiosClienteComponent implements OnInit {
   exportExcel() {
     this.jsonExportExcel = this.dataSource.filteredData;
 
-    this.jsonExportExcel.forEach((element, i) => {
-      delete element['iIdSolicitud'];
-      delete element['iEstatusGeneral'];
-      delete element['iIdCliente'];
-      delete element['iIdSolicitud'];
-      delete element['iIdAnalista'];
-      delete element['sTokenCV'];
-      delete element['bDeclinada'];
-      delete element['bValidada'];
-      delete element['bDeclinada'];
-      delete element['bDeclinada'];
-      delete element['bPublicarDictamen'];
-      delete element['bSolicitarCalidad'];
-      delete element['bCertificadoCalidad'];
-      delete element['iPublicarPreliminar'];
-      delete element['iEstatusDictamen'];
-      delete element['sArchivoPreliminar'];
-      delete element['sArch1Dictamen'];
-      delete element['sArch2Dictamen'];
-      delete element['sArchComplemento'];
-      delete element['iEstatusComplemento'];
-      delete element['sMotivoPreliminar'];
-      delete element['sMotivoDictamen'];
-      delete element['sMotivoComplemento'];
-      delete element['sTokenComplemento'];
-    });
+    const exportExc = this.jsonExportExcel.reduce((acc, v) => {
+        let arr = [v.dFechaSolicitud, v.sFolio, v.sComentarios, v.sNombres, v.sApellidos, v.sPuesto, v.sTelefono, v.sNss,
+          v.sCurp, v.sCalleNumero, v.sColonia, v.sCp, v.sMunicipio, v.sEstado, v.dfechahoraultAgenda, v.sComentariosAsignacion];
+        acc.push(arr);
+        return acc;
+    }, [])
     
-    this.excelGenerate.exportAsExcelFile(this.jsonExportExcel, 'sample');
+    let headers = ['Fecha de Solicitud', 'Folio', 'Comentarios', 'Nombre(s)', 'Apellidos', 'Puesto', 
+      'Teléfono', 'NSS', 'Curp', 'Calle y Número', 'Colonia', 'CP', 'Municipio', 'Estado', 'Fecha Agenda', 'Comentarios de Asignación'];
+
+    this.excelGenerate.createExcel('exportExc', headers, exportExc );
     this.ngOnInit();
   }
 

@@ -7,7 +7,8 @@ export const environment = {
   urlGet: '/bkService.php',
   urlProd: '/WebTalenti/requestsrvrTalenti.php',
   // urlProd: 'https://backtalenti.automatizate.mx/WebTalenti/requestsrvrTalenti.php',
-  urlArchivo: '/WebTalenti/Subearchivo.php'
+  urlArchivo: '/WebTalenti/Subearchivo.php',
+  urlImage: 'http://ec2-54-210-170-110.compute-1.amazonaws.com/WebTalenti'
   // urlArchivo: 'https://backtalenti.automatizate.mx/WebTalenti/Subearchivo.php'
 };
 

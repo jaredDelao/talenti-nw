@@ -5,14 +5,14 @@
     </div>
 
     <div class="row col-12">
-        <div class="formg-group col-3">
+        <div class="formg-group col-md-3">
             <mat-form-field>
                 <mat-label>Nombre de la empresa</mat-label>
                 <input matInput type="text" [(ngModel)]="registerEmpresa.sNombreEmpresa" [disabled]="idEmpresa" autocomplete="off">
             </mat-form-field>
         </div>
 
-        <div class="form-group col-3">
+        <div class="form-group col-md-3">
             <mat-form-field>
                 <mat-label>Tipo folio</mat-label>
                 <mat-select [(ngModel)]="registerEmpresa.sTipoFolio" [disabled]="idEmpresa">
@@ -23,13 +23,17 @@
             </mat-form-field>
         </div>
 
-        <div class="form-group col-6" *ngIf="!idEmpresa">
+        <div class="form-group col-md-6" *ngIf="!idEmpresa">
             <div class="custom-file mb-3">
                 <input type="file" class="custom-file-input" id="customFileLang" [(ngModel)]="reqArchivo.Archivo"
                     (change)="subirImagen($event)" lang="es">
                 <label class="custom-file-label" for="customFileLang">Seleccionar Imagen</label>
             </div>
             <img [src]="previewImg" height="150px" width="auto" *ngIf="previewImg">
+        </div>
+
+        <div class="form-group col-md-6" *ngIf="idEmpresa">
+            <img [src]="imageService.viewImage(tokenImage)" height="150px" width="auto">
         </div>
 
     </div>

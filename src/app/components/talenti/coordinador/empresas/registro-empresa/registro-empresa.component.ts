@@ -11,6 +11,7 @@ import { of } from 'rxjs';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { Empresa } from 'src/app/models/empresas.model';
 import { Estudio } from 'src/app/interfaces/talenti/ejecutivo/estudios';
+import { ImagesService } from 'src/app/services/images.service';
 
 @Component({
   selector: "app-registro-empresa",
@@ -52,19 +53,21 @@ export class RegistroEmpresaComponent implements OnInit {
     p: '()_A81523[]'
   }
 
-  dataFolio: Object[] = [
+  dataFolio: any[] = [
     { id: 'e', descripcion: "Folio Editable" },
     { id: 'f', descripcion: "Folio Fijo" }
   ];
 
   empresaById: any;
 
+  tokenImage: string;
+
   // Tabla consulta
   displayedColumnsConsulta: string[] = ['estudio', 'costo1', 'costo2'];
   dataSourceConsulta: any = [];
 
   constructor(private _route: ActivatedRoute, private empresasService: EmpresasService, private router: Router,
-    private fb: FormBuilder) {}
+    private fb: FormBuilder, public imageService: ImagesService) {}
 
   ngOnInit() {
     this.formInit();
@@ -86,6 +89,8 @@ export class RegistroEmpresaComponent implements OnInit {
       this.empresasService.getEmpresaById(this.idEmpresa).subscribe((empresa: any) => {
         this.empresaById = empresa.Empresas[0];
         this.setValue(this.empresaById);
+        this.tokenImage = this.empresaById.sLogotipo;
+        // this.imageService.viewImage(this.empresaById.sLogotipo).subscribe(console.log)
         // this.consultarEmpresa();
         // Validacion error
         if (empresa.status !== 'Ok') return Swal.fire('Error', 'Error al consultar empresa', 'error').then(() => {

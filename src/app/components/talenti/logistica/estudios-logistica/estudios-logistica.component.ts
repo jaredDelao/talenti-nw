@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import Swal from 'sweetalert2';
 import * as moment from 'moment';
-import { MatTableDataSource, MatPaginator, MatDatepicker, MatSidenav, MatSlideToggle } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatDatepicker, MatSidenav, MatSlideToggle, MatSort } from '@angular/material';
 import { FormControl, FormGroup, FormBuilder } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
@@ -21,6 +21,8 @@ import { VerificarEstatusService } from 'src/app/services/verificar-estatus.serv
   styleUrls: ['./estudios-logistica.component.scss']
 })
 export class EstudiosLogisticaComponent implements OnInit {
+
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   displayedColumns: string[] = [];
   dataSource: MatTableDataSource<any>;
@@ -80,7 +82,7 @@ export class EstudiosLogisticaComponent implements OnInit {
       bcryptjs.compare('4', idPerfil, (err, res) => {
         if (res) {
           console.log('Es supervisor: ',this.idLogistica);
-          this.displayedColumns = ['folio', 'nombre', 'fecha_solicitud', 'estatus_aplicacion','estatus_agendado', 'detalles'];
+          this.displayedColumns = ['sFolio', 'sNombres', 'dFechaSolicitud', 'estatus_aplicacion','iContadoAgendas', 'detalles'];
           this.banderaSupervisor = true;
           return this.getEstudiosSupervisor();
         }
@@ -90,7 +92,7 @@ export class EstudiosLogisticaComponent implements OnInit {
       bcryptjs.compare('8', idPerfil, (err, res) => {
         if (res) {
           console.log('Es normal', this.idLogistica);
-          this.displayedColumns = ['folio', 'nombre', 'fecha_solicitud', 'estatus_agendado','estatus_aplicacion', 'detalles'];
+          this.displayedColumns = ['sFolio', 'sNombres', 'dFechaSolicitud', 'iContadoAgendas','estatus_aplicacion', 'detalles'];
           this.banderaSupervisor = false;
           return this.getEstudiosByIdLogistica();
         }
@@ -181,6 +183,7 @@ export class EstudiosLogisticaComponent implements OnInit {
   getEstudios(estudios) {
       this.dataSource = new MatTableDataSource(estudios);
       this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
 
       // Filtro fecha - texto
       this.dataSource.filterPredicate = (data: any, filter) => {
@@ -218,36 +221,36 @@ export class EstudiosLogisticaComponent implements OnInit {
     
   }
 
-  verificarEstatusAgenda(iContadoAgendas) {
-    return this.vEstatusService.verificarEstatusAgenda(iContadoAgendas);
-  }
+  // verificarEstatusAgenda(iContadoAgendas) {
+  //   return this.vEstatusService.verificarEstatusAgenda(iContadoAgendas);
+  // }
 
-  verificarEstatusAplicacion(bEstatusAsignacion, iEstatusGeneral) {
-    return this.vEstatusService.verificarEstatusAplicacion(bEstatusAsignacion, iEstatusGeneral);
-  }
+  // verificarEstatusAplicacion(bEstatusAsignacion, iEstatusGeneral) {
+  //   return this.vEstatusService.verificarEstatusAplicacion(bEstatusAsignacion, iEstatusGeneral);
+  // }
 
-  verificarEstatusAsignacion(iIdEmpleadoLogistica) {
-    if (!iIdEmpleadoLogistica) return 'SIN ASIGNAR'
-    const empleadoLogistica = this.catEmpleados.find((value) => value.iIdEmpleado == iIdEmpleadoLogistica);
-    return empleadoLogistica.sNombres + ' ' + empleadoLogistica.sApellidos;
-  }
+  // verificarEstatusAsignacion(iIdEmpleadoLogistica) {
+  //   if (!iIdEmpleadoLogistica) return 'SIN ASIGNAR'
+  //   const empleadoLogistica = this.catEmpleados.find((value) => value.iIdEmpleado == iIdEmpleadoLogistica);
+  //   return empleadoLogistica.sNombres + ' ' + empleadoLogistica.sApellidos;
+  // }
 
-  verificarEstatusSolicitud(element) {
+  // verificarEstatusSolicitud(element) {
 
-    const { bDeclinada, bValidada, bPublicarDictamen, bSolicitarCalidad, iPublicarPreliminar, iEstatusComplemento } = element;
+  //   const { bDeclinada, bValidada, bPublicarDictamen, bSolicitarCalidad, iPublicarPreliminar, iEstatusComplemento } = element;
 
-    let complementoPend = false;
-    let preliminarPend = false;
+  //   let complementoPend = false;
+  //   let preliminarPend = false;
 
-    if (iEstatusComplemento > '0' && iEstatusComplemento != '3') complementoPend = true;
-    if (iPublicarPreliminar > '0' && iPublicarPreliminar != '3') preliminarPend = true;
+  //   if (iEstatusComplemento > '0' && iEstatusComplemento != '3') complementoPend = true;
+  //   if (iPublicarPreliminar > '0' && iPublicarPreliminar != '3') preliminarPend = true;
 
-    if (bPublicarDictamen == '2' || iPublicarPreliminar == '2' || iEstatusComplemento == '4') return 'Revisar'
+  //   if (bPublicarDictamen == '2' || iPublicarPreliminar == '2' || iEstatusComplemento == '4') return 'Revisar'
         
-    if (bPublicarDictamen == '3' && !complementoPend && !preliminarPend ) return 'Validado'
+  //   if (bPublicarDictamen == '3' && !complementoPend && !preliminarPend ) return 'Validado'
     
-    return 'Pendiente';
-  }
+  //   return 'Pendiente';
+  // }
 
   color(row) {
     if (row.bDeclinada == '1') {

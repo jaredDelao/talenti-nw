@@ -5,6 +5,7 @@ import * as bcryptjs from 'bcryptjs';
 import * as cryptoJS from 'crypto-js';
 import Swal from 'sweetalert2';
 import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencriptar.service';
+import { ImagesService } from 'src/app/services/images.service';
 
 
 // const menuEjecutivo: Array<Object>;
@@ -124,6 +125,7 @@ export class PagesComponent implements OnInit, DoCheck {
   menuList: Array<Object>;
   permiso: String = "analista";
   colorT: string = 'primary';
+  ulrImage: string;
 
   constructor(private router: Router, private cryptService: EncriptarDesencriptarService) { }
 

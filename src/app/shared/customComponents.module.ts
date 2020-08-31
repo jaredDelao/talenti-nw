@@ -17,8 +17,25 @@ import { ChartsModule } from 'ng2-charts';
 import { TablaEstatusComponent } from './tabla-estatus/tabla-estatus.component';
 import { GraficaClienteComponent } from '../components/graficas/general/grafica-cliente/grafica-cliente.component';
 import { GraficaTalentiComponent } from '../components/graficas/general/grafica-talenti/grafica-talenti.component';
-import { DisableControlDirective } from './directives/disable-control.directive';
+import { EstatusSolicitudPipe } from './pipes/estatus-solicitud.pipe';
+import { VerificarPreliminarPipe } from './pipes/verificar-preliminar.pipe';
+import { EstatusDictamenPipe } from './pipes/estatus-dictamen.pipe';
+import { VerificarRolPipe } from './pipes/verificar-rol.pipe';
+import { VerificarDictamenPipe } from './pipes/verificar-dictamen.pipe';
+import { VerificarEstatusAgendaPipe } from './pipes/verificar-estatus-agenda.pipe';
+import { VerificarEstatusAsignacionPipe } from './pipes/verificar-estatus-asignacion.pipe';
+import { VerificarEstatusAplicacionPipe } from './pipes/verificar-estatus-aplicacion.pipe';
 
+const PIPES = [
+    EstatusSolicitudPipe,
+    VerificarPreliminarPipe,
+    EstatusDictamenPipe,
+    VerificarRolPipe,
+    VerificarDictamenPipe,
+    VerificarEstatusAgendaPipe,
+    VerificarEstatusAsignacionPipe,
+    VerificarEstatusAplicacionPipe,
+]
 @NgModule({
   imports: [
       MaterialModule,
@@ -38,6 +55,7 @@ import { DisableControlDirective } from './directives/disable-control.directive'
     TablaEstatusComponent,
     GraficaClienteComponent,
     GraficaTalentiComponent,
+    ...PIPES,
   ],
   declarations: [
     LoadingComponent, 
@@ -51,6 +69,7 @@ import { DisableControlDirective } from './directives/disable-control.directive'
     TablaEstatusComponent,
     GraficaClienteComponent,
     GraficaTalentiComponent,
+    ...PIPES,
   ],
   entryComponents: [
     RevisarModalComponent,

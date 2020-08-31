@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, OnDestroy, AfterViewInit, ElementRef, ChangeDetectorRef } from '@angular/core';
-import { MatTableDataSource, MatPaginator, MatDatepicker, MatSidenav, MatSlideToggle } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatDatepicker, MatSidenav, MatSlideToggle, MatSort } from '@angular/material';
 import { DatePipe } from '@angular/common';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import Swal from 'sweetalert2';
@@ -17,7 +17,10 @@ import { VerificarEstatusService } from 'src/app/services/verificar-estatus.serv
 })
 export class EstudiosAnalistaComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  displayedColumns: string[] = ['folio', 'nombre', 'fecha_solicitud', 'estatus_solicitud', 'estatus_preliminar', 'estatus_dictamen', 'comentarios'];
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
+
+
+  displayedColumns: string[] = ['sFolio', 'sNombres', 'dFechaSolicitud', 'estatus_solicitud', 'iPublicarPreliminar', 'iEstatusGeneral', 'comentarios'];
   dataSource: MatTableDataSource<any>;
   loading: boolean = false;
 
@@ -100,12 +103,14 @@ export class EstudiosAnalistaComponent implements OnInit, OnDestroy, AfterViewIn
   getEstudios() {
     this.loading = true;
     this.estudiosAnalistaService.getEstudios(this.req).subscribe((estudiosList: any)=> {
-      console.log(estudiosList);
+      // console.log(estudiosList);
       const {resultado} = estudiosList;
       this.estudiosList = resultado;
       this.jsonExportExcel = resultado;
       this.dataSource = new MatTableDataSource(this.estudiosList);
       this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+
 
       // Filtro fecha - texto
       this.dataSource.filterPredicate = (data: any, filter) => {
@@ -203,36 +208,19 @@ export class EstudiosAnalistaComponent implements OnInit, OnDestroy, AfterViewIn
     this.loading = true;
     this.jsonExportExcel = this.dataSource.filteredData;
 
-    this.jsonExportExcel.map((element, i) => {
-      delete element['iIdSolicitud'];
-      delete element['iEstatusGeneral'];
-      delete element['iIdCliente'];
-      delete element['iIdSolicitud'];
-      delete element['iIdAnalista'];
-      delete element['sTokenCV'];
-      delete element['bDeclinada'];
-      delete element['bValidada'];
-      delete element['bDeclinada'];
-      delete element['bDeclinada'];
-      delete element['bPublicarDictamen'];
-      delete element['bSolicitarCalidad'];
-      delete element['bCertificadoCalidad'];
-      delete element['iPublicarPreliminar'];
-      delete element['iEstatusDictamen'];
-      delete element['sArchivoPreliminar'];
-      delete element['sArch1Dictamen'];
-      delete element['sArch2Dictamen'];
-      delete element['sArchComplemento'];
-      delete element['iEstatusComplemento'];
-      delete element['sMotivoPreliminar'];
-      delete element['sMotivoDictamen'];
-      delete element['sMotivoComplemento'];
-      delete element['sTokenComplemento'];
-    });
+    const exportExc = this.jsonExportExcel.reduce((acc, v) => {
+        let arr = [v.dFechaSolicitud, v.sFolio, v.sComentarios, v.sNombres, v.sApellidos, v.sPuesto, v.sTelefono, v.sNss,
+          v.sCurp, v.sCalleNumero, v.sColonia, v.sCp, v.sMunicipio, v.sEstado, v.dfechahoraultAgenda, v.sComentariosAsignacion];
+        acc.push(arr);
+        return acc;
+    }, [])
     
-    this.excelGenerate.exportAsExcelFile(this.jsonExportExcel, 'sample');
-    this.loading = false;
+    let headers = ['Fecha de Solicitud', 'Folio', 'Comentarios', 'Nombre(s)', 'Apellidos', 'Puesto', 
+      'Teléfono', 'NSS', 'Curp', 'Calle y Número', 'Colonia', 'CP', 'Municipio', 'Estado', 'Fecha Agenda', 'Comentarios de Asignación'];
+
+    this.excelGenerate.createExcel('exportExc', headers, exportExc );
     this.ngOnInit();
+    this.loading = false;
   }
 
   reload() {
