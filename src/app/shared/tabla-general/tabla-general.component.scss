@@ -15,3 +15,12 @@ input {
     { 
     color: black;
     }
+
+::ng-deep .mat-slide-toggle.mat-checked .mat-slide-toggle-bar{
+  background-color: #28B463;
+}
+
+::ng-deep .mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
+  background-color: #02A446;
+
+}

@@ -40,17 +40,17 @@ $mat-blue: (
   50: #E1F5FE,
   100: #B3E5FC,
   200: #81D4FA,
-  300: #4FC3F7,
-  400: #29B6F6,
-  500: #03A9F4,
-  600: #039BE5,
-  700: #0288D1,
-  800: #0277BD,
-  900: #01579B,
-  A100: #80D8FF,
-  A200: #40C4FF,
-  A400: #00B0FF,
-  A700: #0091EA,
+  300: #060A46,
+  400: #060A46,
+  500: #060A46,
+  600: #060A46,
+  700: #060A46,
+  800: #060A46,
+  900: #060A46,
+  A100: #060A46,
+  A200: #060A46,
+  A400: #060A46,
+  A700: #060A46,
   contrast: (
     50: $black-87-opacity,
     100: $black-87-opacity,
@@ -71,7 +71,7 @@ $mat-blue: (
 
 @include mat-core();
 
-$primary: mat-palette($mat-teal);
+$primary: mat-palette($mat-blue);
 $accent:  mat-palette($mat-red);
 $theme: mat-light-theme($primary, $accent);
 
@@ -87,6 +87,9 @@ body {
   margin: 0;
   padding: 0;
 }
+
+
+$success: #28B463;
 
 button:focus {
   outline: none !important;
@@ -145,7 +148,7 @@ body {
 }
 
 table {
-  border-top: 3px solid #009688;
+  border-top: 3px solid #060A46;
 }
 
 mat-hint {
@@ -157,5 +160,5 @@ mat-icon {
 }
 
 .detalle-estudio-icon {
-  color: #009688;
+  color: #060A46;
 }

@@ -22,10 +22,4 @@ export class DashboardComponent implements OnInit {
 
   }
 
-  
-
-  check() {
-    this.loginService.assembly().subscribe(r => console.log(r))
-  }
-
 }

@@ -2,10 +2,13 @@
     <mat-toolbar [color]="colorT">
         <mat-toolbar-row>
             <mat-icon class="example-icon" aria-hidden="false" (click)="open()">menu</mat-icon>
+            <button mat-raised-button color="primary" routerLink="/" class="ml-3">Home</button>
+
             <!-- <span class="ml-2">Menu</span> -->
             <span class="example-spacer"></span>
 
             <mat-icon class="perfil" [matMenuTriggerFor]="menu">person_pin</mat-icon>
+
             <mat-menu #menu="matMenu">
                 <!-- <div class="imagen"></div> -->
                 <!-- <button mat-menu-item>Ver perfil</button> -->

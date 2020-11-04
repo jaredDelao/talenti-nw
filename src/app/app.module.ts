@@ -11,22 +11,15 @@ import { TitleComponent } from './shared/title/title.component';
 import { MaterialModule } from './material.module';
 import { PagesComponent } from './components/pages/pages.component';
 import { LoginComponent } from './components/login/login.component';
-import { DetalleEstudioClienteComponent } from './components/cliente/detalle-estudio-cliente/detalle-estudio-cliente.component';
-import { CancelarSolicitudClienteComponent } from './components/cliente/modals/cancelar-solicitud-cliente/cancelar-solicitud-cliente.component';
-import { SolicitudEstudioClienteComponent } from './components/cliente/solicitud-estudio-cliente/solicitud-estudio-cliente.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { MAT_DATE_LOCALE } from '@angular/material';
 import { LoadingComponent } from './shared/loading/loading.component';
 import localEs from '@angular/common/locales/es';
 import { registerLocaleData } from '@angular/common';
-registerLocaleData(localEs, 'es');
 import {CustomComponentsModule} from './shared/customComponents.module';
-import { TablaGeneralComponent } from './shared/tabla-general/tabla-general.component';
-import { EstudiosAnalistaComponent } from './components/talenti/analista/estudios-analista/estudios-analista.component';
-import { EstudiosClienteComponent } from './components/cliente/estudios-cliente/estudios-cliente.component';
-import { ChartsModule } from 'ng2-charts';
-import { GraficaTalentiComponent } from './components/graficas/general/grafica-talenti/grafica-talenti.component';
-import { GraficaClienteComponent } from './components/graficas/general/grafica-cliente/grafica-cliente.component';
+
+registerLocaleData(localEs, 'es');
+
 
 @NgModule({
   declarations: [
@@ -51,7 +44,7 @@ import { GraficaClienteComponent } from './components/graficas/general/grafica-c
   ],
   providers: [
     // { provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
-    // { provide: LOCALE_ID, useValue: 'es'},
+    { provide: LOCALE_ID, useValue: 'es'},
   ],
   entryComponents: [
     // CancelarSolicitudClienteComponent,

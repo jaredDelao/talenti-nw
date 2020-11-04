@@ -165,12 +165,12 @@ export class RegistrarNuevoClienteComponent implements OnInit, AfterViewInit {
         this.loader = false;
       } else {
         this.loader = false; 
-        Swal.fire('Error', 'No se pudo cargar el cliente', 'error').then(v => this.router.navigate(['coordinador/clientes']))
+        Swal.fire('Error', 'No se pudo cargar el cliente', 'error').then(v => this.router.navigate(['/coordinador/clientes']))
       }
       
     }, (err) => {
       this.loader = false; 
-      Swal.fire('Error', 'No se pudo cargar el cliente', 'error').then(v => this.router.navigate(['coordinador/clientes']))
+      Swal.fire('Error', 'No se pudo cargar el cliente', 'error').then(v => this.router.navigate(['/coordinador/clientes']))
     });
   }
 

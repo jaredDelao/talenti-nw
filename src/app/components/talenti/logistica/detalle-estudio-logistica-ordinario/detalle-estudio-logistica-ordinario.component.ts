@@ -9,7 +9,7 @@ import * as moment from 'moment';
 import { EmpresasService } from 'src/app/services/coordinador/empresas.service';
 import Swal from 'sweetalert2';
 import { LogisticaService } from 'src/app/services/logistica/logistica.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { CancelarSolicitudComponent } from '../cancelar-solicitud/cancelar-solicitud.component';
 import { SolicitarCancelacionEmpleadoComponent } from 'src/app/shared/modals/solicitar-cancelacion-empleado/solicitar-cancelacion-empleado.component';
 
@@ -67,7 +67,7 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
   columnasTablaEstatus: any[] = ['estatus_agenda', 'estatus_aplicacion'];
   tipoEstudio: any = null;
 
-  constructor(private fb: FormBuilder, private atp: AmazingTimePickerService, public empresasService: EmpresasService, public logisticaService: LogisticaService,
+  constructor(private fb: FormBuilder, private atp: AmazingTimePickerService, public empresasService: EmpresasService, public logisticaService: LogisticaService, private _snackBar: MatSnackBar,
               private route: ActivatedRoute, private estudiosService: EstudiosService, private router: Router, public dialog: MatDialog) { }
 
   ngOnInit() {
@@ -339,7 +339,6 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
 
   verificarAplicado() {
     let checked = this.controlAplicado.value;
-    console.log(this.controlAplicado.value);
 
     if (checked) {
       const swalWithBootstrapButtons = Swal.mixin({
@@ -369,6 +368,10 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
               this.controlAplicado.setValue(false);
               return Swal.fire('Error', 'Hubo un error al marcar la solicitud como aplicado'+ resp.resultado, 'error')
             }
+
+            this._snackBar.open('El estudio ha sido marcado como aplicado exitosamente', 'cerrar', {
+              duration: 4000,
+            });
 
             this.controlAplicado.disable();
           })

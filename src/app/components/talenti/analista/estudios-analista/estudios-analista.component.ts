@@ -138,7 +138,7 @@ export class EstudiosAnalistaComponent implements OnInit, OnDestroy, AfterViewIn
 
 
   detalles(data) {
-    this.router.navigate(['analista/detalle-estudio-analista/', data.iIdSolicitud]);
+    this.router.navigate(['/analista/detalle-estudio-analista/', data.iIdSolicitud]);
   }
 
   // verificarEstatusSolicitud(element) {

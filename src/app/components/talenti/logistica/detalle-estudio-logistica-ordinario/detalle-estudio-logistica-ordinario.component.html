@@ -19,7 +19,7 @@
         </div>
         <div class="actions d-flex justify-content-between mb-4 col-12">
             <button mat-raised-button color="warn" (click)="solicitarCancelacion()">SOLICITAR CANCELACIÓN</button>   
-            <mat-checkbox color="primary" [formControl]="controlAplicado" (change)="verificarAplicado()">Marcar como aplicado</mat-checkbox>
+            <mat-checkbox color="primary" [formControl]="controlAplicado" *ngIf="contadorAgendas > 0" (change)="verificarAplicado()">Marcar como aplicado</mat-checkbox>
         </div>
     </ng-container>
     

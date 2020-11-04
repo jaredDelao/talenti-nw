@@ -131,7 +131,7 @@ export class EstudiosCalidadComponent implements OnInit {
 
 
   detalles(data) {
-    this.router.navigate(['calidad/detalle-estudio-calidad/', data.iIdSolicitud]);
+    this.router.navigate(['/calidad/detalle-estudio-calidad/', data.iIdSolicitud]);
   }
 
   estatusAgenda(estatus) {

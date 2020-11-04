@@ -215,7 +215,7 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy, After
         this.mostrarColumnasConMotivo();
       })
     } else {
-      return this.router.navigate(['analista/estudios']);
+      return this.router.navigate(['/analista/estudios']);
     }
   }
 

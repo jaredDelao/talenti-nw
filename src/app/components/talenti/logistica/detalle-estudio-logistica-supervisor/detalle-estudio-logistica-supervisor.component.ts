@@ -255,7 +255,7 @@ export class DetalleEstudioLogisticaSupervisorComponent implements OnInit, After
 
         this.loading = false;
         return Swal.fire('Asignación exitosa', 'La solicitud se ha asignado exitosamente', 'success').then(() => {
-          this.router.navigate(['logistica/detalle-estudio-supervisor', this.idSolicitud]);
+          this.router.navigate(['/logistica/detalle-estudio-supervisor', this.idSolicitud]);
         })
       });
      } else {

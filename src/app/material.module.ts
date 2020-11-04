@@ -30,6 +30,8 @@ import { DragDropModule } from "@angular/cdk/drag-drop";
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material';
 import {MatChipsModule} from '@angular/material/chips';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+
 
 
 @NgModule({
@@ -60,7 +62,8 @@ import {MatChipsModule} from '@angular/material/chips';
     MatMenuModule,
     MatProgressSpinnerModule,
     MatButtonToggleModule,
-    MatChipsModule
+    MatChipsModule,
+    MatSnackBarModule
   ],
   exports: [
     MatSliderModule,
@@ -89,7 +92,8 @@ import {MatChipsModule} from '@angular/material/chips';
     MatMenuModule,
     MatProgressSpinnerModule,
     MatButtonToggleModule,
-    MatChipsModule
+    MatChipsModule,
+    MatSnackBarModule
   ]
 })
 export class MaterialModule {}

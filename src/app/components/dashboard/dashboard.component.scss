@@ -4,8 +4,8 @@
     .left {
         width: 50%;
     }
-    background-image: url('../../../assets/images/logo-talenti.png');
-    background-size: 50%;
+    background-image: url('../../../assets/images/dashboard2.jpg');
+    background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
 }
@@ -18,4 +18,16 @@
     font-size: 2.5em;
     font-weight: 300;
     color: #000;
+}
+
+.container {
+    .texto {
+        transition: all 0.3s ease-in-out;
+        background-color: rgba($color: #ffffff, $alpha: 0.7);
+        border-radius: 30px;
+
+        &:hover {
+            background-color: rgba($color: #ffffff, $alpha: 0.9);
+        }
+    }
 }

@@ -212,11 +212,11 @@ export class EstudiosLogisticaComponent implements OnInit {
     console.log(this.banderaSupervisor);
 
     if (this.banderaSupervisor) {
-      this.router.navigate(['logistica/detalle-estudio-supervisor/', data.iIdSolicitud]);
+      this.router.navigate(['/logistica/detalle-estudio-supervisor/', data.iIdSolicitud]);
     } else {
       console.log(data.iIdSolicitud);
       
-      this.router.navigate(['logistica/detalle-estudio-logistica/', data.iIdSolicitud]);
+      this.router.navigate(['/logistica/detalle-estudio-logistica/', data.iIdSolicitud]);
     }
     
   }

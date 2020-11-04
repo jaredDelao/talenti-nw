@@ -10,14 +10,15 @@ import {
 import { EstudiosService } from 'src/app/services/ejecutivo/estudios.service';
 import { EmpresasService } from 'src/app/services/coordinador/empresas.service';
 import { EmpleadosService } from 'src/app/services/coordinador/empleados.service';
-import { flatMap, tap, filter, pluck, toArray, catchError } from 'rxjs/operators';
-import { of, Subscription } from 'rxjs';
+import { flatMap, tap, filter, pluck, toArray, catchError, debounceTime, takeUntil } from 'rxjs/operators';
+import { of, Subject, Subscription } from 'rxjs';
 import { ClienteService } from 'src/app/services/cliente/cliente.service';
 import { EstudiosAnalistaService } from 'src/app/services/analista/estudios-analista.service';
 import { ClientesService } from 'src/app/services/coordinador/clientes.service';
 import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencriptar.service';
-import { MatDialog } from '@angular/material';
+import { MatButton, MatDialog } from '@angular/material';
 import { AprobarCancelacionModalComponent } from 'src/app/components/talenti/ejecutivo/modals/aprobar-cancelacion-modal/aprobar-cancelacion-modal.component';
+import { SepomexService } from 'src/app/services/sepomex.service';
 
 @Component({
   selector: 'app-solicitar-estudio-shared',
@@ -29,6 +30,8 @@ import { AprobarCancelacionModalComponent } from 'src/app/components/talenti/eje
 export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('label', {static: false}) label1: ElementRef;
+  @ViewChild('btnSolicitar', {static: false}) btnSolicitar: MatButton;
+
   @Input() esCliente: boolean = false;
   @Input() analista: boolean = false;
   // @Input() esGNP: boolean = true;
@@ -85,8 +88,16 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
   // estatus
   estatusGeneral: any = null;
 
+  // Sepomex
+  estados = [];
+  municipios = [];
+  colonias = [];
+
+
+  $unsubscribe = new Subject();
+
   constructor(private fb: FormBuilder, public estudiosService: EstudiosService, public router: Router, public empresasService: EmpresasService, public empleadosService: EmpleadosService, private modal: MatDialog,
-            private clienteService: ClientesService, public estudiosAnalistaService:EstudiosAnalistaService, public clientesService: ClienteService, private encryptService: EncriptarDesencriptarService) {}
+            private clienteService: ClientesService, public estudiosAnalistaService:EstudiosAnalistaService, public clientesService: ClienteService, private encryptService: EncriptarDesencriptarService, public sepomexService: SepomexService) {}
 
   async ngOnInit() {
     
@@ -117,6 +128,19 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
         } else {
           this.mostrarEstudiosCompletos = false;
       }
+    })
+
+    //CP
+    this.form.get('sCp').valueChanges.pipe(debounceTime(500), takeUntil(this.$unsubscribe)).subscribe((cp) => {
+      this.sepomexService.getEstadoByCp(cp).pipe(takeUntil(this.$unsubscribe)).subscribe((resp: any) => {
+        if (resp.status == 'Ok') this.estados = resp.Estado;
+      });
+      this.sepomexService.getMunicipioByCp(cp).pipe(takeUntil(this.$unsubscribe)).subscribe((resp: any) => {
+        if (resp.status == 'Ok') this.municipios = resp.Municipio;
+      });
+      this.sepomexService.getColoniasByCp(cp).pipe(takeUntil(this.$unsubscribe)).subscribe((resp: any) => {
+        if (resp.status == 'Ok') this.colonias = resp.Colonias;
+      });
     })
 
     // controlCliente
@@ -167,9 +191,11 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
   }
 
   ngOnDestroy() {
-    this.subs.unsubscribe()
-    this.subs1.unsubscribe()
-    this.subs2.unsubscribe()
+    this.subs.unsubscribe();
+    this.subs1.unsubscribe();
+    this.subs2.unsubscribe();
+    this.$unsubscribe.next(true);
+    this.$unsubscribe.complete();
   }
 
 
@@ -362,10 +388,9 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
 
   async enviar(param: 'validar' | 'crearValidar' | 'solicitar', row) {
 
-    // Archivo
+    this.btnSolicitar.disabled = true;
 
-    console.log(this.dataArchivo);
-    
+    // Archivo    
     if (param != 'validar') {
       try {
         const resp: any = await this.subirArchivo();
@@ -374,14 +399,17 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
           this.controlCV.setValue(null)
           this.label1.nativeElement.innerText = 'Subir CV';
           this.loading = false;
-          return Swal.fire('Error al cargar archivo', 'Revisa que sea un formato DOCX o PDF' + resp, 'error');
+          return Swal.fire('Error al cargar archivo', 'Revisa que sea un formato DOCX o PDF' + resp, 'error').then(() => {
+            this.btnSolicitar.disabled = false;
+          })
         }
-       console.log(resp);
         this.form.get('sTokenCV').patchValue(resp.Identificador);
         this.loading = false;
       } catch(err) {
         this.loading = false;
-        return Swal.fire('Error al cargar archivo', 'Revisa que sea un formato DOCX o PDF' + err, 'error');
+        return Swal.fire('Error al cargar archivo', 'Revisa que sea un formato DOCX o PDF' + err, 'error').then(() => {
+          this.btnSolicitar.disabled = false;
+        })
       }
     }
     
@@ -400,12 +428,14 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
         this.estudiosService.crearEstudio(req).subscribe((res: any) => {
           if (res.resultado == "Ok") {
             return Swal.fire('Registro exitoso', `Se ha registrado un nuevo estudio exitosamente`, "success").then(r => {
-              this.router.navigate(['ejecutivo/estudios']);
+              this.router.navigate(['/ejecutivo/estudios']);
             })
           } else {
+            this.btnSolicitar.disabled = false;
             return Swal.fire('Error', `Error al registrar Estudio`, "error");
           }
         }, err => {
+          this.btnSolicitar.disabled = false;
           return Swal.fire('Error', `Error al registrar Estudio`, "error");
         })
         break;
@@ -414,17 +444,20 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
         case 'validar':
           if (reqValidar.iIdAnalista) {
             this.estudiosService.validarSolicitud(reqValidar).subscribe((res:any) => {
-              console.log(res);
               if (res.resultado == "Ok") {
                 return Swal.fire('Validación exitosa', `Se ha validado el estudio con folio ${req.sFolio}`, "success").then(r => {
                   this.router.navigate([this.regresar]);
+                  this.btnSolicitar.disabled = false;
                 })
               }
+              this.btnSolicitar.disabled = false;
               return Swal.fire('Error', `Error al validar estudio`, "error");
             }, err => {
+              this.btnSolicitar.disabled = false;
               return Swal.fire('Error', `Error al validar estudio`, "error");
             });
           } else {
+            this.btnSolicitar.disabled = false;
             return Swal.fire('Error', 'Falta llenar el campo analista', 'warning');
           }
         break;
@@ -432,7 +465,6 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
         case 'solicitar':
           req.sService = 'SolicitarEstudioCliente';
           delete req.iIdAnalista;
-          console.log(req);
           
           this.clientesService.solicitarEstudioCliente(req).subscribe((res: any) => {
             if (res.resultado == "Ok") {
@@ -440,14 +472,17 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
                 this.router.navigate([this.regresar]);
               })
             } else {
+              this.btnSolicitar.disabled = false;
               return Swal.fire('Error', `Error al registrar Estudio`, "error");
             }
           }, err => {
+            this.btnSolicitar.disabled = false;
             return Swal.fire('Error', `Error al registrar Estudio`, "error");
           })
           break;
           
         default:
+          this.btnSolicitar.disabled = false;
           return Swal.fire('Error', `Error al registrar Estudio`, "error");
       }
   }
@@ -474,11 +509,11 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
           
           if (res.resultado !== 'Ok') {
             return Swal.fire( 'Error', 'Error al declinar la solicitud', 'warning').then(() => {
-              this.router.navigate(['ejecutivo/estudios']);
+              this.router.navigate(['/ejecutivo/estudios']);
             })
           }
           return Swal.fire( 'Solicitud declinada', 'La solicitud se ha declinado con éxito', 'success').then(() => {
-            this.router.navigate(['ejecutivo/estudios']);
+            this.router.navigate(['/ejecutivo/estudios']);
           })
         })
       }
@@ -507,5 +542,7 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
       this.ngOnInit();
     });
   }
+
+
 }
 

@@ -71,7 +71,8 @@ export class TablaEstatusComponent implements OnInit, OnDestroy {
     if (iIdEmpleadoLogistica) {
       const empleado = this.catEmpleados.find((value) => value.iIdEmpleado == iIdEmpleadoLogistica);
       if (empleado) {
-        return empleado.sNombres + ' ' + empleado.sApellidos;
+        // return empleado.sNombres + ' ' + empleado.sApellidos;
+        return 'ASIGNADO';
       } else {
         return 'Sin asignar'
       }

@@ -89,7 +89,7 @@ export class RevisarModalComponent implements OnInit {
         this.estudiosAnalistaService.rechazarComplemento(this.request).subscribe((res: any) => {
           if (res.resultado != 'Ok') return Swal.fire('Error', 'Error al rechazar complemento', 'error');
           return Swal.fire('Complemento rechazado exitosamente', '', 'success').then(() => {
-            // this.router.navigateByUrl('ejecutivo/detalle-estudio/' + this.data.idSolicitud);
+            // this.router.navigateByUrl('/ejecutivo/detalle-estudio/' + this.data.idSolicitud);
             // this.dialogRef.close();
             location.reload();
           })

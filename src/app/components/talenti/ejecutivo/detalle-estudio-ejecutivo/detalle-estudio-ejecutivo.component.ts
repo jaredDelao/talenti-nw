@@ -196,7 +196,7 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
       }, (err) => this.loading = false, (() => this.loading = false));
     } else  {
       this.loading = false;
-      return this.router.navigate(['ejecutivo/estudios']);
+      return this.router.navigate(['/ejecutivo/estudios']);
     }    
   }
 
