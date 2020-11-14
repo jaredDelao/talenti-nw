@@ -14,7 +14,7 @@ export class EmpresasService {
 
   idTipo = new BehaviorSubject(0);
   $idTipo = this.idTipo.asObservable();
-
+  
   constructor(private _http: HttpClient) { 
     
   }

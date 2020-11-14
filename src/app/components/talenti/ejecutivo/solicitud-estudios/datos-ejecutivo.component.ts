@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, DoCheck, Output, EventEmitter, AfterViewInit, AfterViewChecked, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, ViewChild, DoCheck, Output, EventEmitter, AfterViewInit, AfterViewChecked, ChangeDetectorRef, OnDestroy } from "@angular/core";
 import { DatosEjecutivo } from "../../../../interfaces/datos-ejecutivo";
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from "@angular/material/table";
@@ -15,18 +15,23 @@ import * as moment from 'moment'
 import { GenerateExcelService } from 'src/app/services/generate-excel.service';
 import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencriptar.service';
 import { VerificarEstatusService } from 'src/app/services/verificar-estatus.service';
+import { ClientesService } from 'src/app/services/coordinador/clientes.service';
+import { map } from 'rxjs/internal/operators/map';
+import { Subject } from 'rxjs';
+import { pluck, takeUntil } from 'rxjs/operators';
+import { EmpresasService } from 'src/app/services/coordinador/empresas.service';
 
 @Component({
   selector: "app-datos-ejecutivo",
   templateUrl: "./datos-ejecutivo.component.html",
   styleUrls: ["./datos-ejecutivo.component.scss"]
 })
-export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
+export class DatosEjecutivoComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   displayedColumns: string[] = [
-    'sFolio', 'sNombres', 'estatus_solicitud', 'iPublicarPreliminar', 'bPublicarDictamen', 'comentarios'
+    'sFolio', 'sNombres', 'cliente','estatus_solicitud', 'iPublicarPreliminar', 'bPublicarDictamen', 'comentarios'
   ];
   dataSource: MatTableDataSource<Estudio>;
   loader: boolean = false;
@@ -61,12 +66,18 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
 
   sortedData: any[];
 
+  catClientes: any[] = [];
+
+  $unsubscribe = new Subject();
+
   constructor(private estudiosService: EstudiosService, private fb: FormBuilder, private excelGenerate: GenerateExcelService, public vEstatusService: VerificarEstatusService,
-    public dialog: MatDialog, private cd: ChangeDetectorRef, private router: Router, private encryptService: EncriptarDesencriptarService) {
+    public dialog: MatDialog, private cd: ChangeDetectorRef, private router: Router, private encryptService: EncriptarDesencriptarService, private clientesService: ClientesService,
+    private empresasService: EmpresasService) {
     this.pipe = new DatePipe('en');
   }
 
   async ngOnInit() {
+    this.getClientes();
     this.formInit();
     this.req.iIdEjecutivo = await this.getIdEjecutivo();
     this.bTipoFolio = await this.getTipoFolioUsuario();
@@ -85,6 +96,21 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit {
         this.form.get('fechaFinalForm').disable();
       }
     })
+  }
+
+  ngOnDestroy() {
+    this.$unsubscribe.next(true);
+    this.$unsubscribe.complete();
+  }
+
+  getClientes() {
+    this.empresasService.getEmpresas().pipe(
+      takeUntil(this.$unsubscribe),
+    ).subscribe((empresas: any) => {
+      console.log(empresas);
+      this.catClientes = empresas;
+      
+    });
   }
 
   getTipoFolioUsuario() {

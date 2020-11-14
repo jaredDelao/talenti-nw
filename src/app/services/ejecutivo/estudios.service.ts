@@ -93,4 +93,9 @@ export class EstudiosService {
     return this.http.post(environment.urlProd, body);
   }
 
+  actualizarSolicitud(params) {
+    let body = new HttpParams({fromObject: params})
+    return this.http.post(environment.urlProd, body);
+  }
+
 }

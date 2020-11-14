@@ -65,6 +65,11 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy, After
     {id: '14', name: 'SIN RIESGO'},
   ];
 
+  catPreliminar = [
+    {id: '0', name: 'No'},
+    {id: '1', name: 'Si'},
+  ];
+
   // Tabla Estatus
   displayedColumns: string[] = ["proceso", "fecha", "status"];
   dataSource: any
@@ -170,6 +175,7 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy, After
 
   ngOnDestroy() {
     this.subs.unsubscribe();
+    this.subs1.unsubscribe();
   }
 
   getDatosId() {
@@ -197,7 +203,6 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy, After
         this.bComplemento = datosUsuario[0].iEstatusComplemento;
         this.bPreliminar = datosUsuario[0].iPublicarPreliminar;
         this.gnpEstudio = datosUsuario[0].isGnp;
-        console.log(datosUsuario[0]);
 
         // Tabla estatus
         this.ELEMENT_DATA[0].status = datosUsuario[0].iPublicarPreliminar;
@@ -230,32 +235,32 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy, After
 
   formInit() {
     this.form = this.fb.group({
-      iIdSolicitud: new FormControl({value: '', disabled: true}),
-      dFechaSolicitud: new FormControl({value: '', disabled: true}),
-      iIdCliente: new FormControl({value: '', disabled: true}),
+      iIdSolicitud: new FormControl({value: ''}),
+      dFechaSolicitud: new FormControl({value: ''}),
+      iIdCliente: new FormControl({value: '' }),
       iIdEstudio: new FormControl({value: '', disabled: true}),
       sFolio: new FormControl({value: '', disabled: true}),
-      // iPublicarPreliminar: new FormControl({value: '', disabled: true}),
-      iIdAnalista: new FormControl({value: '', disabled: true}),
-      sComentarios: new FormControl({value: '', disabled: true}),
-      sNombres: new FormControl({value: '', disabled: true}),
-      sApellidos: new FormControl({value: '', disabled: true}),
-      sPuesto: new FormControl({value: '', disabled: true}),
-      sTokenCV: new FormControl({value: '', disabled: true}),
-      sTelefono: new FormControl({value: '', disabled: true}),
-      sNss: new FormControl({value: '', disabled: true}),
-      sCurp: new FormControl({value: '', disabled: true}),
-      sCalleNumero: new FormControl({value: '', disabled: true}),
-      sColonia: new FormControl({value: '', disabled: true}),
-      sCp: new FormControl({value: '', disabled: true}),
-      sMunicipio: new FormControl({value: '', disabled: true}),
-      sEstado: new FormControl({value: '', disabled: true}),
-      bDeclinada: new FormControl({value: '', disabled: true}),
-      bValidada: new FormControl({value: '', disabled: true}),
-      bPublicarDictamen: new FormControl({value: '', disabled: true}),
-      bSolicitarCalidad: new FormControl({value: '', disabled: true}),
-      bCertificadoCalidad: new FormControl({value: '', disabled: true}),
-      iPublicarPreliminar: new FormControl({value: '', disabled: true}),
+      // iPublicarPreliminar: new FormControl({value: ''}),
+      iIdAnalista: new FormControl({value: ''}),
+      sComentarios: new FormControl({value: ''}),
+      sNombres: new FormControl({value: ''}),
+      sApellidos: new FormControl({value: ''}),
+      sPuesto: new FormControl({value: ''}),
+      sTokenCV: new FormControl({value: ''}),
+      sTelefono: new FormControl({value: ''}),
+      sNss: new FormControl({value: ''}),
+      sCurp: new FormControl({value: ''}),
+      sCalleNumero: new FormControl({value: ''}),
+      sColonia: new FormControl({value: ''}),
+      sCp: new FormControl({value: ''}),
+      sMunicipio: new FormControl({value: ''}),
+      sEstado: new FormControl({value: ''}),
+      bDeclinada: new FormControl({value: ''}),
+      bValidada: new FormControl({value: ''}),
+      bPublicarDictamen: new FormControl({value: ''}),
+      bSolicitarCalidad: new FormControl({value: ''}),
+      bCertificadoCalidad: new FormControl({value: ''}),
+      iPublicarPreliminar: new FormControl({value: null}),
     })
   }
 
@@ -274,35 +279,7 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy, After
 
     // estatusDictamen
     this.controlEstatusDictamen.setValue(value.iEstatusDictamen);
-
-    this.form.setValue({
-      iIdSolicitud: value.iIdSolicitud,
-      dFechaSolicitud: value.dFechaSolicitud,
-      iIdCliente: value.iIdCliente,
-      iIdEstudio: value.iIdEstudio,
-      sFolio: value.sFolio,
-      // iPublicarPreliminar: value.iPublicarPreliminar,
-      iIdAnalista: value.iIdAnalista,
-      sComentarios: value.sComentarios,
-      sNombres: value.sNombres,
-      sApellidos: value.sApellidos,
-      sPuesto: value.sPuesto,
-      sTokenCV: value.sTokenCV,
-      sTelefono: value.sTelefono,
-      sNss: value.sNss,
-      sCurp: value.sCurp,
-      sCalleNumero: value.sCalleNumero,
-      sColonia: value.sColonia,
-      sCp: value.sCp,
-      sMunicipio: value.sMunicipio,
-      sEstado: value.sEstado,
-      bDeclinada: value.bDeclinada,
-      bValidada: value.bValidada,
-      bPublicarDictamen: value.bPublicarDictamen,
-      bSolicitarCalidad: value.bSolicitarCalidad,
-      bCertificadoCalidad: value.bCertificadoCalidad,
-      iPublicarPreliminar: value.iPublicarPreliminar
-    })
+    this.form.patchValue(value)
   }
 
   // openDialogPreliminarComplemento(token, id): void {
@@ -379,9 +356,7 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy, After
     }
     this.estudiosAnalistaService.descargarPreliminar(req);
   }
-  descargarComplemento() {
-    console.log(this.tokenComplemento);
-    
+  descargarComplemento() {    
     let req = {
       token: this.tokenComplemento,
     }
@@ -451,6 +426,35 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy, After
       if (estatus == 3) return 'Publicado';
       if (estatus == 4) return 'En revisión';
       return 'No aplica';
+    }
+  }
+
+  actualizarEstudio() {
+    this.loader = true;
+    let req = this.form.getRawValue();
+    req.sService = 'UpdateSolicitudCompleta';
+    delete req.bPreliminar;
+    this.estudiosService.actualizarSolicitud(req).subscribe((resp) => {
+      this.loader = false;
+      return Swal.fire('Alerta', 'El estudio ha sido actualizado correctamente', 'success').then(() => {
+        this.getDatosId();
+      })
+
+    }, (e) => {
+      this.loader = false;
+      return Swal.fire('Alerta', 'Ha ocurrido un error al actualizar el estudio', 'error');
+    });
+
+  }
+
+
+  // DESCARGA CV
+  descargarCV() {
+    if (this.form.get('sTokenCV').value) {
+      let req = {
+        token: this.form.get('sTokenCV').value,
+      }
+      this.estudiosAnalistaService.descargarPreliminar(req);
     }
   }
     

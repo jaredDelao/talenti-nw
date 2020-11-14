@@ -11,6 +11,7 @@ import { MatDialog } from '@angular/material';
 import { SolicitarCancelacionEjecutivoComponent } from '../modals/solicitar-cancelacion-ejecutivo/solicitar-cancelacion-ejecutivo.component';
 import { EstudiosAnalistaService } from 'src/app/services/analista/estudios-analista.service';
 import { AprobarCancelacionModalComponent } from '../modals/aprobar-cancelacion-modal/aprobar-cancelacion-modal.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-detalle-estudio-ejecutivo',
@@ -85,6 +86,12 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
     {id: '12', name: 'RIESGO 2'},
     {id: '13', name: 'RIESGO 3'},
     {id: '14', name: 'SIN RIESGO'},
+  ];
+
+
+  catPreliminar = [
+    {id: '0', name: 'No'},
+    {id: '1', name: 'Si'},
   ];
 
   datosSolicitud: any;
@@ -246,67 +253,39 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
 
   formInit() {
     this.form = this.fb.group({
-      iIdSolicitud: new FormControl({value: '', disabled: true}),
-      dFechaSolicitud: new FormControl({value: '', disabled: true}),
-      iIdCliente: new FormControl({value: '', disabled: true}),
+      iIdSolicitud: new FormControl({value: ''}),
+      dFechaSolicitud: new FormControl({value: ''}),
+      iIdCliente: new FormControl({value: ''}),
       iIdEstudio: new FormControl({value: '', disabled: true}),
       sFolio: new FormControl({value: '', disabled: true}),
-      bPreliminar: new FormControl({value: '', disabled: true}),
-      iIdAnalista: new FormControl({value: '', disabled: true}),
-      sComentarios: new FormControl({value: '', disabled: true}),
-      sNombres: new FormControl({value: '', disabled: true}),
-      sApellidos: new FormControl({value: '', disabled: true}),
-      sPuesto: new FormControl({value: '', disabled: true}),
-      sTokenCV: new FormControl({value: '', disabled: true}),
-      sTelefono: new FormControl({value: '', disabled: true}),
-      sNss: new FormControl({value: '', disabled: true}),
-      sCurp: new FormControl({value: '', disabled: true}),
-      sCalleNumero: new FormControl({value: '', disabled: true}),
-      sColonia: new FormControl({value: '', disabled: true}),
-      sCp: new FormControl({value: '', disabled: true}),
-      sMunicipio: new FormControl({value: '', disabled: true}),
-      sEstado: new FormControl({value: '', disabled: true}),
-      bDeclinada: new FormControl({value: '', disabled: true}),
-      bValidada: new FormControl({value: '', disabled: true}),
-      bPublicarDictamen: new FormControl({value: '', disabled: true}),
-      bSolicitarCalidad: new FormControl({value: '', disabled: true}),
-      bCertificadoCalidad: new FormControl({value: '', disabled: true}),
-      iPublicarPreliminar: new FormControl({value: '', disabled: true}),
+      bPreliminar: new FormControl({value: ''}),
+      iIdAnalista: new FormControl({value: ''}),
+      sComentarios: new FormControl({value: ''}),
+      sNombres: new FormControl({value: ''}),
+      sApellidos: new FormControl({value: ''}),
+      sPuesto: new FormControl({value: ''}),
+      sTokenCV: new FormControl({value: ''}),
+      sTelefono: new FormControl({value: ''}),
+      sNss: new FormControl({value: ''}),
+      sCurp: new FormControl({value: ''}),
+      sCalleNumero: new FormControl({value: ''}),
+      sColonia: new FormControl({value: ''}),
+      sCp: new FormControl({value: ''}),
+      sMunicipio: new FormControl({value: ''}),
+      sEstado: new FormControl({value: ''}),
+      bDeclinada: new FormControl({value: ''}),
+      bValidada: new FormControl({value: ''}),
+      bPublicarDictamen: new FormControl({value: ''}),
+      bSolicitarCalidad: new FormControl({value: ''}),
+      bCertificadoCalidad: new FormControl({value: ''}),
+      iPublicarPreliminar: new FormControl({value: ''}),
     })
   }
 
   setDatos(value) {
     // estatusDictamen
     this.controlEstatusDictamen.setValue(value.iEstatusDictamen);
-    
-    this.form.patchValue({
-      iIdSolicitud: value.iIdSolicitud,
-      dFechaSolicitud: value.dFechaSolicitud,
-      iIdCliente: value.iIdCliente,
-      iIdEstudio: value.iIdEstudio,
-      sFolio: value.sFolio,
-      bPreliminar: value.bPreliminar,
-      iIdAnalista: value.iIdAnalista,
-      sComentarios: value.sComentarios,
-      sNombres: value.sNombres,
-      sApellidos: value.sApellidos,
-      sPuesto: value.sPuesto,
-      sTokenCV: value.sTokenCV,
-      sTelefono: value.sTelefono,
-      sNss: value.sNss,
-      sCurp: value.sCurp,
-      sCalleNumero: value.sCalleNumero,
-      sColonia: value.sColonia,
-      sCp: value.sCp,
-      sMunicipio: value.sMunicipio,
-      sEstado: value.sEstado,
-      bDeclinada: value.bDeclinada,
-      bValidada: value.bValidada,
-      bPublicarDictamen: value.bPublicarDictamen,
-      bSolicitarCalidad: value.bSolicitarCalidad,
-      bCertificadoCalidad: value.bCertificadoCalidad,
-      iPublicarPreliminar: value.iPublicarPreliminar
-    })
+    this.form.patchValue(value);
 
     // solicitudCancelacion
     if (this.bSolicCancel == '1') {
@@ -367,6 +346,34 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
     dialogRef.afterClosed().subscribe(result => {
       this.ngOnInit();
     });
+  }
+
+  actualizarEstudio() {
+    this.loading = true;
+    let req = this.form.getRawValue();
+    req.sService = 'UpdateSolicitudCompleta';
+    delete req.bPreliminar;
+    this.estudiosService.actualizarSolicitud(req).subscribe((resp) => {
+      this.loading = false;
+      return Swal.fire('Alerta', 'El estudio ha sido actualizado correctamente', 'success').then(() => {
+        this.getUrlId();
+      })
+
+    }, (e) => {
+      this.loading = false;
+      return Swal.fire('Alerta', 'Ha ocurrido un error al actualizar el estudio', 'error');
+    });
+  }
+
+
+  // DESCARGA CV
+  descargarCV() {
+    if (this.form.get('sTokenCV').value) {
+      let req = {
+        token: this.form.get('sTokenCV').value,
+      }
+      this.estudiosAnalistaService.descargarPreliminar(req);
+    }
   }
 
 }

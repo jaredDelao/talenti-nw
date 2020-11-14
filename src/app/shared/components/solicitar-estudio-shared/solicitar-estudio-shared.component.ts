@@ -10,7 +10,7 @@ import {
 import { EstudiosService } from 'src/app/services/ejecutivo/estudios.service';
 import { EmpresasService } from 'src/app/services/coordinador/empresas.service';
 import { EmpleadosService } from 'src/app/services/coordinador/empleados.service';
-import { flatMap, tap, filter, pluck, toArray, catchError, debounceTime, takeUntil } from 'rxjs/operators';
+import { flatMap, tap, filter, pluck, toArray, catchError, debounceTime, takeUntil, switchMap } from 'rxjs/operators';
 import { of, Subject, Subscription } from 'rxjs';
 import { ClienteService } from 'src/app/services/cliente/cliente.service';
 import { EstudiosAnalistaService } from 'src/app/services/analista/estudios-analista.service';
@@ -221,7 +221,7 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
 
   consultaAnalista() {
     if (this.analista || this.dataEstudio) {
-      this.form.disable();
+      // this.form.disable();
     }
   }
 
@@ -417,11 +417,11 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
     // this.form.get('sFolio').setValue(Math.floor(Math.random()*10));
     let req = this.form.getRawValue();
 
-    let reqValidar = {
-      sService: 'validarSolicitud',
-      iIdSolicitud: this.idSolicitud,
-      iIdAnalista: this.form.get('iIdAnalista').value
-    }
+    // let reqValidar = {
+    //   sService: 'validarSolicitud',
+    //   iIdSolicitud: this.idSolicitud,
+    //   iIdAnalista: this.form.get('iIdAnalista').value
+    // }
 
     switch(param) {
       case 'crearValidar':
@@ -442,8 +442,14 @@ export class SolicitarEstudioSharedComponent implements OnInit, OnDestroy, After
 
         // SOLO VALIDAR - EJECUTIVO
         case 'validar':
-          if (reqValidar.iIdAnalista) {
-            this.estudiosService.validarSolicitud(reqValidar).subscribe((res:any) => {
+
+          if (req.iIdAnalista) {
+            req.sService = 'validarSolicitud';
+            req.iIdSolicitud = this.idSolicitud;
+            delete req.iIdCliente;
+            delete req.iIdEstudio;
+
+            this.estudiosService.validarSolicitud(req).subscribe((res:any) => {
               if (res.resultado == "Ok") {
                 return Swal.fire('Validación exitosa', `Se ha validado el estudio con folio ${req.sFolio}`, "success").then(r => {
                   this.router.navigate([this.regresar]);

@@ -26,6 +26,7 @@ import { VerificarEstatusAgendaPipe } from './pipes/verificar-estatus-agenda.pip
 import { VerificarEstatusAsignacionPipe } from './pipes/verificar-estatus-asignacion.pipe';
 import { VerificarEstatusAplicacionPipe } from './pipes/verificar-estatus-aplicacion.pipe';
 import { IconoPreliminarPipe } from './pipes/ejecutivo/icono-preliminar.pipe';
+import { VerificarClientePipe } from './pipes/ejecutivo/verificar-cliente.pipe';
 
 const PIPES = [
     EstatusSolicitudPipe,
@@ -37,6 +38,7 @@ const PIPES = [
     VerificarEstatusAsignacionPipe,
     VerificarEstatusAplicacionPipe,
     IconoPreliminarPipe,
+    VerificarClientePipe
 ]
 @NgModule({
   imports: [
