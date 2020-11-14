@@ -60,6 +60,7 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
   sComentariosAgenda = new FormControl(null, Validators.required);
   pagosVisita = new FormControl(null, Validators.required);
   viaticosVisita = new FormControl(null, Validators.required);
+  ligaArchivo = new FormControl(null, Validators.required);
   controlAplicado = new FormControl(false);
 
   // Tabla estatus
@@ -105,7 +106,6 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
       this.loading = true;
       this.subs = this.estudiosService.getEstudioById(req).pipe(map((r) => r.resultado)).subscribe((datosUsuario) => {
         if (datosUsuario[0]){
-          console.log(datosUsuario[0]);
           this.datosTablaEstatus(datosUsuario[0]);
           this.tipoEstudio = datosUsuario[0].iIdEstudio;
 
@@ -262,6 +262,7 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
     this.sComentariosAgenda.patchValue(value.sComentariosAgenda);
     this.viaticosVisita.patchValue(value.viaticosVisita);
     this.pagosVisita.patchValue(value.pagosVisita);
+    this.ligaArchivo.patchValue(value.ligaArchivo);
   }
 
   insertarFecha(fechaHora) {
@@ -291,7 +292,7 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
     this.loading = true;
 
     if (this.fecha.valid && this.hora.valid && this.sNombreEncuestador.valid && this.sCorreoEncuestador.valid &&  this.sTelefonoEncuestador.valid && 
-        this.sComentariosAgenda.valid && this.viaticosVisita.valid && this.pagosVisita.valid) {
+        this.sComentariosAgenda.valid && this.viaticosVisita.valid && this.pagosVisita.valid && this.ligaArchivo.valid) {
       let req = {
         sService: 'nuevaAgenda',
         iIdSolicitud: this.idSolicitud,
@@ -301,15 +302,11 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
         sComentarios: this.sComentariosAgenda.value,
         dFechaHora: this.unirFechaHora,
         sPagosVisita: this.pagosVisita.value,
-        sViaticosVisita: this.viaticosVisita.value
-      }
+        sViaticosVisita: this.viaticosVisita.value,
+        ligaArchivo: this.ligaArchivo.value
+      }      
 
-      console.log(this.unirFechaHora);
-      
-
-      this.logisticaService.agendar(req).subscribe((resp: any) => {
-        console.log(resp);
-        
+      this.logisticaService.agendar(req).subscribe((resp: any) => {        
         if (resp.resultado != 'Ok') {
           this.loading = false;
           return Swal.fire('Error', 'Error al agendar solicitud', 'error');
