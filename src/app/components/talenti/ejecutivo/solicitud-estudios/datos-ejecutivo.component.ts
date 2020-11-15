@@ -29,7 +29,7 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit, OnDestroy
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   displayedColumns: string[] = [
-    'sFolio', 'sNombres', 'cliente','estatus_solicitud', 'iPublicarPreliminar', 'bPublicarDictamen', 'comentarios'
+    'sFolio', 'sNombres', 'cliente', 'solicitante', 'analista', 'nombre_aplicador', 'fecha_solicitud', 'estudio', 'fecha_aplicacion', 'fecha_preliminar', 'fecha_publicacion', 'bPublicarDictamen', 'comentarios'
   ];
   dataSource: MatTableDataSource<Estudio>;
   loader: boolean = false;
