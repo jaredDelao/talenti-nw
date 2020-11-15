@@ -66,7 +66,8 @@ export class EstudiosLogisticaComponent implements OnInit {
     this.idLogistica = await this.getIdLogistica();
     this.verificarRolLogistica();
     this.getEmpleados();
-    // this.getEstudios();
+    this.paginator._intl.itemsPerPageLabel = 'Estudios por página:';
+    this.paginator.pageSize = 50;
   }
 
   getIdLogistica() {

@@ -66,11 +66,11 @@ export class EstudiosClienteComponent implements OnInit {
     this.req.iIdCliente = await this.getIdCliente();
     // Perfil cliente - Admin o User
     this.isPerfilAdmin = await this.getPerfil();
-    // IsGNP
-    this.isGNP = await this.getIsGnp();
-    console.log(this.isGNP);
-    
+    this.isGNP = await this.getIsGnp();    
     this.getEstudios();
+
+    this.paginator._intl.itemsPerPageLabel = 'Estudios por página:';
+    this.paginator.pageSize = 50;
     
   }
 

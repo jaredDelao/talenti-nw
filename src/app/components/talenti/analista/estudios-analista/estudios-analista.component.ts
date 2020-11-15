@@ -57,6 +57,8 @@ export class EstudiosAnalistaComponent implements OnInit, OnDestroy, AfterViewIn
     this.formInit();
     this.req.iIdAnalista = await this.getIdAnalista();
     this.getEstudios();
+    this.paginator._intl.itemsPerPageLabel = 'Estudios por página:';
+    this.paginator.pageSize = 50;
   }
 
   ngOnDestroy() {

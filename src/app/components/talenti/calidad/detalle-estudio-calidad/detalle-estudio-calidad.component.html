@@ -62,7 +62,7 @@
                 </mat-form-field>
             </div>
 
-            <ng-container *ngIf="datosSolicitud && datosSolicitud?.bValidada == 1">
+            <ng-container *ngIf="datosSolicitud">
 
                 <p>Aprobar calidad:</p>
                 <div class="form-group box-calidad d-flex flex-row align-items-center">
@@ -148,7 +148,38 @@
                 </div>
             </div>
         </div>
+
+
+        <div class="row col-12 mb-4">
+            <button color="primary" class="btn-actualizar-datos mr-3" mat-raised-button (click)="descargarCV()">
+                <mat-icon class="mr-2">cloud_download</mat-icon>
+                <span>Descargar CV</span>
+            </button>
+            <button color="primary" class="btn-actualizar-datos mr-3" mat-raised-button (click)="descargar(archivoPreliminar)" *ngIf="archivoPreliminar">
+                <mat-icon class="mr-2">cloud_download</mat-icon>
+                <span>Descargar Preliminar</span>
+            </button>
+            <button color="primary" class="btn-actualizar-datos mr-3" mat-raised-button (click)="descargar(archivoComplemento)" *ngIf="archivoComplemento">
+                <mat-icon class="mr-2">cloud_download</mat-icon>
+                <span>Descargar Complemento</span>
+            </button>
+        </div>
+
+        <div class="column col-12 mb-4" *ngIf="archivosDictamen.arch1 || archivosDictamen.arch2">
+            <p>Descargar archivos complemento</p>
+    
+            <div class="d-flex">
+                <button color="primary" class="btn-actualizar-datos mr-2" mat-raised-button (click)="descargar(archivosDictamen.arch1)" *ngIf="archivosDictamen.arch1">
+                    <mat-icon>text_snippet</mat-icon>
+                </button>
+                <button color="primary" class="btn-actualizar-datos" mat-raised-button (click)="descargar(archivosDictamen.arch2)" *ngIf="archivosDictamen.arch2">
+                    <mat-icon>insert_drive_file</mat-icon>
+                </button>
+            </div>
+        </div>
     </div>
+
+   
 
     <div class="container mb-5">
         <app-tabla-estatus *ngIf="dataTablaEstatus.length > 0" [data]="dataTablaEstatus" [tipoEstudio]="tipoEstudio" [columnas]="columnasTablaEstatus"></app-tabla-estatus>

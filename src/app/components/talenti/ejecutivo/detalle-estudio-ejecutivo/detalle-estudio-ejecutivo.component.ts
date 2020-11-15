@@ -124,6 +124,8 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
 
   mostrarEstudiosCompletos: boolean = false;
 
+  calidadAprobada: boolean = false;
+
   constructor(public estudiosService: EstudiosService, public empresasService: EmpresasService, private router: Router, private fb: FormBuilder, public dialog: MatDialog,
               private cd: ChangeDetectorRef, private route: ActivatedRoute, private empleadosService: EmpleadosService, public estudiosAnalistaService: EstudiosAnalistaService) {
                 this.catSelectDisctamen = this.catDictamen;
@@ -188,6 +190,7 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
         this.bPreliminar = datosUsuario[0].iPublicarPreliminar;
         this.datosSolicitud = datosUsuario[0];
         this.estudioValid = datosUsuario[0].bValidada;
+        this.calidadAprobada = datosUsuario[0].bCertificadoCalidad == '0' ? false : true;
         this.setDatosPreliminar(datosUsuario[0]);
         this.setDatosEstudioDictamen(datosUsuario[0]);
         this.setDatosComplemento(datosUsuario[0]);

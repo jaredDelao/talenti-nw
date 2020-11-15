@@ -82,6 +82,9 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit, OnDestroy
     this.req.iIdEjecutivo = await this.getIdEjecutivo();
     this.bTipoFolio = await this.getTipoFolioUsuario();
     this.getEstudios();
+
+    this.paginator._intl.itemsPerPageLabel = 'Estudios por página:';
+    this.paginator.pageSize = 50;
   }
 
   ngAfterViewInit() {

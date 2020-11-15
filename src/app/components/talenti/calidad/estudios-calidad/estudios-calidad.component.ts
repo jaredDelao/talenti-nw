@@ -60,6 +60,9 @@ export class EstudiosCalidadComponent implements OnInit {
     this.getEstudiosCalidad();
     this.getEmpleados();
     // this.getEstudios();
+    this.paginator._intl.itemsPerPageLabel = 'Estudios por página:';
+    this.paginator.pageSize = 50;
+
   }
 
   getEmpleados() {
@@ -74,7 +77,6 @@ export class EstudiosCalidadComponent implements OnInit {
 
   getEstudiosCalidad() {
     this.estudiosService.getSolicitudesCalidad().subscribe((res: any) => {
-      console.log('res', res);
       this.estudiosList = res.LstEstudios;
       this.getEstudios(res.LstEstudios);
     })
@@ -109,7 +111,6 @@ export class EstudiosCalidadComponent implements OnInit {
 
       // Filtro fecha - texto
       this.dataSource.filterPredicate = (data: any, filter) => {
-        console.log(filter)
         if (filter == 'fecha') {
           if (this.fromDate && this.toDate) {
             let nFrom = moment(this.fromDate, "YYYY-MM-DD").format();
