@@ -1,12 +1,11 @@
-import { Component, OnInit, ViewChild, DoCheck, Output, EventEmitter, AfterViewInit, AfterViewChecked, ChangeDetectorRef, OnDestroy } from "@angular/core";
-import { DatosEjecutivo } from "../../../../interfaces/datos-ejecutivo";
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef, OnDestroy } from "@angular/core";
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from "@angular/material/table";
-import { MatDatepicker, MatDatepickerInputEvent, MatSidenav, MatSlideToggle, Sort, MatSort } from '@angular/material';
+import { MatDatepicker, MatSidenav, MatSlideToggle, MatSort } from '@angular/material';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { EstudiosService } from 'src/app/services/ejecutivo/estudios.service';
-import { Estudios, Estudio } from 'src/app/interfaces/talenti/ejecutivo/estudios';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { Estudio } from 'src/app/interfaces/talenti/ejecutivo/estudios';
+import {MatDialog} from '@angular/material/dialog';
 import { ModalDireccionComponent } from '../modals/modal-direccion/modal-direccion.component';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
@@ -16,9 +15,8 @@ import { GenerateExcelService } from 'src/app/services/generate-excel.service';
 import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencriptar.service';
 import { VerificarEstatusService } from 'src/app/services/verificar-estatus.service';
 import { ClientesService } from 'src/app/services/coordinador/clientes.service';
-import { map } from 'rxjs/internal/operators/map';
 import { Subject } from 'rxjs';
-import { pluck, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { EmpresasService } from 'src/app/services/coordinador/empresas.service';
 
 @Component({
@@ -47,12 +45,9 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit, OnDestroy
   @ViewChild('fechaI', { static: false }) fechaI: MatDatepicker<any>;
   @ViewChild('fechaF', { static: false }) fechaF: MatDatepicker<any>;
   @ViewChild('sidenav', {static: false}) detallesMenu: MatSidenav;
-
   @ViewChild('togglePublicarPreliminar', {static: false}) togglePreliminar: MatSlideToggle;
   @ViewChild('togglePublicarDictamen', {static: false}) toggleDictamen: MatSlideToggle;
 
-  // @Output() fechaInicioEvent: EventEmitter<MatDatepickerInputEvent<any>>;
-  // @Output() fechaFinEvent: EventEmitter<MatDatepickerInputEvent<any>>; (dateChange)="fechaFinEvent($event)"
   fechaInicio: Date;
   fechaFin: Date;
   pipe: DatePipe;
@@ -88,13 +83,10 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   ngAfterViewInit() {
-    this.form.get('fechaInicioForm').valueChanges.subscribe((v) => {
+    this.form.get('fechaInicioForm').valueChanges.pipe(takeUntil(this.$unsubscribe)).subscribe((v) => {
       if (v !== '' || v !== null) this.form.get('fechaFinalForm').enable();
-      console.log('enable');
       
-      if (v == null || v == '') {
-        console.log('disabled');
-        
+      if (v == null || v == '') {        
         this.form.get('fechaFinalForm').patchValue(null);
         this.form.get('fechaFinalForm').disable();
       }
@@ -169,7 +161,7 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit, OnDestroy
   getEstudios() {
     console.log('Request:: ',this.req)
     this.loader = true;
-    this.estudiosService.getEstudiosCliente(this.req).subscribe((estudiosList: any)=> {
+    this.estudiosService.getEstudiosCliente(this.req).pipe(takeUntil(this.$unsubscribe)).subscribe((estudiosList: any)=> {
       const {resultado} = estudiosList;
       console.log(resultado);
       this.sortedData = resultado.slice();

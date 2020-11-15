@@ -74,7 +74,9 @@
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
             <ng-container matColumnDef="sFolio">
                 <th mat-header-cell *matHeaderCellDef style="text-align: center;"> FOLIO </th>
-                <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.sFolio}} </td>
+                <td mat-cell *matCellDef="let element" style="text-align: center;"> 
+                    {{element.sFolio ? element.sFolio : element.iIdSolicitud}} 
+                </td>
             </ng-container>
 
             <ng-container matColumnDef="sNombres">

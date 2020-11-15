@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import Swal from 'sweetalert2';
 import * as moment from 'moment';
 import { MatTableDataSource, MatPaginator, MatDatepicker, MatSidenav, MatSlideToggle, MatSort } from '@angular/material';
@@ -20,19 +20,9 @@ import { VerificarEstatusService } from 'src/app/services/verificar-estatus.serv
   templateUrl: './estudios-logistica.component.html',
   styleUrls: ['./estudios-logistica.component.scss']
 })
-export class EstudiosLogisticaComponent implements OnInit {
+export class EstudiosLogisticaComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatSort, {static: true}) sort: MatSort;
-
-  displayedColumns: string[] = [];
-  dataSource: MatTableDataSource<any>;
-
-  // request getEstudios
-  // req = {
-  //   sService: 'getSolicitudesAnalista',
-  //   iIdAnalista: '1'
-  // }
-
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild('fechaI', { static: false }) fechaI: MatDatepicker<any>;
   @ViewChild('fechaF', { static: false }) fechaF: MatDatepicker<any>;
@@ -40,6 +30,9 @@ export class EstudiosLogisticaComponent implements OnInit {
 
   @ViewChild('togglePublicarPreliminar', {static: false}) togglePreliminar: MatSlideToggle;
   @ViewChild('togglePublicarDictamen', {static: false}) toggleDictamen: MatSlideToggle;
+
+  displayedColumns: string[] = [];
+  dataSource: MatTableDataSource<any>;
 
   fechaInicio: Date;
   fechaFin: Date;
@@ -66,8 +59,10 @@ export class EstudiosLogisticaComponent implements OnInit {
     this.idLogistica = await this.getIdLogistica();
     this.verificarRolLogistica();
     this.getEmpleados();
-    this.paginator._intl.itemsPerPageLabel = 'Estudios por página:';
-    this.paginator.pageSize = 50;
+
+  }
+
+  ngAfterViewInit() {
   }
 
   getIdLogistica() {
@@ -148,10 +143,7 @@ export class EstudiosLogisticaComponent implements OnInit {
       catchError((err) => of([]))
     )
     .subscribe((res: any) => {
-      console.log(res);
-
       if (res.length <= 0) return Swal.fire('Aviso', 'No se encontraron resultados', 'warning');
-      
       this.estudiosList = res;
       this.getEstudios(res);
       this.loader = false;
@@ -184,11 +176,12 @@ export class EstudiosLogisticaComponent implements OnInit {
   getEstudios(estudios) {
       this.dataSource = new MatTableDataSource(estudios);
       this.dataSource.paginator = this.paginator;
+      // this.paginator.pageSize = 50;
+      // this.paginator._intl.itemsPerPageLabel = 'Estudios por página:';
       this.dataSource.sort = this.sort;
 
       // Filtro fecha - texto
       this.dataSource.filterPredicate = (data: any, filter) => {
-        console.log(filter)
         if (filter == 'fecha') {
           if (this.fromDate && this.toDate) {
             let nFrom = moment(this.fromDate, "YYYY-MM-DD").format();
@@ -210,16 +203,11 @@ export class EstudiosLogisticaComponent implements OnInit {
 
 
   detalles(data) {
-    console.log(this.banderaSupervisor);
-
     if (this.banderaSupervisor) {
       this.router.navigate(['/logistica/detalle-estudio-supervisor/', data.iIdSolicitud]);
-    } else {
-      console.log(data.iIdSolicitud);
-      
+    } else {      
       this.router.navigate(['/logistica/detalle-estudio-logistica/', data.iIdSolicitud]);
     }
-    
   }
 
   // verificarEstatusAgenda(iContadoAgendas) {
