@@ -309,18 +309,32 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit, OnDestroy
   exportExcel() {
     this.jsonExportExcel = this.dataSource.filteredData;
 
+    console.log(this.dataSource);
     const exportExc = this.jsonExportExcel.reduce((acc, v) => {
-        let arr = [v.dFechaSolicitud, v.sFolio, v.sComentarios, v.sNombres, v.sApellidos, v.sPuesto, v.sTelefono, v.sNss,
-          v.sCurp, v.sCalleNumero, v.sColonia, v.sCp, v.sMunicipio, v.sEstado, v.dfechahoraultAgenda, v.sComentariosAsignacion];
+        let arr = [
+          v.sFolio ? v.sFolio : v.iIdSolicitud, 
+          v.sNombres, 
+          v.sApellidos, 
+          v.Nombrecte + ' ' + v.ApellidosCte, 
+          "", 
+          "",
+          v.sUltimoAplicador, 
+          v.dFechaSolicitud, 
+          v.sNombreEstudio, 
+          v.dFechaAplicacion, 
+          v.dFechaPreliminar, 
+          v.dFechaPublicacion, 
+          this.obtenerEstatusDictamen(v.iEstatusGeneral, v.bPublicarDictamen),
+        ];
         acc.push(arr);
         return acc;
     }, [])
     
-    let headers = ['Fecha de Solicitud', 'Folio', 'Comentarios', 'Nombre(s)', 'Apellidos', 'Puesto', 
-      'Teléfono', 'NSS', 'Curp', 'Calle y Número', 'Colonia', 'CP', 'Municipio', 'Estado', 'Fecha Agenda', 'Comentarios de Asignación'];
+    let headers = ['Folio', 'Nombre(s)', 'Apellidos', 'Cliente', 
+      'Solicitante', 'Analista', 'Aplicador', 'Fecha solicitud', 'Estudio solicitado', 'Fecha Aplicación', 'Fecha Preeliminar', 'Fecha Publicación', 'Estatus Dictamen'];
 
     this.excelGenerate.createExcel('exportExc', headers, exportExc );
-    this.ngOnInit();
+    // this.ngOnInit();
   }
 
   // verificarEstatusSolicitud(element) {
@@ -352,6 +366,22 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit, OnDestroy
   //     }
   //   }
   // }
+
+  obtenerEstatusDictamen(iEstatusGeneral, bPublicarDictamen) {
+    if (iEstatusGeneral == '4') return 'CANCELADO';
+    switch(bPublicarDictamen) {
+      case '0':
+        return 'PENDIENTE';
+      case '1':
+        return 'PENDIENTE';
+      case '2':
+        return 'REVISIÓN';
+      case '3':
+        return 'PUBLICADO';
+      case '4':
+        return 'REBOTADO';
+    }
+  }
 
   reload() {
     this.ngOnInit();

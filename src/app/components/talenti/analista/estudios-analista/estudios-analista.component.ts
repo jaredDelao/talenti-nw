@@ -211,17 +211,24 @@ export class EstudiosAnalistaComponent implements OnInit, OnDestroy, AfterViewIn
     this.jsonExportExcel = this.dataSource.filteredData;
 
     const exportExc = this.jsonExportExcel.reduce((acc, v) => {
-        let arr = [v.dFechaSolicitud, v.sFolio, v.sComentarios, v.sNombres, v.sApellidos, v.sPuesto, v.sTelefono, v.sNss,
-          v.sCurp, v.sCalleNumero, v.sColonia, v.sCp, v.sMunicipio, v.sEstado, v.dfechahoraultAgenda, v.sComentariosAsignacion];
+        let arr = [
+          v.sFolio ? v.sFolio : v.iIdSolicitud,
+          v.sNombres, 
+          v.sApellidos, 
+          v.dFechaSolicitud,
+          this.obtenerEstatusSolicitud(v),
+          this.obtenerEstatusPreliminar(v),
+          this.obtenerEstatusDictamen(v.iEstatusGeneral, v.bPublicarDictamen),
+        ];
         acc.push(arr);
         return acc;
     }, [])
     
-    let headers = ['Fecha de Solicitud', 'Folio', 'Comentarios', 'Nombre(s)', 'Apellidos', 'Puesto', 
-      'Teléfono', 'NSS', 'Curp', 'Calle y Número', 'Colonia', 'CP', 'Municipio', 'Estado', 'Fecha Agenda', 'Comentarios de Asignación'];
+
+    let headers = ['Folio', 'Nombre', 'Apellidos', 'Fecha Solicitud', 'Estatus Solicitud', 'Estatus Preliminar', 'Estatus Dictamen'];
 
     this.excelGenerate.createExcel('exportExc', headers, exportExc );
-    this.ngOnInit();
+    // this.ngOnInit();
     this.loading = false;
   }
 
@@ -244,6 +251,46 @@ export class EstudiosAnalistaComponent implements OnInit, OnDestroy, AfterViewIn
       }
     }
 
+  }
+
+
+  obtenerEstatusSolicitud(value) {
+    const { bDeclinada, bValidada, iEstatusGeneral } = value;
+    if (iEstatusGeneral == '4') return 'CANCELADO';
+    if (bDeclinada == '1') return 'DECLINADO';
+    if (bValidada == '1') return 'VALIDADO';    
+    return 'PENDIENTE';
+  }
+
+  obtenerEstatusPreliminar(value) {
+    switch(value) {
+        case '0':
+          return 'N/A';
+        case '1':
+          return 'PENDIENTE';
+        case '2':
+          return 'REVISIÓN'
+        case '3':
+          return 'PUBLICADO';
+        case '4':
+          return 'REBOTADO';
+    }
+  }
+
+  obtenerEstatusDictamen(iEstatusGeneral, bPublicarDictamen) {
+    if (iEstatusGeneral == '4') return 'CANCELADO';
+    switch(bPublicarDictamen) {
+      case '0':
+        return 'PENDIENTE';
+      case '1':
+        return 'PENDIENTE';
+      case '2':
+        return 'REVISIÓN';
+      case '3':
+        return 'PUBLICADO';
+      case '4':
+        return 'REBOTADO';
+    }
   }
 
 }

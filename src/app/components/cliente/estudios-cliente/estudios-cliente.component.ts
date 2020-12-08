@@ -198,17 +198,31 @@ export class EstudiosClienteComponent implements OnInit {
     this.jsonExportExcel = this.dataSource.filteredData;
 
     const exportExc = this.jsonExportExcel.reduce((acc, v) => {
-        let arr = [v.dFechaSolicitud, v.sFolio, v.sComentarios, v.sNombres, v.sApellidos, v.sPuesto, v.sTelefono, v.sNss,
-          v.sCurp, v.sCalleNumero, v.sColonia, v.sCp, v.sMunicipio, v.sEstado, v.dfechahoraultAgenda, v.sComentariosAsignacion];
+        let arr = [
+          v.sNombres,
+          v.sApellidos,
+          v.dFechaSolicitud,
+          this.obtenerEstatusSolicitud(v),
+          v.dFechaAplicacion,
+          v.dFechaPreliminar,
+          v.dFechaPublicacion,
+        ];
         acc.push(arr);
         return acc;
     }, [])
     
-    let headers = ['Fecha de Solicitud', 'Folio', 'Comentarios', 'Nombre(s)', 'Apellidos', 'Puesto', 
-      'Teléfono', 'NSS', 'Curp', 'Calle y Número', 'Colonia', 'CP', 'Municipio', 'Estado', 'Fecha Agenda', 'Comentarios de Asignación'];
+    let headers = ['Nombre(s)', 'Apellidos', 'Fecha Solicitud', 'Estatus Solicitud', 'Fecha Aplicación', 'Fecha Preliminar', 'Fecha Publicacion'];
 
     this.excelGenerate.createExcel('exportExc', headers, exportExc );
-    this.ngOnInit();
+  }
+
+
+  obtenerEstatusSolicitud(value) {
+    const { bDeclinada, bValidada, iEstatusGeneral } = value;
+    if (iEstatusGeneral == '4') return 'CANCELADO';
+    if (bDeclinada == '1') return 'DECLINADO';
+    if (bValidada == '1') return 'VALIDADO';    
+    return 'PENDIENTE';
   }
 
 }

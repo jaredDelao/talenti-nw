@@ -13,6 +13,7 @@ import { pluck, catchError, flatMap, filter, tap, toArray } from 'rxjs/operators
 import { of } from 'rxjs';
 import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencriptar.service';
 import { VerificarEstatusService } from 'src/app/services/verificar-estatus.service';
+import { GenerateExcelService } from 'src/app/services/generate-excel.service';
 
 
 @Component({
@@ -52,7 +53,8 @@ export class EstudiosLogisticaComponent implements OnInit, AfterViewInit {
 
   banderaSupervisor: boolean = false;
 
-  constructor(private fb: FormBuilder, private router: Router, public estudiosAnalistaService: EstudiosAnalistaService, public logisticaService: LogisticaService, private empleadosService: EmpleadosService, private encryptDecryptService: EncriptarDesencriptarService, public vEstatusService: VerificarEstatusService) { }
+  constructor(private fb: FormBuilder, private router: Router, public estudiosAnalistaService: EstudiosAnalistaService, public logisticaService: LogisticaService, private empleadosService: EmpleadosService, private encryptDecryptService: EncriptarDesencriptarService, public vEstatusService: VerificarEstatusService,
+    private excelGenerate: GenerateExcelService) { }
 
   async ngOnInit() {
     this.formInit();
@@ -239,7 +241,34 @@ export class EstudiosLogisticaComponent implements OnInit, AfterViewInit {
   //   if (bPublicarDictamen == '3' && !complementoPend && !preliminarPend ) return 'Validado'
     
   //   return 'Pendiente';
-  // }
+
+
+  exportExcel() {
+    this.loader = true;
+    let data: Array<any> = this.dataSource.filteredData;
+
+    const exportExc = data.reduce((acc, v) => {
+        let arr = [
+          v.sFolio ? v.sFolio : v.iIdSolicitud,
+          v.sNombres, 
+          v.sApellidos, 
+          v.dFechaSolicitud,
+          this.verificarEstatusAgenda(v.iContadoAgendas),
+          this.verificarEstatusAplicacion(v.iEstatusGeneral ,v.bEstatusAsignacion),
+        ];
+        acc.push(arr);
+        return acc;
+    }, [])
+    
+
+    let headers = ['Folio', 'Nombre', 'Apellidos', 'Fecha Solicitud', 'Estatus Agenda', 'Estatus Aplicación'];
+
+    this.excelGenerate.createExcel('exportExc', headers, exportExc );
+    // this.ngOnInit();
+    this.loader = false;
+  }
+
+
 
   color(row) {
     if (row.bDeclinada == '1') {
@@ -277,6 +306,31 @@ export class EstudiosLogisticaComponent implements OnInit, AfterViewInit {
     if (!this.banderaSupervisor) {
       if (!iIdEmpleadoLogistica) return {'background-color': '#F9E79F'} 
     }
+  }
+
+
+  verificarEstatusAgenda(iContadoAgendas) {
+    switch(iContadoAgendas) {
+      case '0':
+        return 'PENDIENTE'
+      case '1':
+        return 'AGENDADO'
+      case '2':
+        return 'REAGENDADO'
+      case '3':
+        return 'REAGENDADO'
+      case '4':
+        return 'CANCELADO'
+
+      default:
+        return '-'
+    } 
+  }
+
+  verificarEstatusAplicacion(iEstatusGeneral,bEstatusAsignacion ) {
+    if (iEstatusGeneral == '4') return 'CANCELADO';
+    if (!bEstatusAsignacion || bEstatusAsignacion == '0') return 'PENDIENTE'; 
+    if (bEstatusAsignacion == '1') return 'EXITOSO'; 
   }
 
 }
