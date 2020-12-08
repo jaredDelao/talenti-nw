@@ -25,7 +25,7 @@ export class EstudiosClienteComponent implements OnInit {
   jsonExportExcel: any;
 
   displayedColumns: string[] = [
-    'sNombres', 'dFechaSolicitud', 'estatus_solicitud', 'dictamen', 'comentarios'
+    'sNombres', 'dFechaSolicitud', 'estatus_solicitud', 'dFechaAplicacion', 'dFechaPreliminar', 'dFechaPublicacion', 'comentarios'
   ];
   dataSource: MatTableDataSource<any>;
 

@@ -117,10 +117,10 @@ export class EstudiosLogisticaComponent implements OnInit, AfterViewInit {
     }
     this.logisticaService.getSolicitudesLogisticaById(params).pipe(
       pluck('resultado'),
-      flatMap((v: any) => v),
+      // flatMap((v: any) => v),
       // tap((v) => console.log(v)),
-      filter((row: any) => row.iIdEstudio != '2'),
-      toArray(),
+      // filter((row: any) => row.iIdEstudio != '2'),
+      // toArray(),
       catchError((err) => of([]))
     )
     .subscribe((res: any) => {
@@ -136,10 +136,10 @@ export class EstudiosLogisticaComponent implements OnInit, AfterViewInit {
     this.banderaSupervisor = true;
     this.logisticaService.getSolicitudesLogistica().pipe(
       pluck('resultado'),
-      flatMap((v: any) => v),
+      // flatMap((v: any) => v),
       // tap((v) => console.log(v)),
-      filter((row: any) => row.iIdEstudio != '2'),
-      toArray(),
+      // filter((row: any) => row.iIdEstudio != '2'),
+      // toArray(),
       catchError((err) => of([]))
     )
     .subscribe((res: any) => {

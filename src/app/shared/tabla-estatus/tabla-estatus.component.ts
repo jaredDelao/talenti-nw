@@ -113,7 +113,8 @@ export class TablaEstatusComponent implements OnInit, OnDestroy {
     if (!iEstatusDictamen) return 'PENDIENTE';
     if (iEstatusDictamen) {
       let dictamen = this.estatusDictamenList.find((dictamen) => dictamen.id == iEstatusDictamen);
-      return dictamen.nombre;
+
+      if (dictamen && dictamen.nombre) return dictamen.nombre;
     }
   }
 

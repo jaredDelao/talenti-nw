@@ -262,7 +262,7 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
     this.sComentariosAgenda.patchValue(value.sComentariosAgenda);
     this.viaticosVisita.patchValue(value.viaticosVisita);
     this.pagosVisita.patchValue(value.pagosVisita);
-    this.ligaArchivo.patchValue(value.ligaArchivo);
+    this.ligaArchivo.patchValue(value.sligaArchivo);
   }
 
   insertarFecha(fechaHora) {
@@ -291,8 +291,11 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
   agendar() {
     this.loading = true;
 
+    console.log(this.hora);
+    
+
     if (this.fecha.valid && this.hora.valid && this.sNombreEncuestador.valid && this.sCorreoEncuestador.valid &&  this.sTelefonoEncuestador.valid && 
-        this.sComentariosAgenda.valid && this.viaticosVisita.valid && this.pagosVisita.valid && this.ligaArchivo.valid) {
+        this.sComentariosAgenda.valid && this.viaticosVisita.valid && this.pagosVisita.valid) {
       let req = {
         sService: 'nuevaAgenda',
         iIdSolicitud: this.idSolicitud,

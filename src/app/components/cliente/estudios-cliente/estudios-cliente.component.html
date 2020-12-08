@@ -103,19 +103,39 @@
             </ng-container>
 
             <!-- Fecha aplicación -->
-            <!-- <ng-container matColumnDef="fecha_aplicacion">
-                <th mat-header-cell *matHeaderCellDef> FECHA DE APLICACIÓN </th>
+            <ng-container matColumnDef="dFechaAplicacion">
+                <th mat-header-cell *matHeaderCellDef> FECHA <br> APLICACIÓN </th>
                 <td mat-cell *matCellDef="let element">
                     <div class="content-estatus">
-                        <span>{{element}} </span>
+                        <span>{{element.dFechaAplicacion ? (element.dFechaAplicacion | date: 'dd/MMM/yyyy') : 'PENDIENTE'}} </span>
                     </div>
                 </td>
-            </ng-container> -->
+            </ng-container>
 
-            <ng-container matColumnDef="iEstatusGeneral">
+              <!-- Fecha preliminar -->
+              <ng-container matColumnDef="dFechaPreliminar">
+                <th mat-header-cell *matHeaderCellDef> FECHA <br> PRELIMINAR </th>
+                <td mat-cell *matCellDef="let element">
+                    <div class="content-estatus">
+                        <span>{{element.dFechaPreliminar ? (element.dFechaPreliminar | date: 'dd/MMM/yyyy') : 'PENDIENTE'}} </span>
+                    </div>
+                </td>
+            </ng-container>
+
+              <!-- Fecha publicación -->
+              <ng-container matColumnDef="dFechaPublicacion">
+                <th mat-header-cell *matHeaderCellDef> FECHA <br> PUBLICACIÓN </th>
+                <td mat-cell *matCellDef="let element">
+                    <div class="content-estatus">
+                        <span>{{element.dFechaPublicacion ? (element.dFechaPublicacion | date: 'dd/MMM/yyyy') : 'PENDIENTE'}} </span>
+                    </div>
+                </td>
+            </ng-container>
+
+            <!-- <ng-container matColumnDef="iEstatusGeneral">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> ESTATUS DICTAMEN </th>
                 <td mat-cell *matCellDef="let element"> {{element.iEstatusGeneral | estatusDictamen : element.bPublicarDictamen}} </td>
-            </ng-container>
+            </ng-container> -->
 
             <ng-container matColumnDef="dictamen">
                 <th mat-header-cell *matHeaderCellDef> DICTAMEN </th>
