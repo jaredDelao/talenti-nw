@@ -26,7 +26,10 @@
         <ng-container matColumnDef="estatus_agenda">
             <th mat-header-cell *matHeaderCellDef style="text-align: center;"> ESTATUS AGENDA </th>
             <td mat-cell *matCellDef="let element">
-                {{estatusAgenda(element.iContadoAgendas, element.bAgendaRealizada, element.iEstatusGeneral)}}
+                {{fechaHoraAgenda 
+                    ? (fechaHoraAgenda | date: 'dd/MMM/yyyy') 
+                    : estatusAgenda(element.iContadoAgendas, element.bAgendaRealizada, element.iEstatusGeneral) 
+                }}
             </td>
         </ng-container>
 

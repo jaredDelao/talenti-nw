@@ -71,18 +71,46 @@
     <!-- TABLA -->
     <div class="table-container mat-elevation-z15 mt-4">
 
-        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-            <ng-container matColumnDef="sFolio">
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" *ngIf="this.displayedColumns.length > 0">
+            <ng-container matColumnDef="sFolio" sticky>
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center;"> FOLIO </th>
                 <td mat-cell *matCellDef="let element" style="text-align: center;"> 
                     {{isGNP == 1 ? element.sFolio : element.iIdSolicitud }} 
                 </td>
             </ng-container>    
 
-            <ng-container matColumnDef="sNombres">
+            <ng-container matColumnDef="sNombres" sticky>
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> NOMBRE </th>
                 <td mat-cell *matCellDef="let element">
                     {{element.sNombres}} {{element.sApellidos}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="tipoEstudio">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> TIPO ESTUDIO </th>
+                <td mat-cell *matCellDef="let element">
+                    1
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="usuario">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> USUARIO </th>
+                <td mat-cell *matCellDef="let element">
+                    usuario
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="municipio">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> MUNICIPIO </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.sMunicipio}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="estado">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> ESTADO </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.sEstado}}
                 </td>
             </ng-container>
 
@@ -123,11 +151,29 @@
             </ng-container>
 
               <!-- Fecha publicación -->
-              <ng-container matColumnDef="dFechaPublicacion">
+            <ng-container matColumnDef="dFechaPublicacion">
                 <th mat-header-cell *matHeaderCellDef> FECHA <br> PUBLICACIÓN </th>
                 <td mat-cell *matCellDef="let element">
                     <div class="content-estatus">
                         <span>{{element.dFechaPublicacion ? (element.dFechaPublicacion | date: 'dd/MMM/yyyy') : 'PENDIENTE'}} </span>
+                    </div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="estatus">
+                <th mat-header-cell *matHeaderCellDef> ESTATUS </th>
+                <td mat-cell *matCellDef="let element">
+                    <div class="content-estatus">
+                        <span>{{'estatus'}} </span>
+                    </div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="cobro">
+                <th mat-header-cell *matHeaderCellDef> COBRO </th>
+                <td mat-cell *matCellDef="let element">
+                    <div class="content-estatus">
+                        <span>{{'cobro'}} </span>
                     </div>
                 </td>
             </ng-container>
@@ -154,8 +200,8 @@
             <tr mat-row [ngStyle]="color(row)" *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
 
-        <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 25, 50 ]"> </mat-paginator>
     </div>
+    <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 25, 50 ]"> </mat-paginator>
 </div>
 
 <!-- </mat-sidenav-container> -->

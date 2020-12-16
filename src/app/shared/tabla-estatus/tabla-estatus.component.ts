@@ -17,6 +17,9 @@ export class TablaEstatusComponent implements OnInit, OnDestroy {
   @Input() titulo: string;
   @Input() tipoEstudio: string;
   @Input() analista: boolean = false;
+  @Input() fechaHoraAgenda: string;;
+
+
   
 
   displayedColumns: Array<string> = [];

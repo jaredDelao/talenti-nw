@@ -24,9 +24,15 @@ export class EstudiosClienteComponent implements OnInit {
 
   jsonExportExcel: any;
 
-  displayedColumns: string[] = [
-    'sNombres', 'dFechaSolicitud', 'estatus_solicitud', 'dFechaAplicacion', 'dFechaPreliminar', 'dFechaPublicacion', 'comentarios'
+  headersAdmin = [
+    'sFolio','sNombres', 'tipoEstudio', 'municipio', 'estado','dFechaSolicitud', 'estatus_solicitud', 'dFechaAplicacion', 'dFechaPreliminar', 'dFechaPublicacion', 'estatus', 'comentarios'
   ];
+
+  headersUser = [
+    'sFolio','sNombres', 'tipoEstudio', 'usuario', 'municipio', 'estado','dFechaSolicitud', 'estatus_solicitud', 'dFechaAplicacion', 'dFechaPreliminar', 'dFechaPublicacion', 'estatus', 'cobro', 'comentarios'
+  ];
+
+  displayedColumns: string[] = [];
   dataSource: MatTableDataSource<any>;
 
   req = {
@@ -66,6 +72,9 @@ export class EstudiosClienteComponent implements OnInit {
     this.req.iIdCliente = await this.getIdCliente();
     // Perfil cliente - Admin o User
     this.isPerfilAdmin = await this.getPerfil();
+    console.log(this.isPerfilAdmin);
+    if (this.isPerfilAdmin) this.displayedColumns = this.headersAdmin; else this.displayedColumns = this.headersUser;
+    
     this.isGNP = await this.getIsGnp();    
     this.getEstudios();
 

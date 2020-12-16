@@ -5,10 +5,20 @@ mat-form-field {
 .table-container {
   position: relative;
   height: 100%;
-  overflow: auto;
-  overflow-x: visible;
+  max-height: 600px;
+  overflow-x: scroll;
   width: 100%;
   margin: 0 auto;
+}
+
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 5px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: #bbbbbb
+  // -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
 }
 
 .mat-form-field {

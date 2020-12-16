@@ -87,6 +87,8 @@ export class DetalleEstudioClienteComponent implements OnInit, AfterViewInit, On
     id: null
   };
 
+  fechaHoraAgenda: string;
+
   subs = new Subscription();
   subs1 = new Subscription();
   subs2 = new Subscription();
@@ -137,6 +139,7 @@ export class DetalleEstudioClienteComponent implements OnInit, AfterViewInit, On
       this.subs = this.estudiosService.getEstudioById(req).pipe(map((r) => r.resultado)).subscribe((datosUsuario) => {
         console.log('data:::', datosUsuario[0]);
         // Datos tabla input Data
+        this.fechaHoraAgenda = datosUsuario[0].dfechahoraultAgenda;
         this.datosTablaEstatus(datosUsuario[0]);
         this.showMessage(datosUsuario[0]);
         this.tipoEstudio = datosUsuario[0].iIdEstudio;
