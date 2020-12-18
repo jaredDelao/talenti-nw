@@ -10,8 +10,9 @@ import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencr
 import { clienteNormal, clienteGNP } from '../../../shared/docs/tiposDictamen';
 import { VerificarEstatusService } from 'src/app/services/verificar-estatus.service';
 import { GenerateExcelService } from 'src/app/services/generate-excel.service';
-import { DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { VerificarEstatusAgendaPipe } from 'src/app/shared/pipes/verificar-estatus-agenda.pipe';
+import { VerificarPagoPipe } from 'src/app/shared/pipes/verificar-pago.pipe';
 
 
 @Component({
@@ -65,7 +66,8 @@ export class EstudiosClienteComponent implements OnInit {
 
   constructor(private estudiosService: EstudiosService, private fb: FormBuilder, private encryptDecryptService: EncriptarDesencriptarService,
     public dialog: MatDialog, private cd: ChangeDetectorRef, private router: Router, public vEstatusService: VerificarEstatusService,
-    private excelGenerate: GenerateExcelService, private datePipe: DatePipe, private estatusAgendaPipe: VerificarEstatusAgendaPipe) { }
+    private excelGenerate: GenerateExcelService, private datePipe: DatePipe, private estatusAgendaPipe: VerificarEstatusAgendaPipe,
+    private pagoPipe: VerificarPagoPipe, private currencyPipe: CurrencyPipe) { }
 
   async ngOnInit() {    
     this.formInit();
@@ -218,8 +220,8 @@ export class EstudiosClienteComponent implements OnInit {
           let arr = [
             v.sFolio ? v.sFolio : v.iIdSolicitud,
             v.sNombres + ' ' + v.sApellidos,
-            'tipo estudio',
-            'usuario',
+            v.sNombreEstudio,
+            v.nombrecte + ' ' + v.apellidoscte,
             v.sMunicipio,
             v.sEstado,
             this.datePipe.transform(v.dFechaSolicitud, 'dd/MMM/yyyy'),
@@ -228,7 +230,7 @@ export class EstudiosClienteComponent implements OnInit {
             this.datePipe.transform(v.dFechaPreliminar, 'dd/MMM/yyyy'),
             this.datePipe.transform(v.dFechaPublicacion, 'dd/MMM/yyyy'),
             this.obtenerEstatusSolicitud(v),
-            'cobro',
+            this.currencyPipe.transform(this.pagoPipe.transform(v))
           ];
           acc.push(arr);
           return acc;
@@ -242,7 +244,7 @@ export class EstudiosClienteComponent implements OnInit {
         let arr = [
           v.sFolio ? v.sFolio : v.iIdSolicitud,
           v.sNombres + ' ' + v.sApellidos,
-          'tipo estudio',
+          v.sNombreEstudio,
           v.sMunicipio,
           v.sEstado,
           this.datePipe.transform(v.dFechaSolicitud, 'dd/MMM/yyyy'),

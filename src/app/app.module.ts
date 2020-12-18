@@ -15,9 +15,10 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { MAT_DATE_LOCALE } from '@angular/material';
 import { LoadingComponent } from './shared/loading/loading.component';
 import localEs from '@angular/common/locales/es';
-import { DatePipe, registerLocaleData } from '@angular/common';
+import { CurrencyPipe, DatePipe, registerLocaleData } from '@angular/common';
 import {CustomComponentsModule} from './shared/customComponents.module';
 import { VerificarEstatusAgendaPipe } from './shared/pipes/verificar-estatus-agenda.pipe';
+import { VerificarPagoPipe } from './shared/pipes/verificar-pago.pipe';
 
 registerLocaleData(localEs, 'es');
 
@@ -46,8 +47,10 @@ registerLocaleData(localEs, 'es');
   providers: [
     DatePipe,
     VerificarEstatusAgendaPipe,
+    CurrencyPipe,
+    VerificarPagoPipe
     // { provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
-    { provide: LOCALE_ID, useValue: 'es'},
+    // { provide: LOCALE_ID, useValue: 'es'},
   ],
   entryComponents: [
     // CancelarSolicitudClienteComponent,

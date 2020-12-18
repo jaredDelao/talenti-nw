@@ -87,21 +87,21 @@
             <ng-container matColumnDef="cliente">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> CLIENTE </th>
                 <td mat-cell *matCellDef="let element">
-                    {{element.Nombrecte + ' '+ element.ApellidosCte}}
+                    {{element.sNombreEmpresa}}
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="solicitante">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> SOLICITANTE </th>
                 <td mat-cell *matCellDef="let element">
-                    {{''}}
+                    {{element.Nombrecte + ' '+ element.ApellidosCte}}
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="analista">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> ANALISTA </th>
                 <td mat-cell *matCellDef="let element">
-                    {{''}}
+                    {{element.NombreAnalista}}
                 </td>
             </ng-container>
 
