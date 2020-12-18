@@ -9,7 +9,7 @@ mat-form-field {
 .table-container {
     position: relative;
     height: 100%;
-    max-height: 600px;
+    max-height: 500px;
     overflow-x: scroll;
     width: 100%;
     margin: 0 auto;
@@ -40,10 +40,13 @@ mat-form-field {
   }
 
   .mat-table-sticky {
-      background-color: #fff;
+      background-color: rgb(235, 235, 235);
   }
 
   .mat-table-sticky:first-child {
+    border-right: 1px solid #e8e8e8;
+  }
+  .mat-table-sticky:nth-child(2) {
     border-right: 1px solid #e0e0e0;
   }
   

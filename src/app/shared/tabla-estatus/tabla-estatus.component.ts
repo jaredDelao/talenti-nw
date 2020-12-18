@@ -104,7 +104,7 @@ export class TablaEstatusComponent implements OnInit, OnDestroy {
       case '1':
         return 'PENDIENTE';
       case '2':
-        return 'REVISIÓN';
+        return 'PENDIENTE';
       case '3':
         return 'PUBLICADO';
       case '4':

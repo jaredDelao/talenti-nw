@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatDatepicker, MatSidenav, MatSlideToggle, MatDialog, MatSort } from '@angular/material';
-import { DatePipe } from '@angular/common';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { EstudiosService } from 'src/app/services/ejecutivo/estudios.service';
 import { Router } from '@angular/router';
@@ -11,6 +10,8 @@ import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencr
 import { clienteNormal, clienteGNP } from '../../../shared/docs/tiposDictamen';
 import { VerificarEstatusService } from 'src/app/services/verificar-estatus.service';
 import { GenerateExcelService } from 'src/app/services/generate-excel.service';
+import { DatePipe } from '@angular/common';
+import { VerificarEstatusAgendaPipe } from 'src/app/shared/pipes/verificar-estatus-agenda.pipe';
 
 
 @Component({
@@ -24,12 +25,12 @@ export class EstudiosClienteComponent implements OnInit {
 
   jsonExportExcel: any;
 
-  headersAdmin = [
-    'sFolio','sNombres', 'tipoEstudio', 'municipio', 'estado','dFechaSolicitud', 'estatus_solicitud', 'dFechaAplicacion', 'dFechaPreliminar', 'dFechaPublicacion', 'estatus', 'comentarios'
+  headersUser  = [
+    'sFolio','sNombres', 'tipoEstudio', 'municipio', 'estado','dFechaSolicitud', 'iContadoAgendas', 'dFechaAplicacion', 'dFechaPreliminar', 'dFechaPublicacion', 'estatus', 'comentarios'
   ];
 
-  headersUser = [
-    'sFolio','sNombres', 'tipoEstudio', 'usuario', 'municipio', 'estado','dFechaSolicitud', 'estatus_solicitud', 'dFechaAplicacion', 'dFechaPreliminar', 'dFechaPublicacion', 'estatus', 'cobro', 'comentarios'
+  headersAdmin = [
+    'sFolio','sNombres', 'tipoEstudio', 'usuario', 'municipio', 'estado','dFechaSolicitud', 'iContadoAgendas', 'dFechaAplicacion', 'dFechaPreliminar', 'dFechaPublicacion', 'estatus', 'cobro', 'comentarios'
   ];
 
   displayedColumns: string[] = [];
@@ -64,7 +65,7 @@ export class EstudiosClienteComponent implements OnInit {
 
   constructor(private estudiosService: EstudiosService, private fb: FormBuilder, private encryptDecryptService: EncriptarDesencriptarService,
     public dialog: MatDialog, private cd: ChangeDetectorRef, private router: Router, public vEstatusService: VerificarEstatusService,
-    private excelGenerate: GenerateExcelService) { }
+    private excelGenerate: GenerateExcelService, private datePipe: DatePipe, private estatusAgendaPipe: VerificarEstatusAgendaPipe) { }
 
   async ngOnInit() {    
     this.formInit();
@@ -206,21 +207,60 @@ export class EstudiosClienteComponent implements OnInit {
   exportExcel() {
     this.jsonExportExcel = this.dataSource.filteredData;
 
-    const exportExc = this.jsonExportExcel.reduce((acc, v) => {
+    console.log(this.req.sService);
+
+    let exportExc;
+    let headers;
+    
+    if (this.req.sService === 'getSolicitudesClienteAdmin') {
+
+      exportExc = this.jsonExportExcel.reduce((acc, v) => {
+          let arr = [
+            v.sFolio ? v.sFolio : v.iIdSolicitud,
+            v.sNombres + ' ' + v.sApellidos,
+            'tipo estudio',
+            'usuario',
+            v.sMunicipio,
+            v.sEstado,
+            this.datePipe.transform(v.dFechaSolicitud, 'dd/MMM/yyyy'),
+            this.estatusAgendaPipe.transform(v.iContadoAgendas),
+            this.datePipe.transform(v.dFechaAplicacion, 'dd/MMM/yyyy'),
+            this.datePipe.transform(v.dFechaPreliminar, 'dd/MMM/yyyy'),
+            this.datePipe.transform(v.dFechaPublicacion, 'dd/MMM/yyyy'),
+            this.obtenerEstatusSolicitud(v),
+            'cobro',
+          ];
+          acc.push(arr);
+          return acc;
+      }, [])
+      
+      headers = ['Folio', 'Nombre del candidato', 'Tipo de Estudio', 'Usuario', 'Municipio', 'Estado', 'Fecha Solicitud', 
+        'Estatus Agenda', 'Fecha Aplicación', 'Fecha Preliminar', 'Fecha Publicacion', 'Estatus', 'Cobro', ];
+
+    } else {
+      exportExc = this.jsonExportExcel.reduce((acc, v) => {
         let arr = [
-          v.sNombres,
-          v.sApellidos,
-          v.dFechaSolicitud,
+          v.sFolio ? v.sFolio : v.iIdSolicitud,
+          v.sNombres + ' ' + v.sApellidos,
+          'tipo estudio',
+          v.sMunicipio,
+          v.sEstado,
+          this.datePipe.transform(v.dFechaSolicitud, 'dd/MMM/yyyy'),
+          this.estatusAgendaPipe.transform(v.iContadoAgendas),
+          this.datePipe.transform(v.dFechaAplicacion, 'dd/MMM/yyyy'),
+          this.datePipe.transform(v.dFechaPreliminar, 'dd/MMM/yyyy'),
+          this.datePipe.transform(v.dFechaPublicacion, 'dd/MMM/yyyy'),
           this.obtenerEstatusSolicitud(v),
-          v.dFechaAplicacion,
-          v.dFechaPreliminar,
-          v.dFechaPublicacion,
         ];
         acc.push(arr);
         return acc;
     }, [])
     
-    let headers = ['Nombre(s)', 'Apellidos', 'Fecha Solicitud', 'Estatus Solicitud', 'Fecha Aplicación', 'Fecha Preliminar', 'Fecha Publicacion'];
+    headers = ['Folio', 'Nombre del candidato', 'Tipo de Estudio', 'Municipio', 'Estado', 'Fecha Solicitud', 
+      'Estatus Agenda', 'Fecha Aplicación', 'Fecha Preliminar', 'Fecha Publicacion', 'Estatus'];
+
+    }
+
 
     this.excelGenerate.createExcel('exportExc', headers, exportExc );
   }

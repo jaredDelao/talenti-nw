@@ -15,8 +15,9 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { MAT_DATE_LOCALE } from '@angular/material';
 import { LoadingComponent } from './shared/loading/loading.component';
 import localEs from '@angular/common/locales/es';
-import { registerLocaleData } from '@angular/common';
+import { DatePipe, registerLocaleData } from '@angular/common';
 import {CustomComponentsModule} from './shared/customComponents.module';
+import { VerificarEstatusAgendaPipe } from './shared/pipes/verificar-estatus-agenda.pipe';
 
 registerLocaleData(localEs, 'es');
 
@@ -43,6 +44,8 @@ registerLocaleData(localEs, 'es');
     HttpClientModule,
   ],
   providers: [
+    DatePipe,
+    VerificarEstatusAgendaPipe,
     // { provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
     { provide: LOCALE_ID, useValue: 'es'},
   ],
