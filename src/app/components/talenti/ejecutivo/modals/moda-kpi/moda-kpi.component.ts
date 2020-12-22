@@ -8,19 +8,6 @@ import { EstudiosService } from 'src/app/services/ejecutivo/estudios.service';
 import { GenerateExcelService } from 'src/app/services/generate-excel.service';
 import { TiempoKpisPipe } from 'src/app/shared/pipes/tiempo-kpis.pipe';
 
-const ELEMENT_DATA = [
-  {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-  {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-  {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
-  {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-  {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
-  {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
-  {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
-  {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
-  {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-  {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
-];
-
 @Component({
   selector: 'app-moda-kpi',
   templateUrl: './moda-kpi.component.html',
@@ -106,15 +93,15 @@ export class ModaKpiComponent implements OnInit, OnDestroy {
             if (validacion.length > 1) {
               let x = this.obtenerUltimoProceso(validacion);
               if (x) {
-                let i:number = this.dataSource.findIndex((z) => z.iEstatusGeneral == x.iEstatusGeneral);
-                x[0].sDescripcion = this.dataSource[i].sDescripcion;
+                let i:number = this.dataSource.findIndex((z) => z.iEstatusGeneral == x.iEstatusGeneral);                
+                x.sDescripcion = this.dataSource[i].sDescripcion;
                 this.dataSource[i] = x;
               }
             }
 
           })
-          console.log(this.dataSource);
-          this.dataTabla = new MatTableDataSource(this.dataSource);          this.kpisComplete = true;
+          this.dataTabla = new MatTableDataSource(this.dataSource);          
+          this.kpisComplete = true;
         }
     });
   }
@@ -125,6 +112,9 @@ export class ModaKpiComponent implements OnInit, OnDestroy {
       let bd = new Date(b.dFechaRegistro).getTime(), ad = new Date(a.dFechaRegistro).getTime()
       return bd - ad;
     });
+
+    console.log(sort[(sort.length - 1)]);
+    
     return sort[(sort.length - 1)];    
   }
 
