@@ -26,7 +26,7 @@ export class GenerateExcelService {
   //    FileSaver.saveAs(data, fileName + '_export_' + new  Date().getTime() + EXCEL_EXTENSION);
   // }
 
-  createExcel(title, header: Array<string>, data: Array<any>) {
+  createExcel(title, header: Array<string>, data: Array<any>, titulo?: string) {
 
     let workbook = new Workbook();
     let worksheet = workbook.addWorksheet('data');
@@ -53,7 +53,7 @@ export class GenerateExcelService {
 
     workbook.xlsx.writeBuffer().then((data) => {
       let blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      fs.saveAs(blob, 'estudios.xlsx');
+      fs.saveAs(blob, titulo ? titulo : 'estudios.xlsx');
     });
   }
 

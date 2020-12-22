@@ -1,0 +1,139 @@
+<h1 mat-dialog-title>KPI'S</h1>
+
+<mat-dialog-content *ngIf="kpisComplete">
+
+    <!-- Table -->
+
+    <table mat-table [dataSource]="dataTabla" class="mat-elevation-z8">
+      
+        <!-- Position Column -->
+        <ng-container matColumnDef="Descripcion">
+          <th mat-header-cell *matHeaderCellDef> Descripción </th>
+          <td mat-cell *matCellDef="let element"> {{element.sDescripcion ? element.sDescripcion : 'Pendiente'}} </td>
+        </ng-container>
+      
+        <!-- Name Column -->
+        <ng-container matColumnDef="fechaRegistro">
+          <th mat-header-cell *matHeaderCellDef> Fecha de registro </th>
+          <td mat-cell *matCellDef="let element"> {{element.dFechaRegistro ? (element.dFechaRegistro | date: 'dd/MMM/yyyy HH:MM') : 'Pendiente'}} </td>
+        </ng-container>
+      
+        <!-- Weight Column -->
+        <ng-container matColumnDef="tiempo">
+          <th mat-header-cell *matHeaderCellDef > Tiempo transcurrido </th>
+          <td mat-cell *matCellDef="let element"> 
+              <small class="titulo-tiempo"> {{ element | tiempoKpis: dataSource: element.iEstatusGeneral }}</small>
+              <br>
+              <span> {{ element | tiempoKpis: dataSource }} </span>
+             </td>
+        </ng-container>
+      
+      
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    
+    <!-- <div class="timeline desktop">
+        
+        <div class="timeline__wrapper" v-for="(item, index) in dias">
+
+            <button type="button" class="timeline__button">KPI'S</button>
+
+            <ul class="timeline__list">
+
+                    <li  class="timeline__item active">
+                        <div class="timeline__item-content bg-c">
+                            <p class="low">Creación de estudio</p>
+                            <p class="low">{{ Screacion ? (Screacion.dFechaRegistro | date: 'dd/MMM/yyyy') : '' }}</p>
+                        </div>
+                    </li>
+
+                    <li  class="timeline__item active">
+                        <div class="timeline__item-content">
+                            <p class="low">{{ Screacion?.dFechaRegistro | tiempoKpis: Svalidacion?.dFechaRegistro }}</p>
+                        </div>
+                    </li>
+
+                    <li  class="timeline__item active">
+                        <div class="timeline__item-content bg-c">
+                            <p class="low">Validación de estudio</p>
+                            <p class="low">{{ Svalidacion ? (Svalidacion.dFechaRegistro | date: 'dd/MMM/yyyy HH:MM') : '' }}</p>
+                        </div>
+                    </li>
+
+                    <li  class="timeline__item active">
+                        <div class="timeline__item-content">
+                            <p class="low">{{ Svalidacion?.dFechaRegistro | tiempoKpis: Sasignacion?.dFechaRegistro }}</p>
+                        </div>
+                    </li>
+
+                    <li  class="timeline__item active">
+                        <div class="timeline__item-content bg-c">
+                            <p class="low">Asignación de estudio</p>
+                            <p class="low">{{ Sasignacion ? (Sasignacion.dFechaRegistro | date: 'dd/MMM/yyyy HH:MM') : '' }}</p>
+                        </div>
+                    </li>
+
+                    <li  class="timeline__item active">
+                        <div class="timeline__item-content">
+                            <p class="low">{{ Sasignacion?.dFechaRegistro | tiempoKpis: Sagenda?.dFechaRegistro }}</p>
+
+                        </div>
+                    </li>
+
+                    <li  class="timeline__item active">
+                        <div class="timeline__item-content bg-c">
+                            <p class="low">Agenda de estudio</p>
+                            <p class="low">{{ Sagenda ? (Sagenda.dFechaRegistro | date: 'dd/MMM/yyyy HH:MM') : '' }}</p>
+                        </div>
+                    </li>
+
+                    <li  class="timeline__item active">
+                        <div class="timeline__item-content">
+                            <p class="low">{{ Sagenda?.dFechaRegistro | tiempoKpis: Saplicacion?.dFechaRegistro }}</p>
+
+                        </div>
+                    </li>
+
+                    <li  class="timeline__item active">
+                        <div class="timeline__item-content bg-c">
+                            <p class="low">Estudio aplicado</p>
+                            <p class="low">{{ Saplicacion ? (Saplicacion.dFechaRegistro | date: 'dd/MMM/yyyy HH:MM') : '' }}</p>
+                        </div>
+                    </li>
+
+                    <li  class="timeline__item active">
+                        <div class="timeline__item-content">
+                            <p class="low">{{ Saplicacion?.dFechaRegistro | tiempoKpis: Sarchivos?.dFechaRegistro }}</p>
+                        </div>
+                    </li>
+
+                    <li  class="timeline__item active">
+                        <div class="timeline__item-content bg-c">
+                            <p class="low">Archivos de dictamen</p>
+                            <p class="low">{{ Sarchivos ? (Sarchivos.dFechaRegistro | date: 'dd/MMM/yyyy HH:MM') : '' }}</p>
+                        </div>
+                    </li>
+
+                    <li  class="timeline__item active">
+                        <div class="timeline__item-content">
+                            <p class="low">{{ Sarchivos?.dFechaRegistro | tiempoKpis: Spublicacion?.dFechaRegistro }}</p>
+                        </div>
+                    </li>
+
+                    <li  class="timeline__item active">
+                        <div class="timeline__item-content bg-c">
+                            <p class="low">Publicación de dictamen</p>
+                            <p class="low">{{ Spublicacion ? (Spublicacion.dFechaRegistro | date: 'dd/MMM/yyyy HH:MM') : '' }}</p>
+                        </div>
+                    </li>            
+            </ul>
+        </div>
+    </div> -->
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" *ngIf="kpisComplete">
+    <button mat-raised-button class="excel-btn" (click)="exportExcel()">{{ loader ? 'Cargando..' : 'Exportar a Excel' }}</button>
+    <button mat-raised-button color="warn" mat-dialog-close>Cerrar</button>
+</mat-dialog-actions>

@@ -12,6 +12,7 @@ import { SolicitarCancelacionEjecutivoComponent } from '../modals/solicitar-canc
 import { EstudiosAnalistaService } from 'src/app/services/analista/estudios-analista.service';
 import { AprobarCancelacionModalComponent } from '../modals/aprobar-cancelacion-modal/aprobar-cancelacion-modal.component';
 import Swal from 'sweetalert2';
+import { ModaKpiComponent } from 'src/app/components/talenti/ejecutivo/modals/moda-kpi/moda-kpi.component';
 
 @Component({
   selector: 'app-detalle-estudio-ejecutivo',
@@ -377,6 +378,17 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
       }
       this.estudiosAnalistaService.descargarPreliminar(req);
     }
+  }
+
+
+  abrirModalKpis() {
+    this.dialog.open(ModaKpiComponent, {
+      data: {
+        idEstudio: this.idSolicitud
+      },
+      maxHeight: '600px'
+      // width: '100%',
+    })
   }
 
 }

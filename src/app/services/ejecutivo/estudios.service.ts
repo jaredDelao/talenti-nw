@@ -1,7 +1,9 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { HttpParams, HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, of } from 'rxjs';
+import { catchError, pluck } from 'rxjs/operators';
+import { Kpis } from 'src/app/models/kpis.model';
 // import { Estudios, Estudio } from 'src/app/interfaces/talenti/ejecutivo/estudios';
 
 @Injectable({
@@ -96,6 +98,19 @@ export class EstudiosService {
   actualizarSolicitud(params) {
     let body = new HttpParams({fromObject: params})
     return this.http.post(environment.urlProd, body);
+  }
+
+
+  getKpis(idSolicitud): Observable<Kpis[]> {
+    let req = {
+      sService: 'getKpis',
+      iIdSolicitud: idSolicitud
+    }
+    let body = new HttpParams({fromObject: req})
+    return this.http.post<Kpis[]>(environment.urlProd, body).pipe(
+      pluck('resultado'),
+      catchError<Kpis[], Observable<any[]>>((e) => of([]))
+    )
   }
 
 }

@@ -28,6 +28,7 @@ import { VerificarEstatusAplicacionPipe } from './pipes/verificar-estatus-aplica
 import { IconoPreliminarPipe } from './pipes/ejecutivo/icono-preliminar.pipe';
 import { VerificarClientePipe } from './pipes/ejecutivo/verificar-cliente.pipe';
 import { VerificarPagoPipe } from './pipes/verificar-pago.pipe';
+import { TiempoKpisPipe } from './pipes/tiempo-kpis.pipe';
 
 const PIPES = [
     EstatusSolicitudPipe,
@@ -40,7 +41,8 @@ const PIPES = [
     VerificarEstatusAplicacionPipe,
     IconoPreliminarPipe,
     VerificarClientePipe,
-    VerificarPagoPipe
+    VerificarPagoPipe,
+    TiempoKpisPipe
 ]
 @NgModule({
   imports: [
@@ -64,6 +66,7 @@ const PIPES = [
     ...PIPES,
   ],
   declarations: [
+    ...PIPES,
     LoadingComponent, 
     TitleComponent, 
     TitleTablaComponent, 
@@ -75,7 +78,6 @@ const PIPES = [
     TablaEstatusComponent,
     GraficaClienteComponent,
     GraficaTalentiComponent,
-    ...PIPES,
   ],
   entryComponents: [
     RevisarModalComponent,

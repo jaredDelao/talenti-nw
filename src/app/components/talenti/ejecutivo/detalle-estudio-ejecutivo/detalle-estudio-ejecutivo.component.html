@@ -7,7 +7,6 @@
 
     <app-title regresar="true" titulo="DETALLE DE ESTUDIO" ruta="/ejecutivo/estudios"></app-title>
 
-    <!-- <button class="align-self-center" mat-raised-button color="warn">REGRESAR</button> -->
 
     <div class="container justify-content-start mb-5" [formGroup]="form">
 
@@ -15,9 +14,16 @@
         <div class="alert alert-danger" role="alert" *ngIf="estatusGeneral == '4'">La solicitud ha sido cancelada</div>
         <!-- ...  -->
 
+        <button mat-raised-button class="mr-3" color="primary" (click)="abrirModalKpis()">
+            <mat-icon class="mr-2">timeline</mat-icon>
+            <span>VER KPI'S</span>
+        </button>
+
         <button class="mt-3 mb-3 btn-cancelar" *ngIf="bSolicCancel != 1" mat-raised-button color="warn" (click)="solicitarCancelacionEjecutivo()">
             SOLICITAR CANCELACIÓN
         </button>
+
+
 
         <!-- CALIDAD -->
         <mat-chip-list aria-label="Certificado" class="mt-3" *ngIf="calidadAprobada">

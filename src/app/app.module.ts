@@ -19,6 +19,7 @@ import { CurrencyPipe, DatePipe, registerLocaleData } from '@angular/common';
 import {CustomComponentsModule} from './shared/customComponents.module';
 import { VerificarEstatusAgendaPipe } from './shared/pipes/verificar-estatus-agenda.pipe';
 import { VerificarPagoPipe } from './shared/pipes/verificar-pago.pipe';
+import { TiempoKpisPipe } from './shared/pipes/tiempo-kpis.pipe';
 
 registerLocaleData(localEs, 'es');
 
@@ -48,7 +49,8 @@ registerLocaleData(localEs, 'es');
     DatePipe,
     VerificarEstatusAgendaPipe,
     CurrencyPipe,
-    VerificarPagoPipe
+    VerificarPagoPipe,
+    TiempoKpisPipe,
     // { provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
     // { provide: LOCALE_ID, useValue: 'es'},
   ],

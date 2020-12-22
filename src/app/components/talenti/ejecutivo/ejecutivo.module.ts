@@ -25,6 +25,7 @@ import { EstatusSolicitudPipe } from 'src/app/shared/pipes/estatus-solicitud.pip
 import { VerificarPreliminarPipe } from 'src/app/shared/pipes/verificar-preliminar.pipe';
 import { EstatusDictamenPipe } from 'src/app/shared/pipes/estatus-dictamen.pipe';
 import { VerificarRolPipe } from 'src/app/shared/pipes/verificar-rol.pipe';
+import { ModaKpiComponent } from './modals/moda-kpi/moda-kpi.component';
 
 @NgModule({
   imports: [
@@ -33,7 +34,7 @@ import { VerificarRolPipe } from 'src/app/shared/pipes/verificar-rol.pipe';
     MaterialModule,
     HttpClientModule,
     CustomComponentsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   declarations: [
     SolicitudCancelacionComponent,
@@ -45,9 +46,16 @@ import { VerificarRolPipe } from 'src/app/shared/pipes/verificar-rol.pipe';
     ActualizarDictamenComponent,
     AprobarCancelacionModalComponent,
     SolicitarCancelacionEjecutivoComponent,
+    ModaKpiComponent,
   ],
   exports: [DatosEjecutivoComponent],
-  entryComponents: [ModalDireccionComponent, ActualizarDictamenComponent, AprobarCancelacionModalComponent, SolicitarCancelacionEjecutivoComponent],
+  entryComponents: [
+    ModalDireccionComponent, 
+    ActualizarDictamenComponent, 
+    AprobarCancelacionModalComponent, 
+    SolicitarCancelacionEjecutivoComponent,
+    ModaKpiComponent
+  ],
   providers: [DatosEjecutivoService],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
