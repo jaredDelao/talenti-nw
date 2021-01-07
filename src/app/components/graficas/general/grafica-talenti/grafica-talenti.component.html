@@ -2,8 +2,7 @@
 
     <app-title regresar="true" [ruta]="'/'" titulo="GRÁFICAS"></app-title>
 
-    <div class="search-box row col-12 align-items-baseline">
-         <!-- Fecha inicio -->
+    <!-- <div class="search-box row col-12 align-items-baseline">
          <div class="form-group col-4">
             <mat-form-field>
                 <input matInput #fechaI [matDatepicker]="fechaInicio" [formControl]="fechaInicioForm"
@@ -13,7 +12,6 @@
             </mat-form-field>
         </div>
 
-        <!-- Fecha termino -->
         <div class="form-group col-4">
             <mat-form-field>
                 <input matInput #fechaF [matDatepicker]="fechaFinal"
@@ -28,6 +26,30 @@
             <button mat-raised-button color="primary" (click)="buscar()">Buscar</button>
             <button mat-raised-button class="btn-limpiar ml-3" (click)="limpiar()">Limpiar</button>
         </div>
+    </div> -->
+
+    <div class="search-box row col-12 align-items-baseline mb-3">
+
+        <mat-form-field appearance="fill" class="col-md-4">
+            <mat-label>Mes</mat-label>
+            <mat-select [formControl]="mesControl">
+              <mat-option *ngFor="let cat of catMeses" [value]="cat.valor">
+                {{cat.nombre}}
+              </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="col-md-4">
+            <mat-label>Año</mat-label>
+            <mat-select [formControl]="anioControl">
+              <mat-option *ngFor="let a of catAnios" [value]="a">
+                {{a}}
+              </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <button mat-raised-button [disabled]="mesControl.invalid || anioControl.invalid" color="primary" (click)="buscarGraficas()">Buscar</button>
+
     </div>
 
     <div style="display: block;" *ngIf="barChartData.length > 0">

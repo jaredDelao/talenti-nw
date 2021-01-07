@@ -94,7 +94,7 @@ export class GraficaClienteComponent implements OnInit, AfterViewInit {
     { nombre: 'Diciembre', valor: '12' },
   ];
 
-  catAnios: Array<number> = []
+  catAnios: Array<number> = [];
 
   isGNP: number;
 
@@ -241,7 +241,7 @@ export class GraficaClienteComponent implements OnInit, AfterViewInit {
 
 
   private getPaquetesGraficaGnp() {
-    this.graficasService.paqueteGraficasGnp(this.mesControl.value, this.anioControl.value).subscribe((resp: Array<any>) => {
+    this.graficasService.paqueteGraficasGnp(this.mesControl.value, this.anioControl.value, this.request.iIdCliente).subscribe((resp: Array<any>) => {
       let datosGrafica =  resp.reduce((acc, curr) => {        
         acc.push({
           data: [curr.valor],
@@ -256,7 +256,7 @@ export class GraficaClienteComponent implements OnInit, AfterViewInit {
 
 
   private getPaquetesGraficaClienteNormal() {
-    this.graficasService.paqueteGraficasClienteNormal(this.mesControl.value, this.anioControl.value).subscribe((resp: Array<any>) => {
+    this.graficasService.paqueteGraficasClienteNormal(this.mesControl.value, this.anioControl.value, this.request.iIdCliente).subscribe((resp: Array<any>) => {
       let datosGrafica =  resp.reduce((acc, curr) => {        
         acc.push({
           data: [curr.valor],

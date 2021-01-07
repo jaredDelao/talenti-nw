@@ -24,12 +24,40 @@ export class GraficasService {
   }
 
 
+  // Graficas talenti
+  graficasSolicitudesPublicadas(mes, anio): Observable<any> {
+    const req = {
+      sService: 'getGraficaSolPublicadas',
+      anio,
+      mes
+    }
+
+    let body = new HttpParams({fromObject: req});
+    return this.http.post(environment.urlProd, body).pipe(
+      pluck('cantidad'),
+      catchError<any, Observable<any> >((e) => of(0))
+    )
+  }
+  graficasSolicitudesCreadas(mes, anio): Observable<any> {
+    const req = {
+      sService: 'getGraficaSolGeneradas',
+      anio,
+      mes
+    }
+
+    let body = new HttpParams({fromObject: req});
+    return this.http.post(environment.urlProd, body).pipe(
+      pluck('cantidad'),
+      catchError<any, Observable<any> >((e) => of(0))
+    )
+  }
+
   // Graficas GNP
-  graficaGnpRiesgo1(mes, anio): Observable<any> {
+  graficaGnpRiesgo1(mes, anio, idCliente): Observable<any> {
     const req = {
       sService: 'getGraficaEstatusDictamen',
       iEstatusDictamen: '11',
-      iIdCliente: '23',
+      iIdCliente: idCliente,
       mes,
       anio
     }
@@ -41,11 +69,11 @@ export class GraficasService {
     )
   }
 
-  graficaGnpRiesgo2(mes, anio): Observable<any> {
+  graficaGnpRiesgo2(mes, anio, idCliente): Observable<any> {
     const req = {
       sService: 'getGraficaEstatusDictamen',
       iEstatusDictamen: '12',
-      iIdCliente: '23',
+      iIdCliente: idCliente,
       mes,
       anio
     }
@@ -57,11 +85,11 @@ export class GraficasService {
     )
   }
 
-  graficaGnpRiesgo3(mes, anio): Observable<any> {
+  graficaGnpRiesgo3(mes, anio, idCliente): Observable<any> {
     const req = {
       sService: 'getGraficaEstatusDictamen',
       iEstatusDictamen: '13',
-      iIdCliente: '23',
+      iIdCliente: idCliente,
       mes,
       anio
     }
@@ -73,11 +101,11 @@ export class GraficasService {
     )
   }
 
-  graficaGnpSinRiesgo(mes, anio): Observable<any> {
+  graficaGnpSinRiesgo(mes, anio, idCliente): Observable<any> {
     const req = {
       sService: 'getGraficaEstatusDictamen',
       iEstatusDictamen: '14',
-      iIdCliente: '23',
+      iIdCliente: idCliente,
       mes,
       anio
     }
@@ -91,10 +119,11 @@ export class GraficasService {
 
 
   // Graficas Cliente normal
-  graficaNormalRecomendados(mes, anio): Observable<any> {
+  graficaNormalRecomendados(mes, anio, idCliente): Observable<any> {
     const req = {
       sService: 'getGraficaEstatusDictamen',
       iEstatusDictamen: '2',
+      iIdCliente: idCliente,
       mes,
       anio
     }
@@ -106,10 +135,11 @@ export class GraficasService {
     )
   }
 
-  graficaNormalNoRecomendados(mes, anio): Observable<any> {
+  graficaNormalNoRecomendados(mes, anio, idCliente): Observable<any> {
     const req = {
       sService: 'getGraficaEstatusDictamen',
       iEstatusDictamen: '3',
+      iIdCliente: idCliente,
       mes,
       anio
     }
@@ -121,10 +151,11 @@ export class GraficasService {
     )
   }
 
-  graficaNormalRecomendadosReserva(mes, anio): Observable<any> {
+  graficaNormalRecomendadosReserva(mes, anio, idCliente): Observable<any> {
     const req = {
       sService: 'getGraficaEstatusDictamen',
       iEstatusDictamen: '4',
+      iIdCliente: idCliente,
       mes,
       anio
     }
@@ -137,7 +168,7 @@ export class GraficasService {
   }
 
 
-  paqueteGraficasGnp(mes, anio): Observable<any> {
+  paqueteGraficasGnp(mes, anio, idCliente): Observable<any> {
 
     const listaGraficas = [
       { nombre: 'Riesgo 1', func: 'graficaGnpRiesgo1' },
@@ -147,7 +178,7 @@ export class GraficasService {
     ];
 
     let pckage = listaGraficas.map((grafica) => {
-      return this[grafica.func](mes, anio).pipe(
+      return this[grafica.func](mes, anio, idCliente).pipe(
         map((single) => ({ nombre: grafica.nombre, valor: single }))
       )
     })
@@ -155,7 +186,7 @@ export class GraficasService {
     return forkJoin(pckage);
   }
 
-  paqueteGraficasClienteNormal(mes, anio): Observable<any> {
+  paqueteGraficasClienteNormal(mes, anio, idCliente): Observable<any> {
 
     const listaGraficas = [
       { nombre: 'Recomendados', func: 'graficaNormalRecomendados' },
@@ -164,10 +195,29 @@ export class GraficasService {
     ];
 
     let pckage = listaGraficas.map((grafica) => {
-      return this[grafica.func](mes, anio).pipe(
+      return this[grafica.func](mes, anio, idCliente).pipe(
         map((single) => ({ nombre: grafica.nombre, valor: single }))
       )
     })
+
+    return forkJoin(pckage);
+  }
+
+
+
+
+  paqueteGraficasTalenti(mes, anio): Observable<any> {
+
+    const listaGraficas = [
+      { nombre: 'Estudios publicados', func: 'graficasSolicitudesPublicadas' },
+      { nombre: 'Estudios solicitados', func: 'graficasSolicitudesCreadas' },
+    ];
+
+    let pckage = listaGraficas.map((grafica) => {
+      return this[grafica.func](mes, anio).pipe(
+        map((single) => ({ nombre: grafica.nombre, valor: single }))
+      )
+    });
 
     return forkJoin(pckage);
   }

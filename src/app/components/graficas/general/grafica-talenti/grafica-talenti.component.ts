@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import { Label, ThemeService, Color } from 'ng2-charts';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import * as moment from 'moment'
 import { GraficasService } from 'src/app/services/graficas.service';
 import { pluck, catchError } from 'rxjs/operators';
@@ -65,11 +65,41 @@ export class GraficaTalentiComponent implements OnInit {
   // Date
   dateNow: any = new Date();
 
+  catMeses = [
+    { nombre: 'Enero', valor: '01' },
+    { nombre: 'Febrero', valor: '02' },
+    { nombre: 'Marzo', valor: '03' },
+    { nombre: 'Abril', valor: '04' },
+    { nombre: 'Mayo', valor: '05' },
+    { nombre: 'Junio', valor: '06' },
+    { nombre: 'Julio', valor: '07' },
+    { nombre: 'Agosto', valor: '08' },
+    { nombre: 'Septiembre', valor: '09' },
+    { nombre: 'Octubre', valor: '10' },
+    { nombre: 'Noviembre', valor: '11' },
+    { nombre: 'Diciembre', valor: '12' },
+  ];
+
+  catAnios: Array<number> = [];
+
+  public mesControl = new FormControl(null, Validators.required);
+  public anioControl = new FormControl(null, Validators.required);
+  private anioInicio = 2019;
+
   constructor(public themeService: ThemeService, public graficasService: GraficasService, public encriptarService: EncriptarDesencriptarService, private router:Router) { }
 
   ngOnInit() {
+    this.crearCatalogoAnio();
     this.setCurrentTheme('dark-theme'); 
     this.getIdEjecutivo();  
+  }
+
+  private crearCatalogoAnio() {
+    let year2 = moment().year();
+    let count = year2 - this.anioInicio;
+    for(let i = 0; i <= count; i++) {
+      this.catAnios.push(this.anioInicio + i);
+    }    
   }
 
   setCurrentTheme(theme: Theme) {
@@ -128,55 +158,73 @@ export class GraficaTalentiComponent implements OnInit {
 
   }
 
-  buscar() {
-    let fechaInicio = moment(this.request.dfechaInicio).format('DD-MMMM-YYYY').toString()
-    let fechaFin =  moment(this.request.dFechaFin).format('DD-MMMM-YYYY').toString()
-    this.barChartLabels = [fechaInicio + '   -   '+ fechaFin];
+  // buscar() {
+  //   let fechaInicio = moment(this.request.dfechaInicio).format('DD-MMMM-YYYY').toString()
+  //   let fechaFin =  moment(this.request.dFechaFin).format('DD-MMMM-YYYY').toString()
+  //   this.barChartLabels = [fechaInicio + '   -   '+ fechaFin];
     
-    this.graficasService.getGraficaCliente(this.request).pipe(
-      pluck('LstDatos'),
-      catchError((err) => of([]))
-    )
-    .subscribe((value: any[]) => {
-      if (value.length <= 0) return Swal.fire('Aviso', 'Resultados no encontrados', 'warning');
+  //   this.graficasService.getGraficaCliente(this.request).pipe(
+  //     pluck('LstDatos'),
+  //     catchError((err) => of([]))
+  //   )
+  //   .subscribe((value: any[]) => {
+  //     if (value.length <= 0) return Swal.fire('Aviso', 'Resultados no encontrados', 'warning');
       
-      var resp = [];
-      value.map((row) => {
-        let label;
+  //     var resp = [];
+  //     value.map((row) => {
+  //       let label;
         
-        switch(row.EstatusHistorico) {
-          case '1':
-            label = 'Agendados';
-            break;
-          case '2':
-            label = 'Publicados';
-            break;
-          case '3':
-            label = 'Declinados';
-            break;
-          case '4':
-            label = 'Validados';
-            break;
-          case '5':
-            label = 'Cancelados';
-            break;
-        }
+  //       switch(row.EstatusHistorico) {
+  //         case '1':
+  //           label = 'Agendados';
+  //           break;
+  //         case '2':
+  //           label = 'Publicados';
+  //           break;
+  //         case '3':
+  //           label = 'Declinados';
+  //           break;
+  //         case '4':
+  //           label = 'Validados';
+  //           break;
+  //         case '5':
+  //           label = 'Cancelados';
+  //           break;
+  //       }
 
-        let data = {
-          data: [row.cantidad],
-          label,
-        }
-        resp.push(data);
-      })
-      this.barChartData = resp;
+  //       let data = {
+  //         data: [row.cantidad],
+  //         label,
+  //       }
+  //       resp.push(data);
+  //     })
+  //     this.barChartData = resp;
       
+  //   })
+  // }
+
+  // limpiar() {
+  //   this.fechaInicioForm.reset();
+  //   this.fechaFinalForm.reset();
+  //   this.barChartData = [];
+  // }
+
+  private getPaquetesGraficaTalenti() {
+    this.graficasService.paqueteGraficasTalenti(this.mesControl.value, this.anioControl.value).subscribe((resp: Array<any>) => {
+      let datosGrafica =  resp.reduce((acc, curr) => {        
+        acc.push({
+          data: [curr.valor],
+          label: curr.nombre
+        })
+        return acc;
+      }, []);
+    
+      this.barChartData = datosGrafica;
     })
   }
 
-  limpiar() {
-    this.fechaInicioForm.reset();
-    this.fechaFinalForm.reset();
-    this.barChartData = [];
+  buscarGraficas() {
+    this.getPaquetesGraficaTalenti();
   }
 
 
