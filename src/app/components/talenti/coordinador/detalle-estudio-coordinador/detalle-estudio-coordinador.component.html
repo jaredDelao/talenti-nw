@@ -8,6 +8,13 @@
     <div class="alert alert-success col-12" role="success" *ngIf="datosSolicitud?.bValidada == 1">Estudio validado</div>
 </div>
 
+<div class="container justify-content-start mb-4">
+    <button mat-raised-button class="mr-3" color="primary" (click)="abrirModalKpis()">
+        <mat-icon class="mr-2">timeline</mat-icon>
+        <span>VER KPI'S</span>
+    </button>
+</div>
+
 <form [formGroup]="form">
     <div class="box-container row d-flex justify-content-center container">
         <div class="left col-lg-6 col-md-6 col-sm-12">

@@ -1,9 +1,7 @@
-import { Component, ViewChild, OnInit, AfterContentInit, DoCheck } from "@angular/core";
+import { Component, ViewChild, OnInit, DoCheck } from "@angular/core";
 import { MatDrawer } from "@angular/material";
 import { Router } from '@angular/router';
 import * as bcryptjs from 'bcryptjs';
-import * as cryptoJS from 'crypto-js';
-import Swal from 'sweetalert2';
 import { EncriptarDesencriptarService } from 'src/app/services/encriptar-desencriptar.service';
 import { ImagesService } from 'src/app/services/images.service';
 
@@ -186,10 +184,8 @@ export class PagesComponent implements OnInit, DoCheck {
       res ? this.menuList = menuCalidad : '';
     });
 
-    if (idCliente) {
-      this.menuList = menuCliente;
-    }
-
+    if (idCliente) this.menuList = menuCliente;
+    
   }
 
   open() {

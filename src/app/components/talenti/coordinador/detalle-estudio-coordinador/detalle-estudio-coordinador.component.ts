@@ -8,8 +8,9 @@ import { EmpresasService } from 'src/app/services/coordinador/empresas.service';
 import Swal from 'sweetalert2';
 import { LogisticaService } from 'src/app/services/logistica/logistica.service';
 import { EmpleadosService } from 'src/app/services/coordinador/empleados.service';
-import { MatChip, MatSlideToggle } from '@angular/material';
+import { MatChip, MatDialog, MatSlideToggle } from '@angular/material';
 import { EstudiosAnalistaService } from 'src/app/services/analista/estudios-analista.service';
+import { ModaKpiComponent } from '../../ejecutivo/modals/moda-kpi/moda-kpi.component';
 
 @Component({
   selector: 'app-detalle-estudio-coordinador',
@@ -71,7 +72,7 @@ export class DetalleEstudioCoordinadorComponent implements OnInit {
   }
 
   constructor(private fb: FormBuilder, public empresasService: EmpresasService, public logisticaService: LogisticaService, private estudiosAnalistaService: EstudiosAnalistaService,
-              private route: ActivatedRoute, private estudiosService: EstudiosService, private router: Router, public empleadosService: EmpleadosService) { }
+              private route: ActivatedRoute, private estudiosService: EstudiosService, private router: Router, public empleadosService: EmpleadosService, public dialog: MatDialog) { }
 
   ngOnInit() {
     this.formInit();
@@ -288,5 +289,15 @@ export class DetalleEstudioCoordinadorComponent implements OnInit {
   descargar(token) {
     let reqParams = {token}
     this.estudiosAnalistaService.descargarPreliminar(reqParams);
+  }
+
+  abrirModalKpis() {
+    this.dialog.open(ModaKpiComponent, {
+      data: {
+        idEstudio: this.idSolicitud
+      },
+      maxHeight: '600px'
+      // width: '100%',
+    })
   }
 }

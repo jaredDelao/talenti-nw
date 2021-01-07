@@ -20,6 +20,7 @@ import { CustomComponentsModule } from 'src/app/shared/customComponents.module';
 import { DisableControlDirective } from 'src/app/shared/directives/disable-control.directive';
 import { EstudiosCoordinadorComponent } from './estudios-coordinador/estudios-coordinador.component';
 import { DetalleEstudioCoordinadorComponent } from './detalle-estudio-coordinador/detalle-estudio-coordinador.component';
+import { ModaKpiComponent } from '../ejecutivo/modals/moda-kpi/moda-kpi.component';
 
 @NgModule({
   imports: [
@@ -41,7 +42,9 @@ import { DetalleEstudioCoordinadorComponent } from './detalle-estudio-coordinado
     DisableControlDirective,
     EstudiosCoordinadorComponent,
     DetalleEstudioCoordinadorComponent,
+    ModaKpiComponent
   ],
+  entryComponents: [ModaKpiComponent],
   providers: [ClientesService, EmpleadosService, EmpresasService],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
