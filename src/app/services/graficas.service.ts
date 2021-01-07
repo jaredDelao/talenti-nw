@@ -171,6 +171,8 @@ export class GraficasService {
   paqueteGraficasGnp(mes, anio, idCliente): Observable<any> {
 
     const listaGraficas = [
+      { nombre: 'Estudios publicados', func: 'graficasSolicitudesPublicadas' },
+      { nombre: 'Estudios solicitados', func: 'graficasSolicitudesCreadas' },
       { nombre: 'Riesgo 1', func: 'graficaGnpRiesgo1' },
       { nombre: 'Riesgo 2', func: 'graficaGnpRiesgo2' },
       { nombre: 'Riesgo 3', func: 'graficaGnpRiesgo3' },
@@ -189,6 +191,8 @@ export class GraficasService {
   paqueteGraficasClienteNormal(mes, anio, idCliente): Observable<any> {
 
     const listaGraficas = [
+      { nombre: 'Estudios publicados', func: 'graficasSolicitudesPublicadas' },
+      { nombre: 'Estudios solicitados', func: 'graficasSolicitudesCreadas' },
       { nombre: 'Recomendados', func: 'graficaNormalRecomendados' },
       { nombre: 'No recomendados', func: 'graficaNormalNoRecomendados' },
       { nombre: 'Recomendados con reserva', func: 'graficaNormalRecomendadosReserva' },

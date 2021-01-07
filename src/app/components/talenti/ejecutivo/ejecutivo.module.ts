@@ -46,7 +46,7 @@ import { ModaKpiComponent } from './modals/moda-kpi/moda-kpi.component';
     ActualizarDictamenComponent,
     AprobarCancelacionModalComponent,
     SolicitarCancelacionEjecutivoComponent,
-    ModaKpiComponent,
+    // ModaKpiComponent,
   ],
   exports: [DatosEjecutivoComponent],
   entryComponents: [
@@ -54,7 +54,7 @@ import { ModaKpiComponent } from './modals/moda-kpi/moda-kpi.component';
     ActualizarDictamenComponent, 
     AprobarCancelacionModalComponent, 
     SolicitarCancelacionEjecutivoComponent,
-    ModaKpiComponent
+    // ModaKpiComponent
   ],
   providers: [DatosEjecutivoService],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]

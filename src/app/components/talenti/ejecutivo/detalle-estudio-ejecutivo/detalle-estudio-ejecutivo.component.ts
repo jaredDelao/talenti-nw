@@ -381,14 +381,14 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
   }
 
 
-  abrirModalKpis() {
-    this.dialog.open(ModaKpiComponent, {
-      data: {
-        idEstudio: this.idSolicitud
-      },
-      maxHeight: '600px'
-      // width: '100%',
-    })
-  }
+  // abrirModalKpis() {
+  //   this.dialog.open(ModaKpiComponent, {
+  //     data: {
+  //       idEstudio: this.idSolicitud
+  //     },
+  //     maxHeight: '600px'
+  //     // width: '100%',
+  //   })
+  // }
 
 }
