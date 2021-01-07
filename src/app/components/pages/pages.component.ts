@@ -21,6 +21,7 @@ const menuAdmin: Array<Object> = [
   {
     titulo: "COORDINADOR",
     list: [
+      { title: "Estudios", link: "coordinador/estudios" },
       { title: "Clientes", link: "coordinador/clientes" },
       { title: "Empleados", link: "coordinador/empleados" },
       { title: "Empresas", link: "coordinador/empresas" },
@@ -97,6 +98,7 @@ const menuCoordinador: Array<Object> = [
   {
     titulo: "COORDINADOR",
     list: [
+      { title: "Estudios", link: "coordinador/estudios" },
       { title: "Clientes", link: "coordinador/clientes" },
       { title: "Empleados", link: "coordinador/empleados" },
       { title: "Empresas", link: "coordinador/empresas" },

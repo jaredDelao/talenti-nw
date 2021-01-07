@@ -1,18 +1,14 @@
 <app-loading *ngIf="loading"></app-loading>
 
-<app-title regresar="true" class="mb-4" titulo="DETALLES ESTUDIO" ruta="/calidad/estudios-calidad"></app-title>
+<app-title regresar="true" class="mb-4" titulo="DETALLES ESTUDIO" ruta="/coordinador/estudios"></app-title>
 
 <div class="container">
-
     <div class="alert alert-danger col-12" role="danger" *ngIf="datosSolicitud?.bDeclinada == 1">Estudio Declinado</div>
     <div class="alert alert-warning col-12" role="warning" *ngIf="datosSolicitud?.bDeclinada == 0 && datosSolicitud?.bValidada == 0">Estudio pendiente por validar</div>
     <div class="alert alert-success col-12" role="success" *ngIf="datosSolicitud?.bValidada == 1">Estudio validado</div>
-
 </div>
 
 <form [formGroup]="form">
-
-
     <div class="box-container row d-flex justify-content-center container">
         <div class="left col-lg-6 col-md-6 col-sm-12">
             <p>Tipo de estudio:</p>
@@ -61,15 +57,9 @@
             </div>
 
             <ng-container *ngIf="datosSolicitud">
-
-                <p>Aprobar calidad:</p>
-                <div class="form-group box-calidad d-flex flex-row align-items-center">
-                    <mat-slide-toggle class="mr-3" color="primary" #slideToggle [formControl]="controlToggleCalidad" (change)="aprobar()"></mat-slide-toggle>
-                    <mat-chip-list aria-label="Fish selection">
-                        <mat-chip color="primary" [selected]="controlToggleCalidad.value == true" #chip>{{controlToggleCalidad.value == true? 'Calidad aprobada' : 'Calidad pendiente'}}</mat-chip>
-                    </mat-chip-list>
-                </div>
-
+                <mat-chip-list aria-label="Fish selection">
+                    <mat-chip color="primary" [selected]="controlToggleCalidad.value == true" #chip>{{controlToggleCalidad.value == true? 'Calidad aprobada' : 'Calidad pendiente'}}</mat-chip>
+                </mat-chip-list>
             </ng-container>
 
         </div>

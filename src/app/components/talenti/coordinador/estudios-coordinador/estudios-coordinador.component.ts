@@ -12,14 +12,12 @@ import { of } from 'rxjs';
 import { EstudiosService } from 'src/app/services/ejecutivo/estudios.service';
 import { VerificarEstatusService } from 'src/app/services/verificar-estatus.service';
 
-
 @Component({
-  selector: 'app-estudios-calidad',
-  templateUrl: './estudios-calidad.component.html',
-  styleUrls: ['./estudios-calidad.component.scss']
+  selector: 'app-estudios-coordinador',
+  templateUrl: './estudios-coordinador.component.html',
+  styleUrls: ['./estudios-coordinador.component.scss']
 })
-export class EstudiosCalidadComponent implements OnInit {
-
+export class EstudiosCoordinadorComponent implements OnInit {
   displayedColumns: string[] = ['folio', 'nombre', 'fecha_solicitud', 'estatus_dictamen', 'dictamen', 'certificado_calidad', 'detalles'];
   dataSource: MatTableDataSource<any>;
 
@@ -130,7 +128,7 @@ export class EstudiosCalidadComponent implements OnInit {
 
 
   detalles(data) {
-    this.router.navigate(['/calidad/detalle-estudio-calidad/', data.iIdSolicitud]);
+    this.router.navigate(['/coordinador/detalle-estudio-coordinador/', data.iIdSolicitud]);
   }
 
   estatusAgenda(estatus) {
