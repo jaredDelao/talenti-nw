@@ -35,7 +35,7 @@ export class EstudiosAnalistaService {
   }
 
   descargarPreliminar(params) {
-    window.open(`https://backtalenti.automatizate.mx/WebTalenti/GetFile.php?Token=__-Talenti&file=${params.token}&name=documento.pdf`, "_blank")
+    window.open(`https://backend.talenti.com.mx/WebTalenti/GetFile.php?Token=__-Talenti&file=${params.token}&name=documento.pdf`, "_blank")
   }
 
   rechazarPreliminar(params) {
