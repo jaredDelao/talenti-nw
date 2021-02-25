@@ -328,7 +328,6 @@ export class DetalleEstudioAnalistaComponent implements OnInit, OnDestroy, After
       }
       this.loader = false;
       this.estudiosAnalistaService.subirArchivo(req).subscribe((resp: any) => {
-        console.log(resp);
         if (resp.resultado != 'Ok') return Swal.fire('Error', 'Erro al subir archivo complemento', 'error');
         
         return Swal.fire('Archivo subido exitosamente', '', 'success').then(() => {

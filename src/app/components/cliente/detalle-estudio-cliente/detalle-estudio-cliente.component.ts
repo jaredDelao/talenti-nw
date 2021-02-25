@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { EmpresasService } from 'src/app/services/coordinador/empresas.service';
+import { EstudiosAnalistaService } from "src/app/services/analista/estudios-analista.service";
 
 
 const ELEMENT_DATA = [
@@ -88,13 +89,14 @@ export class DetalleEstudioClienteComponent implements OnInit, AfterViewInit, On
   };
 
   fechaHoraAgenda: string;
+  tokenPreliminar: string;
 
   subs = new Subscription();
   subs1 = new Subscription();
   subs2 = new Subscription();
 
   constructor(public dialog: MatDialog, private fb: FormBuilder, public estudiosService: EstudiosService, private route: ActivatedRoute, 
-              private router: Router, public empresasService: EmpresasService, private cd: ChangeDetectorRef) {}
+              private router: Router, public empresasService: EmpresasService, private cd: ChangeDetectorRef, private estudiosAnalistaService: EstudiosAnalistaService) {}
 
   ngOnInit() {
     this.formInit();
@@ -137,7 +139,7 @@ export class DetalleEstudioClienteComponent implements OnInit, AfterViewInit, On
     if (idUrl) {
       this.loading = true;
       this.subs = this.estudiosService.getEstudioById(req).pipe(map((r) => r.resultado)).subscribe((datosUsuario) => {
-        console.log('data:::', datosUsuario[0]);
+        // console.log('data:::', datosUsuario[0]);
         // Datos tabla input Data
         this.fechaHoraAgenda = datosUsuario[0].dfechahoraultAgenda;
         this.datosTablaEstatus(datosUsuario[0]);
@@ -155,6 +157,8 @@ export class DetalleEstudioClienteComponent implements OnInit, AfterViewInit, On
         this.setDatosEstudioDictamen(datosUsuario[0]);
         this.setDatosComplemento(datosUsuario[0]);
         this.setDatos(this.datosSolicitud);
+        // Tokens
+        this.tokenPreliminar = datosUsuario[0].sArchivoPreliminar;  
 
         this.loading = false;
       }, (err) => this.loading = false, (() => this.loading = false));
@@ -269,5 +273,13 @@ export class DetalleEstudioClienteComponent implements OnInit, AfterViewInit, On
     if (bDeclinada == '1') return this.mostrarMensajeAlerta.desc = 'Solicitud declinada';
 
     if (bValidada == '1') return this.mostrarMensajeAlerta.id = null;
+  }
+
+   // DESCARGA Preliminar
+   descargarPreliminar() {
+    let req = {
+      token: this.tokenPreliminar,
+    }
+    this.estudiosAnalistaService.descargarPreliminar(req);
   }
 }

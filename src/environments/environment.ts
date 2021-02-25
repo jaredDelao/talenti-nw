@@ -1,22 +1,17 @@
-// This file can be replaced during build by using the `fileReplacements` array.
-// `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
-
 export const environment = {
   production: false,
-  urlGet: '/bkService.php',
-  urlProd: '/WebTalenti/requestsrvrTalenti.php',
-  // urlProd: 'https://backtalenti.automatizate.mx/WebTalenti/requestsrvrTalenti.php',
-  urlArchivo: '/WebTalenti/Subearchivo.php',
-  urlImage: 'http://ec2-54-210-170-110.compute-1.amazonaws.com/WebTalenti'
-  // urlArchivo: 'https://backtalenti.automatizate.mx/WebTalenti/Subearchivo.php'
-};
+  // urlGet: '/bkService.php',
+  // urlProd: '/WebTalenti/requestsrvrTalenti.php',
+  // // urlProd: 'https://backtalenti.automatizate.mx/WebTalenti/requestsrvrTalenti.php',
+  // urlArchivo: '/WebTalenti/Subearchivo.php',
+  // urlImage: 'http://ec2-54-210-170-110.compute-1.amazonaws.com/WebTalenti'
+  // // urlArchivo: 'https://backtalenti.automatizate.mx/WebTalenti/Subearchivo.php'
 
-/*
- * For easier debugging in development mode, you can import the following file
- * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
- *
- * This import should be commented out in production mode because it will have a negative impact
- * on performance if an error is thrown.
- */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+
+  urlGet: 'http://34.234.225.159/bkService.php',
+  // urlProd: 'http://ec2-54-210-170-110.compute-1.amazonaws.com/WebTalenti/requestsrvrTalenti.php',
+  urlProd: 'https://backend.talenti.com.mx/WebTalenti/requestsrvrTalenti.php',
+  // urlArchivo: 'http://ec2-54-210-170-110.compute-1.amazonaws.com/WebTalenti/Subearchivo.php'
+  urlArchivo: 'https://backend.talenti.com.mx/WebTalenti/Subearchivo.php',
+  urlImage: 'http://ec2-54-210-170-110.compute-1.amazonaws.com/WebTalenti'
+};

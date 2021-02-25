@@ -119,13 +119,12 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
   // Cancelacion
   controlComentarioCancel = new FormControl(null);
   controlTokenCancel = new FormControl(null);
-
   controlEstatusDictamen = new FormControl({value: null, disabled: true});
 
-
   mostrarEstudiosCompletos: boolean = false;
-
   calidadAprobada: boolean = false;
+  tokenPreliminar: any;
+
 
   constructor(public estudiosService: EstudiosService, public empresasService: EmpresasService, private router: Router, private fb: FormBuilder, public dialog: MatDialog,
               private cd: ChangeDetectorRef, private route: ActivatedRoute, private empleadosService: EmpleadosService, public estudiosAnalistaService: EstudiosAnalistaService) {
@@ -180,7 +179,6 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
     if (idUrl) {
       this.loading = true;
       this.subs = this.estudiosService.getEstudioById(req).pipe(map((r) => r.resultado)).subscribe((datosUsuario) => {
-        console.log(datosUsuario[0]);
         this.datosTablaEstatus(datosUsuario[0]);
         this.bSolicCancel = datosUsuario[0].CancelSolic;
         this.estatusGeneral = datosUsuario[0].iEstatusGeneral;
@@ -196,8 +194,10 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
         this.setDatosEstudioDictamen(datosUsuario[0]);
         this.setDatosComplemento(datosUsuario[0]);
         this.setDatos(this.datosSolicitud);
-        
 
+        // Tokens
+        this.tokenPreliminar = datosUsuario[0].sArchivoPreliminar;     
+        
         // Tabla estatus
         this.ELEMENT_DATA[0].status = datosUsuario[0].iPublicarPreliminar;
         this.ELEMENT_DATA[1].status = datosUsuario[0].bPublicarDictamen;
@@ -379,7 +379,13 @@ export class DetalleEstudioEjecutivoComponent implements OnInit, OnDestroy, Afte
       this.estudiosAnalistaService.descargarPreliminar(req);
     }
   }
-
+  // DESCARGA Preliminar
+  descargarPreliminar() {
+    let req = {
+      token: this.tokenPreliminar,
+    }
+    this.estudiosAnalistaService.descargarPreliminar(req);
+  }
 
   // abrirModalKpis() {
   //   this.dialog.open(ModaKpiComponent, {

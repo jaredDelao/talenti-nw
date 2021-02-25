@@ -90,6 +90,13 @@
         </div> -->
     </div>
 
+    <div class="row col-12 mb-4">
+        <button color="primary" class="btn-actualizar-datos" mat-raised-button (click)="descargarPreliminar()" *ngIf="tokenPreliminar">
+            <mat-icon class="mr-2">attach_file</mat-icon>
+            <span>Descargar Preliminar</span>
+        </button>
+    </div>
+
     <div class="contenido row col-12">
 
         <!-- Tabla estatus -->
