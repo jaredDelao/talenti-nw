@@ -120,6 +120,9 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
           this.datosSolicitud = datosUsuario[0];
           this.contadorAgendas = datosUsuario[0].iContadoAgendas;
           this.mostrarBtnAgenda(datosUsuario[0].iContadoAgendas);
+
+          console.log(this.datosSolicitud);
+          
   
           // Consulta datos
           this.setDatos(this.datosSolicitud);
@@ -289,10 +292,7 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
   }
 
   agendar() {
-    this.loading = true;
-
-    console.log(this.hora);
-    
+    this.loading = true;    
 
     if (this.fecha.valid && this.hora.valid && this.sNombreEncuestador.valid && this.sCorreoEncuestador.valid &&  this.sTelefonoEncuestador.valid && 
         this.sComentariosAgenda.valid && this.viaticosVisita.valid && this.pagosVisita.valid) {

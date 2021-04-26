@@ -76,6 +76,12 @@
                     <textarea matInput cdkTextareaAutosize formControlName="sComentarios"></textarea>
                 </mat-form-field>
             </div>
+            <div class="form-group" *ngIf="datosSolicitud">
+                <mat-form-field>
+                    <mat-label>Horario aplicacion</mat-label>
+                    <input matInput type="text" disabled [value]="datosSolicitud.dFechaAplicacion | date: 'dd/MMM/yyyy:hh:mm'" />
+                </mat-form-field>
+            </div>
 
             <ng-container>
 
@@ -96,7 +102,7 @@
 
                 <div class="form-group">
                     <mat-form-field>
-                        <mat-label>Encuestador</mat-label>
+                        <mat-label>Aplicador</mat-label>
                         <input matInput type="text" [formControl]="sNombreEncuestador" >
                     </mat-form-field>
                 </div>

@@ -18,7 +18,7 @@ import { VerificarEstatusService } from 'src/app/services/verificar-estatus.serv
   styleUrls: ['./estudios-coordinador.component.scss']
 })
 export class EstudiosCoordinadorComponent implements OnInit {
-  displayedColumns: string[] = ['folio', 'nombre', 'fecha_solicitud', 'estatus_dictamen', 'dictamen', 'certificado_calidad', 'detalles'];
+  displayedColumns: string[] = ['folio', 'nombre', 'fecha_solicitud', 'estatus_agenda', 'estatus_aplicacion', 'fecha_preliminar', 'fecha_publicacion', 'detalles'];
   dataSource: MatTableDataSource<any>;
 
   // request getEstudios

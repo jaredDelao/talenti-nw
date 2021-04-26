@@ -63,11 +63,22 @@
                 </mat-form-field>
             </div>
 
-            <ng-container *ngIf="datosSolicitud">
+            <!-- <ng-container *ngIf="datosSolicitud">
                 <mat-chip-list aria-label="Fish selection">
                     <mat-chip color="primary" [selected]="controlToggleCalidad.value == true" #chip>{{controlToggleCalidad.value == true? 'Calidad aprobada' : 'Calidad pendiente'}}</mat-chip>
                 </mat-chip-list>
-            </ng-container>
+            </ng-container> -->
+
+            <div class="form-group" *ngIf="datosSolicitud">
+                <mat-form-field>
+                    <mat-label>Certificado de calidad</mat-label>
+                    <mat-select [formControl]="controlToggleCalidad" disabled>
+                        <mat-option *ngFor="let a of catTrueFalse" [value]="a.value">
+                            {{a.nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
 
         </div>
 

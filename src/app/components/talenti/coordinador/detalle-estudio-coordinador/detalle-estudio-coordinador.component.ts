@@ -35,6 +35,10 @@ export class DetalleEstudioCoordinadorComponent implements OnInit {
   empleadoAsignado: any;
 
   // Catalogos
+  catTrueFalse = [
+    { value: true, nombre: "Si" },
+    { value: false, nombre: "No" },
+  ]
   catLogistica = [];
   catEstudios: any = [];
   param = {

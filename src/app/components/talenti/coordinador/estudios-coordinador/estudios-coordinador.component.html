@@ -58,20 +58,22 @@
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
             <ng-container matColumnDef="folio">
                 <th mat-header-cell *matHeaderCellDef style="text-align: center;"> FOLIO </th>
-                <td mat-cell *matCellDef="let element" style="text-align: center;"> {{element.sFolio}} </td>
+                <td mat-cell *matCellDef="let element" style="text-align: center;"> 
+                    {{element.sFolio ? element.sFolio : element.iIdSolicitud}} 
+                </td>
             </ng-container>
 
             <ng-container matColumnDef="nombre">
-                <th mat-header-cell *matHeaderCellDef> NOMBRE </th>
+                <th mat-header-cell *matHeaderCellDef> NOMBRE DEL CANDIDATO </th>
                 <td mat-cell *matCellDef="let element">
                     {{element.sNombres}} {{element.sApellidos}}
                 </td>
             </ng-container>
 
-            <ng-container matColumnDef="direccion">
-                <th mat-header-cell *matHeaderCellDef> DIRECCIÓN </th>
-                <td mat-cell *matCellDef="let element" (click)="verDireccion(element.sEstado, element.sMunicipio)">
-                    <button mat-raised-button color="primary">VER</button>
+            <ng-container matColumnDef="cliente">
+                <th mat-header-cell *matHeaderCellDef> CLIENTE </th>
+                <td mat-cell *matCellDef="let element">
+                    
                 </td>
             </ng-container>
 
@@ -80,25 +82,40 @@
                 <td mat-cell *matCellDef="let element"> {{element.dFechaSolicitud | date: 'dd/MMM/yyyy'}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="hora_solicitud">
-                <th mat-header-cell *matHeaderCellDef> HORA SOLICITUD </th>
-                <td mat-cell *matCellDef="let element"> {{element.dFechaSolicitud}} </td>
+            <ng-container matColumnDef="estatus_agenda">
+                <th mat-header-cell *matHeaderCellDef> ESTATUS AGENDA </th>
+                <td mat-cell *matCellDef="let element"> {{element.dfechahoraultAgenda | date: 'dd/MMM/yyyy'}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="estatus_dictamen">
+            <ng-container matColumnDef="estatus_aplicacion">
+                <th mat-header-cell *matHeaderCellDef> FECHA DE APLICACIÓN </th>
+                <td mat-cell *matCellDef="let element"> {{element.dFechaAplicacion | date: 'dd/MMM/yyyy'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="fecha_preliminar">
+                <th mat-header-cell *matHeaderCellDef> FECHA PRELIMINAR </th>
+                <td mat-cell *matCellDef="let element"> {{element.dFechaPreliminar | date: 'dd/MMM/yyyy'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="fecha_publicacion">
+                <th mat-header-cell *matHeaderCellDef> FECHA PUBLICACIÓN </th>
+                <td mat-cell *matCellDef="let element"> {{element.dFechaPublicacion | date: 'dd/MMM/yyyy'}} </td>
+            </ng-container>
+
+            <!-- <ng-container matColumnDef="estatus_dictamen">
                 <th mat-header-cell *matHeaderCellDef> ESTATUS DICTAMEN </th>
                 <td mat-cell *matCellDef="let element"> {{verificarEstatusDictamen(element.bPublicarDictamen, element.iEstatusGeneral)}} </td>
-            </ng-container>
+            </ng-container> -->
 
-            <ng-container matColumnDef="dictamen">
+            <!-- <ng-container matColumnDef="dictamen">
                 <th mat-header-cell *matHeaderCellDef> DICTAMEN </th>
                 <td mat-cell *matCellDef="let element"> {{verificarDictamen(element.iEstatusDictamen, element.iEstatusGeneral)}} </td>
-            </ng-container>
+            </ng-container> -->
 
-            <ng-container matColumnDef="certificado_calidad">
+            <!-- <ng-container matColumnDef="certificado_calidad">
                 <th mat-header-cell *matHeaderCellDef> CERTIFICADO DE CALIDAD</th>
                 <td mat-cell *matCellDef="let element"> {{element.bSolicitarCalidad == 2 ? 'SI' : 'NO'}} </td>
-            </ng-container>
+            </ng-container> -->
 
             <ng-container matColumnDef="detalles">
                 <th mat-header-cell *matHeaderCellDef style="text-align: center;"> VER DETALLES </th>

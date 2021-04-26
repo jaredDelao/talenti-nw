@@ -90,7 +90,7 @@ export class EstudiosLogisticaComponent implements OnInit, AfterViewInit {
       bcryptjs.compare('8', idPerfil, (err, res) => {
         if (res) {
           console.log('Es normal', this.idLogistica);
-          this.displayedColumns = ['sFolio', 'sNombres', 'dFechaSolicitud', 'iContadoAgendas','estatus_aplicacion', 'detalles'];
+          this.displayedColumns = ['sFolio', 'sNombres', 'dFechaSolicitud', 'dFechaAplicacion', 'iContadoAgendas','estatus_aplicacion', 'detalles'];
           this.banderaSupervisor = false;
           return this.getEstudiosByIdLogistica();
         }

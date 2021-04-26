@@ -4,7 +4,7 @@ import { NgModule, LOCALE_ID, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MenuCoordinadorComponent } from './components/talenti/coordinador/menu/menu-coordinador.component';
 import { TitleComponent } from './shared/title/title.component';
@@ -20,6 +20,7 @@ import {CustomComponentsModule} from './shared/customComponents.module';
 import { VerificarEstatusAgendaPipe } from './shared/pipes/verificar-estatus-agenda.pipe';
 import { VerificarPagoPipe } from './shared/pipes/verificar-pago.pipe';
 import { TiempoKpisPipe } from './shared/pipes/tiempo-kpis.pipe';
+import { HttpConfigInterceptor } from './services/HttpConfigInterceptor';
 
 registerLocaleData(localEs, 'es');
 
@@ -53,6 +54,7 @@ registerLocaleData(localEs, 'es');
     TiempoKpisPipe,
     // { provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
     // { provide: LOCALE_ID, useValue: 'es'},
+    { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
   ],
   entryComponents: [
     // CancelarSolicitudClienteComponent,
