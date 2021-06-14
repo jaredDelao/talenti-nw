@@ -1,9 +1,9 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators, FormArray } from '@angular/forms';
 import { AmazingTimePickerService } from 'amazing-time-picker';
-import { Subscription } from 'rxjs';
+import { of, Subject, Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map, pluck, flatMap, filter, toArray } from 'rxjs/operators';
+import { map, pluck, flatMap, filter, toArray, catchError, takeUntil } from 'rxjs/operators';
 import { EstudiosService } from 'src/app/services/ejecutivo/estudios.service';
 import { EmpresasService } from 'src/app/services/coordinador/empresas.service';
 import Swal from 'sweetalert2';
@@ -29,9 +29,11 @@ export class DetalleEstudioLogisticaSupervisorComponent implements OnInit, After
   datosSolicitud: any;
   alertCancelado: any;
   empleadoAsignado: any;
+  costoEstudio: string;
 
   // Catalogos
   catLogistica = [];
+  catAnalistas = [];
   catEstudios: any = [];
   param = {
     sService: "getLstEstudios",
@@ -47,6 +49,7 @@ export class DetalleEstudioLogisticaSupervisorComponent implements OnInit, After
   subs = new Subscription();
   subs1 = new Subscription();
   subs2 = new Subscription();
+  $unsubscribe = new Subject();
 
   // Fecha hora
   controlLogistica = new FormControl(null, Validators.required);
@@ -63,6 +66,7 @@ export class DetalleEstudioLogisticaSupervisorComponent implements OnInit, After
   ngOnInit() {
     this.formInit();
     this.getUrlId();
+    // this.getCatAnalistas();
     this.getCatalogoEstudios();
     this.getCatLogistica();
   }
@@ -82,19 +86,18 @@ export class DetalleEstudioLogisticaSupervisorComponent implements OnInit, After
   ngOnDestroy() {
     this.subs.unsubscribe();
     this.subs1.unsubscribe();
+    this.$unsubscribe.next(true);
+    this.$unsubscribe.complete();
   }
 
   getCatLogistica() {
     this.empleadosService.getEmpleados().pipe(
+      takeUntil(this.$unsubscribe),
       pluck('Empleados'),
-      flatMap((resp) => resp),
-      filter((value) => value.iIdRol == '8'),
-      toArray()
     )
     .subscribe((empleados) => {
-      console.log(empleados);
-      
-      this.catLogistica = empleados;
+      this.catLogistica = empleados.filter((x) => x.iIdRol == '8');
+      this.catAnalistas = empleados.filter((x) => x.iIdRol == '3');      
     })
   }
 
@@ -108,12 +111,16 @@ export class DetalleEstudioLogisticaSupervisorComponent implements OnInit, After
     
     if (idUrl) {
       this.loading = true;
-      this.subs = this.estudiosService.getEstudioById(req).pipe(map((r) => r.resultado)).subscribe((datosUsuario) => {
+      this.subs = this.estudiosService.getEstudioById(req).pipe(
+          takeUntil(this.$unsubscribe), 
+          map((r) => r.resultado)
+        ).subscribe((datosUsuario) => {
         if (datosUsuario[0]){
           console.log(datosUsuario[0]);
           this.datosTablaEstatus(datosUsuario[0]);
           this.tipoEstudio = datosUsuario[0].iIdEstudio;
           this.idSolicitud = datosUsuario[0].iIdSolicitud;
+          this.costoEstudio = datosUsuario[0].dCosto1;
           this.datosSolicitud = datosUsuario[0];
           this.contadorAgendas = datosUsuario[0].iContadoAgendas;
           this.controlLogistica.patchValue(datosUsuario[0].iIdEmpleadoLogistica);
@@ -149,7 +156,7 @@ export class DetalleEstudioLogisticaSupervisorComponent implements OnInit, After
   }
 
   getCatalogoEstudios() {
-    this.subs1 = this.empresasService.getCatalogoEstudios(this.param).subscribe((resp: any) => {
+    this.subs1 = this.empresasService.getCatalogoEstudios(this.param).pipe(takeUntil(this.$unsubscribe)).subscribe((resp: any) => {
       this.catEstudios = resp.LstEstudios;
     })
   }
@@ -194,6 +201,7 @@ export class DetalleEstudioLogisticaSupervisorComponent implements OnInit, After
       dFechaSolicitud: value.dFechaSolicitud,
       iIdCliente: value.iIdCliente,
       iIdEstudio: value.iIdEstudio,
+      analista: value.iIdAnalista,
       sFolio: value.sFolio,
       bPreliminar: value.bPreliminar,
       iIdAnalista: value.iIdAnalista,

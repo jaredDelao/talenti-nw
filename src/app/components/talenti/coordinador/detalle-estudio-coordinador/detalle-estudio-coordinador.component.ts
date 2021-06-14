@@ -1,8 +1,8 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators, FormArray } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map, pluck, flatMap, filter, toArray } from 'rxjs/operators';
+import { map, pluck, flatMap, filter, toArray, takeUntil } from 'rxjs/operators';
 import { EstudiosService } from 'src/app/services/ejecutivo/estudios.service';
 import { EmpresasService } from 'src/app/services/coordinador/empresas.service';
 import Swal from 'sweetalert2';
@@ -40,6 +40,7 @@ export class DetalleEstudioCoordinadorComponent implements OnInit {
     { value: false, nombre: "No" },
   ]
   catLogistica = [];
+  catAnalistas = [];
   catEstudios: any = [];
   param = {
     sService: "getLstEstudios",
@@ -58,6 +59,7 @@ export class DetalleEstudioCoordinadorComponent implements OnInit {
   subs = new Subscription();
   subs1 = new Subscription();
   subs2 = new Subscription();
+  $unsubscribe = new Subject();
 
    // Tabla estatus
    dataTablaEstatus: any[] = [];
@@ -74,6 +76,8 @@ export class DetalleEstudioCoordinadorComponent implements OnInit {
     arch1: null,
     arch2: null,
   }
+
+  costoEstudio: string;
 
   constructor(private fb: FormBuilder, public empresasService: EmpresasService, public logisticaService: LogisticaService, private estudiosAnalistaService: EstudiosAnalistaService,
               private route: ActivatedRoute, private estudiosService: EstudiosService, private router: Router, public empleadosService: EmpleadosService, public dialog: MatDialog) { }
@@ -100,19 +104,22 @@ export class DetalleEstudioCoordinadorComponent implements OnInit {
   ngOnDestroy() {
     this.subs.unsubscribe();
     this.subs1.unsubscribe();
+    this.$unsubscribe.next(true);
+    this.$unsubscribe.complete();
   }
 
+ 
   getCatLogistica() {
     this.empleadosService.getEmpleados().pipe(
+      takeUntil(this.$unsubscribe),
       pluck('Empleados'),
-      flatMap((resp) => resp),
-      filter((value) => value.iIdRol == '8'),
-      toArray()
     )
     .subscribe((empleados) => {
-      this.catLogistica = empleados;
+      this.catLogistica = empleados.filter((x) => x.iIdRol == '8');
+      this.catAnalistas = empleados.filter((x) => x.iIdRol == '3');      
     })
   }
+
 
   getUrlId() {
     let idUrl = this.route.snapshot.paramMap.get('id');
@@ -124,7 +131,10 @@ export class DetalleEstudioCoordinadorComponent implements OnInit {
     
     if (idUrl) {
       this.loading = true;
-      this.subs = this.estudiosService.getEstudioById(req).pipe(map((r) => r.resultado)).subscribe((datosUsuario) => {
+      this.subs = this.estudiosService.getEstudioById(req).pipe(
+          takeUntil(this.$unsubscribe),
+          map((r) => r.resultado)
+        ).subscribe((datosUsuario) => {
         if (datosUsuario[0]){
           console.log('Datos usuario::', datosUsuario[0]);
 
@@ -134,6 +144,7 @@ export class DetalleEstudioCoordinadorComponent implements OnInit {
 
           this.datosTablaEstatus(datosUsuario[0]);
           this.tipoEstudio = datosUsuario[0].iIdEstudio;
+          this.costoEstudio = datosUsuario[0].dCosto1;
 
           this.idSolicitud = datosUsuario[0].iIdSolicitud;
           // toggle calidad
@@ -229,7 +240,10 @@ export class DetalleEstudioCoordinadorComponent implements OnInit {
   }
 
   setDatos(value) {
-    this.form.patchValue(value);
+    this.form.patchValue({
+      ...value,
+      analista: value.iIdAnalista
+    });
     // SetPreliminar
     if (value.iPublicarPreliminar > '0') {
       this.form.get('iPreliminar').patchValue('1')

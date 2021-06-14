@@ -80,7 +80,7 @@ export class EstudiosLogisticaComponent implements OnInit, AfterViewInit {
       bcryptjs.compare('4', idPerfil, (err, res) => {
         if (res) {
           console.log('Es supervisor: ',this.idLogistica);
-          this.displayedColumns = ['sFolio', 'sNombres', 'dFechaSolicitud', 'estatus_aplicacion','iContadoAgendas', 'detalles'];
+          this.displayedColumns = ['sFolio', 'sNombres', 'sNombreEmpresa', 'sNombreEstudio', 'dFechaSolicitud', 'dFechaAplicacion','iContadoAgendas', 'estatus_aplicacion', 'detalles'];
           this.banderaSupervisor = true;
           return this.getEstudiosSupervisor();
         }
@@ -90,7 +90,7 @@ export class EstudiosLogisticaComponent implements OnInit, AfterViewInit {
       bcryptjs.compare('8', idPerfil, (err, res) => {
         if (res) {
           console.log('Es normal', this.idLogistica);
-          this.displayedColumns = ['sFolio', 'sNombres', 'dFechaSolicitud', 'dFechaAplicacion', 'iContadoAgendas','estatus_aplicacion', 'detalles'];
+          this.displayedColumns = ['sFolio', 'sNombres', 'sNombreEmpresa', 'sNombreEstudio', 'dFechaSolicitud', 'dFechaAplicacion', 'iContadoAgendas','estatus_aplicacion', 'detalles'];
           this.banderaSupervisor = false;
           return this.getEstudiosByIdLogistica();
         }

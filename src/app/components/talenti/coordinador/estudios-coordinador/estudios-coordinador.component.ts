@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import * as moment from 'moment';
 import { MatTableDataSource, MatPaginator, MatDatepicker, MatSidenav, MatSlideToggle } from '@angular/material';
 import { FormControl, FormGroup, FormBuilder } from '@angular/forms';
@@ -7,8 +7,8 @@ import { Router } from '@angular/router';
 import { EstudiosAnalistaService } from 'src/app/services/analista/estudios-analista.service';
 import { LogisticaService } from 'src/app/services/logistica/logistica.service';
 import { EmpleadosService } from 'src/app/services/coordinador/empleados.service';
-import { pluck, catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { pluck, catchError, takeUntil } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
 import { EstudiosService } from 'src/app/services/ejecutivo/estudios.service';
 import { VerificarEstatusService } from 'src/app/services/verificar-estatus.service';
 
@@ -17,8 +17,8 @@ import { VerificarEstatusService } from 'src/app/services/verificar-estatus.serv
   templateUrl: './estudios-coordinador.component.html',
   styleUrls: ['./estudios-coordinador.component.scss']
 })
-export class EstudiosCoordinadorComponent implements OnInit {
-  displayedColumns: string[] = ['folio', 'nombre', 'fecha_solicitud', 'estatus_agenda', 'estatus_aplicacion', 'fecha_preliminar', 'fecha_publicacion', 'detalles'];
+export class EstudiosCoordinadorComponent implements OnInit, OnDestroy {
+  displayedColumns: string[] = ['folio', 'nombre', 'sNombrecl', 'sNombreEjec', 'sNombreAnalista', 'fecha_solicitud', 'estatus_agenda', 'estatus_aplicacion', 'fecha_preliminar', 'fecha_publicacion', 'detalles'];
   dataSource: MatTableDataSource<any>;
 
   // request getEstudios
@@ -47,6 +47,7 @@ export class EstudiosCoordinadorComponent implements OnInit {
   element: any = {};
   validarEstudio: any = 'PENDIENTE';
   validarPublicacionPreeliminar: boolean = false;
+  $unsubsscribe = new Subject();
 
   constructor(private fb: FormBuilder, private router: Router, public estudiosAnalistaService: EstudiosAnalistaService, public logisticaService: LogisticaService, 
     private empleadosService: EmpleadosService, public estudiosService: EstudiosService, public vEstatusService: VerificarEstatusService) { }
@@ -61,8 +62,14 @@ export class EstudiosCoordinadorComponent implements OnInit {
 
   }
 
+  ngOnDestroy() {
+    this.$unsubsscribe.next(true);
+    this.$unsubsscribe.complete();
+  }
+
   getEmpleados() {
     this.empleadosService.getEmpleados().pipe(
+      takeUntil(this.$unsubsscribe),
       pluck('Empleados'),
       catchError((err) => of([]))
     )
@@ -72,7 +79,7 @@ export class EstudiosCoordinadorComponent implements OnInit {
   }
 
   getEstudiosCalidad() {
-    this.estudiosService.getSolicitudesCalidad().subscribe((res: any) => {
+    this.estudiosService.getSolicitudesCalidad().pipe(takeUntil(this.$unsubsscribe)).subscribe((res: any) => {
       this.estudiosList = res.LstEstudios;
       this.getEstudios(res.LstEstudios);
     })

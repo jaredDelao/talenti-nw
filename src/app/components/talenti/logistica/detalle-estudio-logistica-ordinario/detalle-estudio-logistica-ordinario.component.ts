@@ -1,9 +1,9 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators, FormArray } from '@angular/forms';
 import { AmazingTimePickerService } from 'amazing-time-picker';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map } from 'rxjs/operators';
+import { map, pluck, takeUntil } from 'rxjs/operators';
 import { EstudiosService } from 'src/app/services/ejecutivo/estudios.service';
 import * as moment from 'moment';
 import { EmpresasService } from 'src/app/services/coordinador/empresas.service';
@@ -12,6 +12,7 @@ import { LogisticaService } from 'src/app/services/logistica/logistica.service';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { CancelarSolicitudComponent } from '../cancelar-solicitud/cancelar-solicitud.component';
 import { SolicitarCancelacionEmpleadoComponent } from 'src/app/shared/modals/solicitar-cancelacion-empleado/solicitar-cancelacion-empleado.component';
+import { EmpleadosService } from 'src/app/services/coordinador/empleados.service';
 
 @Component({
   selector: 'app-detalle-estudio-logistica-ordinario',
@@ -36,6 +37,8 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
 
   // Catalogos
   catEstudios: any = [];
+  catAnalistas = [];
+
   param = {
     sService: "getLstEstudios",
     iIdEmpresa: 0
@@ -50,6 +53,7 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
   subs = new Subscription();
   subs1 = new Subscription();
   subs2 = new Subscription();
+  $unsubscribe = new Subject();
 
   // Fecha hora
   fecha = new FormControl(null, Validators.required);
@@ -69,11 +73,12 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
   tipoEstudio: any = null;
 
   constructor(private fb: FormBuilder, private atp: AmazingTimePickerService, public empresasService: EmpresasService, public logisticaService: LogisticaService, private _snackBar: MatSnackBar,
-              private route: ActivatedRoute, private estudiosService: EstudiosService, private router: Router, public dialog: MatDialog) { }
+              private route: ActivatedRoute, private estudiosService: EstudiosService, private router: Router, public dialog: MatDialog, private empleadoService: EmpleadosService) { }
 
   ngOnInit() {
     this.formInit();
     this.getUrlId();
+    this.getCatAnalistas()
     this.getCatalogoEstudios();
   }
 
@@ -92,6 +97,8 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
   ngOnDestroy() {
     this.subs.unsubscribe();
     this.subs1.unsubscribe();
+    this.$unsubscribe.next(true);
+    this.$unsubscribe.complete();
   }
 
   getUrlId() {
@@ -104,7 +111,10 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
     
     if (idUrl) {
       this.loading = true;
-      this.subs = this.estudiosService.getEstudioById(req).pipe(map((r) => r.resultado)).subscribe((datosUsuario) => {
+      this.subs = this.estudiosService.getEstudioById(req).pipe(
+          takeUntil(this.$unsubscribe),
+          map((r) => r.resultado)
+        ).subscribe((datosUsuario) => {
         if (datosUsuario[0]){
           this.datosTablaEstatus(datosUsuario[0]);
           this.tipoEstudio = datosUsuario[0].iIdEstudio;
@@ -167,8 +177,23 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
   }
 
   getCatalogoEstudios() {
-    this.subs1 = this.empresasService.getCatalogoEstudios(this.param).subscribe((resp: any) => {
+    this.subs1 = this.empresasService.getCatalogoEstudios(this.param).pipe(
+      takeUntil(this.$unsubscribe)
+    ).subscribe((resp: any) => {
       this.catEstudios = resp.LstEstudios;
+    })
+  }
+
+  getCatAnalistas() {
+    this.empleadoService.getEmpleados().pipe(
+      takeUntil(this.$unsubscribe),
+      pluck('Empleados'),
+    )
+    .subscribe((empleados) => {
+      console.log({empleados});
+      this.catAnalistas = empleados.filter((x) => x.iIdRol == '3');
+      console.log(this.catAnalistas);
+      
     })
   }
 
@@ -215,6 +240,7 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
       sFolio: value.sFolio,
       bPreliminar: value.bPreliminar,
       iIdAnalista: value.iIdAnalista,
+      analista: value.iIdAnalista,
       sComentarios: value.sComentarios,
       sNombres: value.sNombres,
       sApellidos: value.sApellidos,

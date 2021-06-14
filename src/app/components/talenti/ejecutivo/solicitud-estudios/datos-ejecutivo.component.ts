@@ -29,7 +29,7 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit, OnDestroy
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   displayedColumns: string[] = [
-    'sFolio', 'sNombres', 'cliente', 'solicitante', 'analista', 'sUltimoAplicador', 'fecha_solicitud', 'sNombreEstudio', 'dFechaAplicacion', 'dFechaPreliminar', 'dFechaPublicacion', 'bPublicarDictamen', 'comentarios'
+    'sFolio', 'sNombres', 'cliente', 'sNombreEstudio', 'solicitante', 'analista', 'fecha_solicitud', 'dFechaAplicacion', 'dFechaPreliminar', 'dFechaPublicacion', 'bPublicarDictamen', 'comentarios'
   ];
   dataSource: MatTableDataSource<Estudio>;
   loader: boolean = false;
@@ -102,9 +102,7 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit, OnDestroy
     this.empresasService.getEmpresas().pipe(
       takeUntil(this.$unsubscribe),
     ).subscribe((empresas: any) => {
-      console.log(empresas);
-      this.catClientes = empresas;
-      
+      this.catClientes = empresas;      
     });
   }
 
@@ -159,11 +157,9 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   getEstudios() {
-    console.log('Request:: ',this.req)
     this.loader = true;
     this.estudiosService.getEstudiosCliente(this.req).pipe(takeUntil(this.$unsubscribe)).subscribe((estudiosList: any)=> {
       const {resultado} = estudiosList;
-      console.log(resultado);
       this.sortedData = resultado.slice();
       this.estudiosList = resultado;
       this.jsonExportExcel = resultado;
@@ -308,8 +304,6 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit, OnDestroy
 
   exportExcel() {
     this.jsonExportExcel = this.dataSource.filteredData;
-
-    console.log(this.dataSource);
     const exportExc = this.jsonExportExcel.reduce((acc, v) => {
         let arr = [
           v.sFolio ? v.sFolio : v.iIdSolicitud, 

@@ -19,6 +19,8 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "es2015",
+    "noUnusedParameters": false,
+    "noUnusedLocals": false,
     "typeRoots": [
       "node_modules/@types"
     ],
