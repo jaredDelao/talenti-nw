@@ -13,12 +13,12 @@ export class HttpConfigInterceptor implements HttpInterceptor {
     // console.log(req.body.map);
     
 
-    const cloneReq = req.clone({
-      setHeaders: {
-        Authorization: 'eydcxx323cdfsgreg'
-      }
-    });
-    return next.handle(cloneReq);
+    // const cloneReq = req.clone({
+    //   setHeaders: {
+    //     Authorization: 'eydcxx323cdfsgreg'
+    //   }
+    // });
+    return next.handle(req);
 
   }
 }
