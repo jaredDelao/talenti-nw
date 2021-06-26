@@ -29,6 +29,7 @@ import { IconoPreliminarPipe } from './pipes/ejecutivo/icono-preliminar.pipe';
 import { VerificarClientePipe } from './pipes/ejecutivo/verificar-cliente.pipe';
 import { VerificarPagoPipe } from './pipes/verificar-pago.pipe';
 import { TiempoKpisPipe } from './pipes/tiempo-kpis.pipe';
+import { TiempoKpisCoordinadorPipe } from './pipes/tiempo-kpis-coordinador.pipe';
 
 const PIPES = [
     EstatusSolicitudPipe,
@@ -42,7 +43,8 @@ const PIPES = [
     IconoPreliminarPipe,
     VerificarClientePipe,
     VerificarPagoPipe,
-    TiempoKpisPipe
+    TiempoKpisPipe,
+    TiempoKpisCoordinadorPipe,
 ]
 @NgModule({
   imports: [

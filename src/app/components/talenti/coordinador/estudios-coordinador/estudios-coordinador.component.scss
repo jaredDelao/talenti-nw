@@ -2,3 +2,10 @@ table, .table-container {
     margin: auto;
     min-width: 1250px;
 }
+
+table {
+    th {
+        min-width: 170px !important;
+        padding: auto 10px !important;
+    }
+}

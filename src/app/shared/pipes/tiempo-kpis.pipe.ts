@@ -93,22 +93,16 @@ export class TiempoKpisPipe implements PipeTransform {
 
   }
   
-  calcularTiempo(date1, date2) {
+  calcularTiempo(date1, date2): string {
     if (!date1 || !date2) return '';
   
-    var init = moment(date1);
-    var final = moment(date2);
+    let init = moment(date1);
+    let final = moment(date2);
     
     let h = final.diff(init, 'hours', false);
     let m = final.diff(init, 'minutes', false);
 
     return `Horas: ${h}, Minutos: ${m}`;
-
-
-
-
-
-
   }
 
 }

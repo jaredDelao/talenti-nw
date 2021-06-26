@@ -10,3 +10,14 @@ export interface CatalogoEstudio {
     iIdEstudio: string;
     nombre: string;
 }
+
+export interface FechasEstudios {
+    dFechaAplicacion: string;
+    dFechaPreliminar: string;
+    dFechaPublicacion: string;
+    dFechaSolicitud: string;
+    dfechahoraultAgenda: string;
+    fValidacion: string;
+    fasignacion: string;
+    fdictamen: string;
+}
