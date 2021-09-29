@@ -1,6 +1,16 @@
 <app-loading *ngIf="loading"></app-loading>
 
+
+
 <app-title titulo="SOLICITUD ESTUDIO"></app-title>
+
+<div class="container">
+    <p>Importar estudios</p>
+    <input type="file" name="estudios" (change)="importExcel($event)">
+
+    <button mat-button [disabled]="dataExcel.length <= 0" (click)="uploadExcel()">Subir</button>
+</div>
+
 <div class="container-full">
 
     

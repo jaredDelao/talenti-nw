@@ -48,7 +48,7 @@ export class LoginComponent implements OnInit {
     req.md5pass = md5pass;
     
     this._loginService.login(req).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       const { token, perfil, idPerfil, resultado, Nombre, iEmpresa, stipoFolio, iIdEmpleado, iIdCliente, bIsGnp }:any = res;
 
       if (resultado == 'Error') {
