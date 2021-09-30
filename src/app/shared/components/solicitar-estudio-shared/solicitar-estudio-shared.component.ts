@@ -701,20 +701,21 @@ export class SolicitarEstudioSharedComponent
     const forkGroup = this.dataExcel.reduce((acc, curr, id) => {
       let req = this.form.getRawValue();
       delete req.iIdAnalista;
+      req.sService = 'SolicitarEstudioCliente';
       req.sNombres = curr.Nombre.trim();
       req.sApellidos = `${curr.Paterno.trim()} ${curr.Materno.trim()}`;
       req.sFolio = curr.Folio;
       req.iIdEstudio = 14;
-      req.sPuesto = 'NA' ;
-      req.sTokenCV = 'F521185056712449Tdocx';
-      req.sTelefono = 'NA' ;
-      req.sNss = 'NA' ;
-      req.sCurp = 'NA' ;
-      req.sCalleNumero = 'NA' ;
-      req.sColonia = 'NA' ;
-      req.sCp = 'NA' ;
-      req.sMunicipio = 'NA' ;
-      req.sEstado = 'NA';
+      // req.sPuesto = 'NA' ;
+      // req.sTokenCV = 'F521185056712449Tdocx';
+      // req.sTelefono = 'NA' ;
+      // req.sNss = 'NA' ;
+      // req.sCurp = 'NA' ;
+      // req.sCalleNumero = 'NA' ;
+      // req.sColonia = 'NA' ;
+      // req.sCp = 'NA' ;
+      // req.sMunicipio = 'NA' ;
+      // req.sEstado = 'NA';
 
       acc.push(this.clientesService.solicitarEstudioCliente(req));
 

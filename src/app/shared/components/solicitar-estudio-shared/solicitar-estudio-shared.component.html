@@ -4,7 +4,7 @@
 
 <app-title titulo="SOLICITUD ESTUDIO"></app-title>
 
-<div class="container">
+<div class="container" *ngIf="esCliente">
     <p>Importar estudios</p>
     <input type="file" name="estudios" (change)="importExcel($event)">
 
