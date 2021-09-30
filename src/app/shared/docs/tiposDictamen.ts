@@ -9,10 +9,10 @@
     
     export const clienteGNP = [
         {id: 10, nombre: 'EN PROCESO'},
-        {id: 11, nombre: 'RIESGO 1'},
-        {id: 12, nombre: 'RIESGO 2'},
-        {id: 13, nombre: 'RIESGO 3' },
-        {id: 14, nombre: 'SIN RIESGO' }
+        {id: 11, nombre: 'SR'},
+        {id: 12, nombre: 'R1'},
+        {id: 13, nombre: 'R2' },
+        {id: 14, nombre: 'R3' }
     ];
 
     // export const clienteGNP;
