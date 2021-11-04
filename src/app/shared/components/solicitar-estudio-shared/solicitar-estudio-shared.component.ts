@@ -483,34 +483,34 @@ export class SolicitarEstudioSharedComponent
     this.btnSolicitar.disabled = true;
 
     // Archivo
-    // if (param != "validar") {
-    //   try {
-    //     const resp: any = await this.subirArchivo();
-    //     if (!resp.Identificador || resp.resultado != "Ok") {
-    //       this.controlCV.setValue(null);
-    //       this.label1.nativeElement.innerText = "Subir CV";
-    //       this.loading = false;
-    //       return Swal.fire(
-    //         "Error al cargar archivo",
-    //         "Revisa que sea un formato DOCX o PDF" + resp,
-    //         "error"
-    //       ).then(() => {
-    //         this.btnSolicitar.disabled = false;
-    //       });
-    //     }
-    //     this.form.get("sTokenCV").patchValue(resp.Identificador);
-    //     this.loading = false;
-    //   } catch (err) {
-    //     this.loading = false;
-    //     return Swal.fire(
-    //       "Error al cargar archivo",
-    //       "Revisa que sea un formato DOCX o PDF" + err,
-    //       "error"
-    //     ).then(() => {
-    //       this.btnSolicitar.disabled = false;
-    //     });
-    //   }
-    // }
+    if (param != "validar") {
+      try {
+        const resp: any = await this.subirArchivo();
+        if (!resp.Identificador || resp.resultado != "Ok") {
+          this.controlCV.setValue(null);
+          this.label1.nativeElement.innerText = "Subir CV";
+          this.loading = false;
+          return Swal.fire(
+            "Error al cargar archivo",
+            "Revisa que sea un formato DOCX o PDF" + resp,
+            "error"
+          ).then(() => {
+            this.btnSolicitar.disabled = false;
+          });
+        }
+        this.form.get("sTokenCV").patchValue(resp.Identificador);
+        this.loading = false;
+      } catch (err) {
+        this.loading = false;
+        return Swal.fire(
+          "Error al cargar archivo",
+          "Revisa que sea un formato DOCX o PDF" + err,
+          "error"
+        ).then(() => {
+          this.btnSolicitar.disabled = false;
+        });
+      }
+    }
 
     // this.form.get('sFolio').setValue(Math.floor(Math.random()*10));
     let req = this.form.getRawValue();
