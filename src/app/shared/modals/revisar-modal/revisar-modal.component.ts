@@ -42,7 +42,6 @@ export class RevisarModalComponent implements OnInit {
   ngOnInit() {
     this.titulo = this.data.titulo;
     this.sRechazo = this.data.sRechazo;
-    console.log(this.data);
   }
 
   cancelar() {
@@ -59,7 +58,6 @@ export class RevisarModalComponent implements OnInit {
     switch(this.sRechazo) {
       case 1:
         this.request.sService = 'rechazarPreliminar';
-        console.log(this.request);
         
         this.estudiosAnalistaService.rechazarPreliminar(this.request).subscribe((res: any) => {
           if (res.resultado != 'Ok') return Swal.fire('Error', 'Error al rechazar preliminar', 'error');
@@ -70,9 +68,7 @@ export class RevisarModalComponent implements OnInit {
         break;
 
       case 2:
-        this.request.sService = 'rechazarDictamen';
-        console.log(this.request);
-        
+        this.request.sService = 'rechazarDictamen';        
         this.estudiosAnalistaService.rechazarEstudioSoc(this.request).subscribe((res: any) => {
           if (res.resultado != 'Ok') return Swal.fire('Error', 'Error al rechazar estudio', 'error');
           return Swal.fire('Estudio rechazado exitosamente', '', 'success').then(() => {
@@ -83,9 +79,7 @@ export class RevisarModalComponent implements OnInit {
         break;
 
       case 3:
-        this.request.sService = 'rechazarComplemento';
-        console.log(this.request);
-        
+        this.request.sService = 'rechazarComplemento';        
         this.estudiosAnalistaService.rechazarComplemento(this.request).subscribe((res: any) => {
           if (res.resultado != 'Ok') return Swal.fire('Error', 'Error al rechazar complemento', 'error');
           return Swal.fire('Complemento rechazado exitosamente', '', 'success').then(() => {

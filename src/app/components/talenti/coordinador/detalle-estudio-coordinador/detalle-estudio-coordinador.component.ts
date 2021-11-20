@@ -136,8 +136,6 @@ export class DetalleEstudioCoordinadorComponent implements OnInit {
           map((r) => r.resultado)
         ).subscribe((datosUsuario) => {
         if (datosUsuario[0]){
-          console.log('Datos usuario::', datosUsuario[0]);
-
           this.setDatosComplemento(datosUsuario[0]);
           this.setDatosEstudioDictamen(datosUsuario[0]);
           this.setDatosPreliminar(datosUsuario[0]);

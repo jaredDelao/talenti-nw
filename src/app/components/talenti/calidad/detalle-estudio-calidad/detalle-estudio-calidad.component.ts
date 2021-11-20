@@ -122,8 +122,6 @@ export class DetalleEstudioCalidadComponent implements OnInit {
       this.loading = true;
       this.subs = this.estudiosService.getEstudioById(req).pipe(map((r) => r.resultado)).subscribe((datosUsuario) => {
         if (datosUsuario[0]){
-          console.log('Datos usuario::', datosUsuario[0]);
-
           this.setDatosComplemento(datosUsuario[0]);
           this.setDatosEstudioDictamen(datosUsuario[0]);
           this.setDatosPreliminar(datosUsuario[0]);

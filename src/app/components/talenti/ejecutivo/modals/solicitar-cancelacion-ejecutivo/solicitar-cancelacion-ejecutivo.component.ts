@@ -81,7 +81,6 @@ export class SolicitarCancelacionEjecutivoComponent implements OnInit {
         this.label1.nativeElement.innerText = 'Subir evidencia';
         return Swal.fire('Error al cargar archivo', 'Revisa que sea un formato DOCX o PDF' + resp, 'error');
       }
-     console.log(resp);
      this.loading = false;
       this.form.get('sTokenEvidencia').patchValue(resp.Identificador);
     } catch(err) {
@@ -91,7 +90,6 @@ export class SolicitarCancelacionEjecutivoComponent implements OnInit {
 
     this.form.get('iIdSolicitud').patchValue(this.data.idSolicitud);    
     this.estudiosService.solicitarCancelEjecutivo(this.form.getRawValue()).subscribe((resp: any) => {
-      console.log(resp);
       if (resp.resultado != 'Ok') {
         this.loading = false;
         return Swal.fire('Error', 'Error al aprobar cancelacion', 'error');

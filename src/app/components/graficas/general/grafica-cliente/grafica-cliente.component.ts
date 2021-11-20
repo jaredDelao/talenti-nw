@@ -156,11 +156,9 @@ export class GraficaClienteComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() { 
     this.fechaInicioForm.valueChanges.subscribe((fecha) => {
-      // console.log(fecha);
       this.request.dfechaInicio  = moment(fecha).format("YYYY-MM-DD");
     })
     this.fechaFinalForm.valueChanges.subscribe((fecha) => {
-      // console.log(fecha);
       this.request.dFechaFin  = moment(fecha).format("YYYY-MM-DD");      
     })
   }

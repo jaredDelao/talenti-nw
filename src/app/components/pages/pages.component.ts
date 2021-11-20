@@ -147,10 +147,7 @@ export class PagesComponent implements OnInit, DoCheck {
   getLocalStorage() {
 
     if (localStorage.getItem('super'))
-    this.cryptService.desencriptar(localStorage.getItem('super')).subscribe(console.log)
-    // desencriptar
-    // console.log(ci);
-    
+    this.cryptService.desencriptar(localStorage.getItem('super')).subscribe()    
 
     let perfil = localStorage.getItem('perfil');
     let idPerfil = localStorage.getItem('idPerfil');

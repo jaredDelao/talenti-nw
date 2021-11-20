@@ -42,7 +42,6 @@ export class AprobarCancelacionModalComponent implements OnInit {
     let req = this.form.getRawValue();
     this.form.get('iIdSolicitud').patchValue(this.data.idSolicitud);    
     this.estudiosService.aprobarCancelacion(this.form.getRawValue()).subscribe((resp: any) => {
-      console.log(resp);
       if (resp.resultado != 'Ok') {
         return Swal.fire('Error', 'Error al aprobar cancelacion', 'error');
       }

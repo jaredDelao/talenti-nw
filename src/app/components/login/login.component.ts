@@ -100,9 +100,7 @@ export class LoginComponent implements OnInit {
   }
 
   desc() {
-    let v = this.form.get('md5pass').value;
-    console.log(v);
-    
+    let v = this.form.get('md5pass').value;    
     this.encryptService.desencriptar(v).subscribe(console.log)
   }
 }

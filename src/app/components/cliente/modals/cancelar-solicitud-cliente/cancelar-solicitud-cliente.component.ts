@@ -50,7 +50,6 @@ export class CancelarSolicitudClienteComponent implements OnInit {
 
   getTiposCancelacion() {
     this.clienteService.getTiposCancelacion().subscribe((resp: any) => {
-      console.log(resp);
       this.catMotivo = resp.Tipos;
     })
   }
@@ -76,10 +75,7 @@ export class CancelarSolicitudClienteComponent implements OnInit {
     if (this.dataArchivo) {
       this.loadArchivo = true;
       let blob = this.dataArchivo.target.files[0];
-      let name = this.dataArchivo.target.files[0].name;
-
-      console.log(blob, name);
-      
+      let name = this.dataArchivo.target.files[0].name;      
       return this.empresasService.subirArchivo(blob, name).toPromise();
     }
     //   if (!resp.Identificador || resp.resultado != 'Ok') {
@@ -127,7 +123,6 @@ export class CancelarSolicitudClienteComponent implements OnInit {
     // Request
     this.form.get('iIdClienteSolicitante').patchValue(this.idCliente);
     let req = this.form.getRawValue();
-    console.log(req);
     this.clienteService.solicitarCancelacionCliente(req).subscribe((resp: any) => {
       if (resp.resultado != 'Ok') return Swal.fire('Aviso', 'La solicitud ya ha sido enviada anteriormente', 'warning').then(() => {
         this.dialogRef.close();

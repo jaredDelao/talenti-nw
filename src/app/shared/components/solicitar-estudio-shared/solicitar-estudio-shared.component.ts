@@ -290,7 +290,6 @@ export class SolicitarEstudioSharedComponent
     let idClienteD = localStorage.getItem("idCliente");
     this.encryptService.desencriptar(idClienteD).subscribe((res) => {
       this.form.get("iIdCliente").patchValue(res);
-      console.log("idCliente", res);
     });
   }
 
@@ -462,7 +461,6 @@ export class SolicitarEstudioSharedComponent
       this.loading = true;
       let name = this.dataArchivo.target.files[0].name;
       let blob = this.dataArchivo.target.files[0];
-      console.log(blob, name);
 
       return this.empresasService.subirArchivo(blob, name).toPromise();
     }
@@ -625,8 +623,6 @@ export class SolicitarEstudioSharedComponent
       cancelButtonColor: "#d33",
       confirmButtonText: "Declinar",
     }).then((result) => {
-      console.log(result);
-
       if (result.value) {
         let body = {
           sService: "declinarSolicitud",
@@ -676,7 +672,6 @@ export class SolicitarEstudioSharedComponent
   }
 
   importExcel(e) {
-    console.log(e);
     this.onFileChange(e);
   }
 
@@ -692,7 +687,6 @@ export class SolicitarEstudioSharedComponent
         initial.push(...XLSX.utils.sheet_to_json(sheet));
         return initial;
       }, []);
-      console.log(this.dataExcel);
     };
     reader.readAsBinaryString(file);
   }
@@ -726,12 +720,9 @@ export class SolicitarEstudioSharedComponent
       return acc;
     }, []);
 
-    console.log(forkGroup);
-
     const $fork = forkJoin(forkGroup);
     $fork.subscribe({
       next: (res: any) => {
-        console.log(res)
         return Swal.fire(
           "Alerta",
           `Las solicitudes se crearon correctamente`,
@@ -741,7 +732,6 @@ export class SolicitarEstudioSharedComponent
         });
       },
       error: (e: HttpErrorResponse) => {
-        console.log(e);
         return Swal.fire("Error", `Error al registrar estudios`, "error");
       },
     });

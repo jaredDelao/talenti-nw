@@ -26,7 +26,6 @@ export class SubirDictamenModalComponent implements OnInit {
   ngOnInit() {
     this.isGnp();
     this.formInit();
-    console.log(this.data);
   }
 
   isGnp() {
@@ -93,11 +92,8 @@ export class SubirDictamenModalComponent implements OnInit {
       return Swal.fire('Error', 'Faltan campos por ingresar', 'error');
     }
 
-    let body = this.form.getRawValue();
-    console.log(body);
-    
+    let body = this.form.getRawValue();    
     this.estudiosAnalistaService.subirArchivosDictamen(body).subscribe((res: any) => {
-      console.log(res);
       if (res.resultado !== 'Ok') {
         return Swal.fire('Error', 'Error al subir archivo', 'error').then(() => {
           this.dialogRef.close();

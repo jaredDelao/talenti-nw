@@ -16,9 +16,7 @@ export class TiempoKpisPipe implements PipeTransform {
       if (!data) return '';
   
       if (Number(el.iEstatusGeneral) == TipoKpi.CREACION) {
-        let final = data.find((c) => Number(c.iEstatusGeneral) == TipoKpi.VALIDACION);
-        console.log(final);
-        
+        let final = data.find((c) => Number(c.iEstatusGeneral) == TipoKpi.VALIDACION);        
         return this.calcularTiempo(el.dFechaRegistro, final.dFechaRegistro);
       }
   

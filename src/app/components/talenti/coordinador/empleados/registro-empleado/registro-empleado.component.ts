@@ -131,7 +131,6 @@ export class RegistroEmpleadoComponent implements OnInit, OnDestroy {
       let res = empleado.Datos[0];
       const {iIdEmpleado, sNombres, sApellidos, iIdRol, sPassword, sCorreo} = res;
       this.originalPassword = sPassword;
-      // console.log(res);
       this.form.setValue({
         sService: 'UpdEmpleado',
         nombres: sNombres,

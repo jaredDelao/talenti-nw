@@ -105,7 +105,7 @@ export class DetalleEstudioClienteComponent implements OnInit, AfterViewInit, On
   }
 
   ngAfterViewInit() {
-    console.log(this.idEstudio);
+    // console.log(this.idEstudio);
 
     this.form.get('iIdEstudio').valueChanges.subscribe((value) => {
       if (value == 1 || value == 3 || value == 4 || value == 5 || value == 7|| 

@@ -84,7 +84,6 @@ export class RegistroEmpresaComponent implements OnInit {
   getIdEmpresa() {
     this.idEmpresa = this._route.snapshot.paramMap.get('id');
     this.reqTarifasEmpresa.iIdEmpresa = this.idEmpresa;
-    console.log('IdEmpresa::', this.idEmpresa);
     if (this.idEmpresa) {
       this.empresasService.getEmpresaById(this.idEmpresa).subscribe((empresa: any) => {
         this.empresaById = empresa.Empresas[0];
@@ -124,8 +123,6 @@ export class RegistroEmpresaComponent implements OnInit {
       }),
       pluck('resultado')
     ).subscribe((empresa: Empresa[]) => {
-      console.log(empresa);
-
       this.getEstudios.forEach((estudio, i) => {
         empresa.forEach((emp) => {
           if (estudio.id == emp.iIdEstudio) {

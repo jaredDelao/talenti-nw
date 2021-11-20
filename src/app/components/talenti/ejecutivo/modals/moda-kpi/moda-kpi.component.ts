@@ -49,8 +49,6 @@ export class ModaKpiComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data: {idEstudio: number}, public _estudiosService: EstudiosService, private excelGenerate: GenerateExcelService) { }
 
   ngOnInit() {
-
-    console.log(this.data.idEstudio);
     this.obtenerKpis();
   }
 
@@ -111,10 +109,7 @@ export class ModaKpiComponent implements OnInit, OnDestroy {
     const sort = kpis.sort((a, b) => {
       let bd = new Date(b.dFechaRegistro).getTime(), ad = new Date(a.dFechaRegistro).getTime()
       return bd - ad;
-    });
-
-    console.log(sort[(sort.length - 1)]);
-    
+    });    
     return sort[(sort.length - 1)];    
   }
 

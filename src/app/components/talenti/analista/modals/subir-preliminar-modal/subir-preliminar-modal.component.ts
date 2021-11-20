@@ -37,7 +37,6 @@ export class SubirPreliminarModalComponent implements OnInit {
 
   ngOnInit() {
     this.formInit();
-    console.log(this.data);
     this.catSelectDisctamen = this.catDictamen;
     this.idArchivoTipo = this.data.id;
   }
@@ -59,11 +58,8 @@ export class SubirPreliminarModalComponent implements OnInit {
     }
 
     let body = this.form.getRawValue();
-    
-    console.log(body);
-    
+        
     this.estudiosAnalistaService.subirArchivo(body).subscribe((res: any) => {
-      console.log(res);
       if (res.resultado !== 'Ok') {
         return Swal.fire('Error', 'Error al subir archivo', 'error').then(() => {
           this.dialogRef.close();

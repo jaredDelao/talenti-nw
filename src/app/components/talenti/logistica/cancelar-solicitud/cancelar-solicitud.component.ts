@@ -23,7 +23,6 @@ export class CancelarSolicitudComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
-    console.log(this.data);
     this.formInit();
     this.getCatTiposCancelaciones();
   }
@@ -40,7 +39,6 @@ export class CancelarSolicitudComponent implements OnInit {
 
   getCatTiposCancelaciones() {
     this.logisticaService.tiposCancelaciones().subscribe((resp: any) => {
-      console.log(resp);
       if (resp.status != 'Ok') {
         return Swal.fire('Error', 'Error al traer catalogo de tipo cancelaciones', 'error');
       }
@@ -67,7 +65,6 @@ export class CancelarSolicitudComponent implements OnInit {
       }
 
       // Valid
-      console.log(resp);
       this.form.get('sTokenEvidencia').patchValue(this.tokenFile.value);
       this.loader = false;
       

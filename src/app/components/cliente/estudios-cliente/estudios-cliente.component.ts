@@ -75,7 +75,6 @@ export class EstudiosClienteComponent implements OnInit {
     this.req.iIdCliente = await this.getIdCliente();
     // Perfil cliente - Admin o User
     this.isPerfilAdmin = await this.getPerfil();
-    console.log(this.isPerfilAdmin);
     if (this.isPerfilAdmin) this.displayedColumns = this.headersAdmin; else this.displayedColumns = this.headersUser;
     
     this.isGNP = await this.getIsGnp();    
@@ -208,9 +207,6 @@ export class EstudiosClienteComponent implements OnInit {
 
   exportExcel() {
     this.jsonExportExcel = this.dataSource.filteredData;
-
-    console.log(this.req.sService);
-
     let exportExc;
     let headers;
     

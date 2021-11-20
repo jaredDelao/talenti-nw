@@ -79,7 +79,6 @@ export class EstudiosLogisticaComponent implements OnInit, AfterViewInit {
       // Rol logistica supervisor
       bcryptjs.compare('4', idPerfil, (err, res) => {
         if (res) {
-          console.log('Es supervisor: ',this.idLogistica);
           this.displayedColumns = ['sFolio', 'sNombres', 'sNombreEmpresa', 'sNombreEstudio', 'dFechaSolicitud', 'dFechaAplicacion','iContadoAgendas', 'estatus_aplicacion', 'detalles'];
           this.banderaSupervisor = true;
           return this.getEstudiosSupervisor();
@@ -89,7 +88,6 @@ export class EstudiosLogisticaComponent implements OnInit, AfterViewInit {
       // Rol logistica normal
       bcryptjs.compare('8', idPerfil, (err, res) => {
         if (res) {
-          console.log('Es normal', this.idLogistica);
           this.displayedColumns = ['sFolio', 'sNombres', 'sNombreEmpresa', 'sNombreEstudio', 'dFechaSolicitud', 'dFechaAplicacion', 'iContadoAgendas','estatus_aplicacion', 'detalles'];
           this.banderaSupervisor = false;
           return this.getEstudiosByIdLogistica();

@@ -129,10 +129,7 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
           this.idSolicitud = datosUsuario[0].iIdSolicitud;
           this.datosSolicitud = datosUsuario[0];
           this.contadorAgendas = datosUsuario[0].iContadoAgendas;
-          this.mostrarBtnAgenda(datosUsuario[0].iContadoAgendas);
-
-          console.log(this.datosSolicitud);
-          
+          this.mostrarBtnAgenda(datosUsuario[0].iContadoAgendas);          
   
           // Consulta datos
           this.setDatos(this.datosSolicitud);
@@ -190,10 +187,7 @@ export class DetalleEstudioLogisticaOrdinarioComponent implements OnInit {
       pluck('Empleados'),
     )
     .subscribe((empleados) => {
-      console.log({empleados});
-      this.catAnalistas = empleados.filter((x) => x.iIdRol == '3');
-      console.log(this.catAnalistas);
-      
+      this.catAnalistas = empleados.filter((x) => x.iIdRol == '3');      
     })
   }
 

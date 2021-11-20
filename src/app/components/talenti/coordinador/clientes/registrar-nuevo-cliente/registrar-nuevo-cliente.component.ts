@@ -41,7 +41,6 @@ export class RegistrarNuevoClienteComponent implements OnInit, AfterViewInit {
     private router: Router
   ) {
     // this.idTipo = this.router.getCurrentNavigation().extras.state.id;
-    // console.log(this.idTipo)
     this.clientesService.$idTipoSubject.subscribe(id => {
       this.idTipo = id;
       if (id == 0) {
@@ -216,10 +215,7 @@ export class RegistrarNuevoClienteComponent implements OnInit, AfterViewInit {
     if (this.idTipo == 2) {
       // this.form.setControl('iIdCliente', this.idCliente);
       let body = this.form.getRawValue();
-      if (body.md5pass && this.passwordChanged) body.md5pass = Md5.hashStr(body.md5pass);
-
-      console.log(body);
-      
+      if (body.md5pass && this.passwordChanged) body.md5pass = Md5.hashStr(body.md5pass);      
       this.clientesService.updateCliente(body).subscribe((res: any) => {
         const { resultado } = res;
         if (resultado == "Ok") {
@@ -227,7 +223,6 @@ export class RegistrarNuevoClienteComponent implements OnInit, AfterViewInit {
             this.router.navigate(['/coordinador/clientes']);
           });
         }
-        console.log(res);
       })
 
     }

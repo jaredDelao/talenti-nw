@@ -116,7 +116,6 @@ export class DetalleEstudioLogisticaSupervisorComponent implements OnInit, After
           map((r) => r.resultado)
         ).subscribe((datosUsuario) => {
         if (datosUsuario[0]){
-          console.log(datosUsuario[0]);
           this.datosTablaEstatus(datosUsuario[0]);
           this.tipoEstudio = datosUsuario[0].iIdEstudio;
           this.idSolicitud = datosUsuario[0].iIdSolicitud;

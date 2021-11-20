@@ -135,10 +135,6 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit, OnDestroy
       width: '400px',
       data: direccion
     });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
   }
 
   formInit() {
