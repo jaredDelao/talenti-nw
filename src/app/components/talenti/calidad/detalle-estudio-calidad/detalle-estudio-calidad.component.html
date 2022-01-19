@@ -30,7 +30,7 @@
             <div class="form-group" *ngIf="!esGNP">
                 <mat-form-field>
                     <mat-label>Folio</mat-label>
-                    <input matInput type="text" formControlName="sFolio" />
+                    <input matInput type="text" [value]="idSolicitud" disabled />
                 </mat-form-field>
             </div>
             <div class="form-group" *ngIf="!esCliente">

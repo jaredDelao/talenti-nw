@@ -4,24 +4,48 @@
 
 <app-title titulo="SOLICITUD ESTUDIO"></app-title>
 
-<!-- <div class="container" *ngIf="esCliente">
-    <p>Importar estudios</p>
-    <input type="file" name="estudios" (change)="importExcel($event)">
+<div class="container" *ngIf="esCliente">
+    <mat-checkbox [formControl]="controlCheckExcel">Importar estudios</mat-checkbox>
+    <br>
+    <br>
+    <input #fileExcel type="file" name="estudios" style="display: none;" (change)="importExcel($event)">
 
-    <button mat-button [disabled]="dataExcel.length <= 0" (click)="uploadExcel()">Subir</button>
-</div> -->
+    <ng-container *ngIf="controlCheckExcel.value">
 
-<div class="container-full">
+        <div class="row align-items-baseline">
+            <button mat-raised-button [color]="dataExcel.length === 0 ? 'primary' : 'accent'"
+                (click)="fileExcel.click()">
+                {{dataExcel.length > 0 ? 'Archivo cargado' : 'Elegir archivo'}}
+            </button>
+            <div class="form-group col-4">
+                <mat-form-field>
+                    <mat-label>Tipo de estudio</mat-label>
+                    <mat-select [formControl]="controlIdEstudio">
+                        <mat-option *ngFor="let estudio of estudiosData" [value]="estudio.iIdEstudio">
+                            {{estudio.sNombreEstudio}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <button mat-button [disabled]="dataExcel.length <= 0 || controlIdEstudio.invalid"
+                (click)="uploadExcel()">Subir</button>
+        </div>
+    </ng-container>
+    <br>
+</div>
 
-    
-    
+
+<div class="container-full" *ngIf="!controlCheckExcel.value">
+
     <form [formGroup]="form">
-        <div class="alert alert-danger alert mb-4" role="alert" *ngIf="estatusGeneral == '4'"> La solicitud ha sido cancelada</div>
+        <div class="alert alert-danger alert mb-4" role="alert" *ngIf="estatusGeneral == '4'"> La solicitud ha sido
+            cancelada</div>
         <ng-container *ngIf="dataEstudio">
-            <div class="alert alert-danger alert mb-4" role="alert" *ngIf="dataEstudio.bDeclinada == '1' && estatusGeneral != '4'"> La solicitud ha sido declinada</div>
+            <div class="alert alert-danger alert mb-4" role="alert"
+                *ngIf="dataEstudio.bDeclinada == '1' && estatusGeneral != '4'"> La solicitud ha sido declinada</div>
         </ng-container>
-        
-        
+
+
         <div class="box-container row d-flex justify-content-center">
 
             <div class="left col-5">
@@ -47,7 +71,7 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-                
+
                 <div class="form-group">
                     <mat-form-field>
                         <mat-label>Tipo de estudio</mat-label>
@@ -59,23 +83,23 @@
                     </mat-form-field>
                 </div>
                 <!-- Mostrar solo gnp -->
-                <div class="form-group" *ngIf="bTipoFolio == 'e'">
+                <!-- <div class="form-group" *ngIf="bTipoFolio == 'e'">
                     <mat-form-field>
                         <mat-label>Folio</mat-label>
                         <input matInput type="text" formControlName="sFolio" />
                     </mat-form-field>
-                </div>
+                </div> -->
                 <div class="form-group" *ngIf="!esCliente">
                     <label class="mr-3">Preliminar:</label>
                     <mat-radio-group color="primary" aria-label="Preliminar" formControlName="iPublicarPreliminar">
                         <mat-radio-button class="mr-3" *ngFor="let p of preliminarList" [value]="p.value">
                             {{p.nombre}}
                         </mat-radio-button>
-                        
+
                     </mat-radio-group>
                 </div>
                 <!-- Mostrar solo al validar estudios -->
-                
+
                 <div class="form-group" *ngIf="!esCliente">
                     <mat-form-field>
                         <mat-label>Analista</mat-label>
@@ -101,7 +125,8 @@
                 </div>
 
                 <div class="custom-file" *ngIf="!dataEstudio">
-                    <input type="file" class="custom-file-input" id="customFileLang" (change)="getDataArchivo($event)" lang="es" [formControl]="controlCV">
+                    <input type="file" class="custom-file-input" id="customFileLang" (change)="getDataArchivo($event)"
+                        lang="es" [formControl]="controlCV">
                     <label class="custom-file-label" #label for="customFileLang">Subir CV</label>
                 </div>
 
@@ -114,10 +139,12 @@
                         </mat-form-field>
                     </div>
                     <div class="form-group">
-                        <button mat-stroked-button color="warn" (click)="descargarEvidencia()">Descargar evidencia de cancelación</button>
+                        <button mat-stroked-button color="warn" (click)="descargarEvidencia()">Descargar evidencia de
+                            cancelación</button>
                     </div>
                     <div class="form-group">
-                        <button mat-raised-button color="warn" *ngIf="estatusGeneral != '4'" (click)="aprobarCancel()">Aprobar cancelación</button>
+                        <button mat-raised-button color="warn" *ngIf="estatusGeneral != '4'"
+                            (click)="aprobarCancel()">Aprobar cancelación</button>
                     </div>
                 </ng-container>
                 <!-- <div class="form-group mt-3" *ngIf="form.get('sTokenCV').value !== null">
@@ -211,7 +238,7 @@
                             <input matInput type="text" formControlName="sCalleNumero">
                         </mat-form-field>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -220,15 +247,19 @@
         <div class="actions d-flex justify-content-center mt-3" *ngIf="!analista && dataEstudio.bDeclinada != '1'">
             <div class="buttons d-flex flex-column col-3">
                 <ng-container *ngIf="!esCliente">
-                    <button mat-raised-button color="primary" #btnSolicitar (click)="enviar('crearValidar')" *ngIf="!dataEstudio">CREAR</button>
-                    <button mat-raised-button color="primary" #btnSolicitar (click)="enviar('validar')" *ngIf="dataEstudio && estatusGeneral != '4'">VALIDAR</button>
-                    <button mat-raised-button color="warn" (click)="declinarSolicitud()" *ngIf="dataEstudio && estatusGeneral != '4'">DECLINAR</button>
-                    <button mat-raised-button color="warn" (click)="regresarFunc()" >REGRESAR</button>
+                    <button mat-raised-button color="primary" #btnSolicitar (click)="enviar('crearValidar')"
+                        *ngIf="!dataEstudio">CREAR</button>
+                    <button mat-raised-button color="primary" #btnSolicitar (click)="enviar('validar')"
+                        *ngIf="dataEstudio && estatusGeneral != '4'">VALIDAR</button>
+                    <button mat-raised-button color="warn" (click)="declinarSolicitud()"
+                        *ngIf="dataEstudio && estatusGeneral != '4'">DECLINAR</button>
+                    <button mat-raised-button color="warn" (click)="regresarFunc()">REGRESAR</button>
                 </ng-container>
-                
+
                 <ng-container *ngIf="esCliente">
-                    <button mat-raised-button color="primary" #btnSolicitar (click)="enviar('solicitar')">SOLICITAR</button>
-                    <button mat-raised-button color="warn" (click)="regresarFunc()" >REGRESAR</button>
+                    <button mat-raised-button color="primary" #btnSolicitar
+                        (click)="enviar('solicitar')">SOLICITAR</button>
+                    <button mat-raised-button color="warn" (click)="regresarFunc()">REGRESAR</button>
                 </ng-container>
             </div>
         </div>
@@ -236,7 +267,7 @@
         <div class="actions d-flex justify-content-center mt-3 mb-3" *ngIf="!analista && dataEstudio.bDeclinada == '1'">
             <div class="buttons d-flex flex-column col-3">
                 <ng-container>
-                    <button mat-raised-button color="warn" (click)="regresarFunc()" >REGRESAR</button>
+                    <button mat-raised-button color="warn" (click)="regresarFunc()">REGRESAR</button>
                 </ng-container>
             </div>
         </div>

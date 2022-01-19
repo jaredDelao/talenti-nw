@@ -127,6 +127,9 @@ export class SolicitarEstudioSharedComponent
 
   $unsubscribe = new Subject();
 
+  controlCheckExcel = new FormControl(null);
+  controlIdEstudio = new FormControl(null, Validators.required);
+
   constructor(
     private fb: FormBuilder,
     public estudiosService: EstudiosService,
@@ -699,7 +702,7 @@ export class SolicitarEstudioSharedComponent
       req.sNombres = curr.Nombre.trim();
       req.sApellidos = `${curr.Paterno.trim()} ${curr.Materno.trim()}`;
       req.sFolio = curr.Folio;
-      req.iIdEstudio = 14;
+      req.iIdEstudio = this.controlIdEstudio.value;
       // req.sPuesto = 'NA' ;
       // req.sTokenCV = 'F521185056712449Tdocx';
       // req.sTelefono = 'NA' ;

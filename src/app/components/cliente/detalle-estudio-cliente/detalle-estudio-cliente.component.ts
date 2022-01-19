@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { EmpresasService } from 'src/app/services/coordinador/empresas.service';
 import { EstudiosAnalistaService } from "src/app/services/analista/estudios-analista.service";
+import * as bcryptjs from 'bcryptjs';
 
 
 const ELEMENT_DATA = [
@@ -281,5 +282,10 @@ export class DetalleEstudioClienteComponent implements OnInit, AfterViewInit, On
       token: this.tokenPreliminar,
     }
     this.estudiosAnalistaService.descargarPreliminar(req);
+  }
+
+  get getPerfil(): boolean {
+    const perfil = localStorage.getItem('perfil');
+    return bcryptjs.compare('Admin', perfil)
   }
 }
