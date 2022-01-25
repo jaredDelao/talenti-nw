@@ -96,10 +96,13 @@ export class DetalleEstudioClienteComponent implements OnInit, AfterViewInit, On
   subs1 = new Subscription();
   subs2 = new Subscription();
 
+  isAdmin: boolean = false;
+
   constructor(public dialog: MatDialog, private fb: FormBuilder, public estudiosService: EstudiosService, private route: ActivatedRoute, 
               private router: Router, public empresasService: EmpresasService, private cd: ChangeDetectorRef, private estudiosAnalistaService: EstudiosAnalistaService) {}
 
   ngOnInit() {
+    this.getPerfil();
     this.formInit();
     this.getUrlId();
     this.getCatalogoEstudios();
@@ -284,8 +287,10 @@ export class DetalleEstudioClienteComponent implements OnInit, AfterViewInit, On
     this.estudiosAnalistaService.descargarPreliminar(req);
   }
 
-  get getPerfil(): boolean {
+  getPerfil(): void {
     const perfil = localStorage.getItem('perfil');
-    return bcryptjs.compare('Admin', perfil)
+    console.log(bcryptjs.compare('Admin', perfil, (err, res) => {
+      this.isAdmin = res;
+    }))
   }
 }

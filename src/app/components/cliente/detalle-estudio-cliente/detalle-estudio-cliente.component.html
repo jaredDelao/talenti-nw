@@ -6,7 +6,7 @@
     <button 
             class="mt-3 mb-3 ml-3 btn-cancelar" 
             (click)="openDialog()" 
-            *ngIf="mostrarMensajeAlerta.id != 1 && mostrarMensajeAlerta.id != 2 && getPerfil" 
+            *ngIf="mostrarMensajeAlerta.id != 1 && mostrarMensajeAlerta.id != 2 && isAdmin" 
             mat-raised-button 
             color="warn"
         >
