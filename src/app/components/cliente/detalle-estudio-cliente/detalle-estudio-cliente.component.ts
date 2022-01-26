@@ -289,8 +289,8 @@ export class DetalleEstudioClienteComponent implements OnInit, AfterViewInit, On
 
   getPerfil(): void {
     const perfil = localStorage.getItem('perfil');
-    console.log(bcryptjs.compare('Admin', perfil, (err, res) => {
+    bcryptjs.compare('Admin', perfil, (err, res) => {
       this.isAdmin = res;
-    }))
+    })
   }
 }
