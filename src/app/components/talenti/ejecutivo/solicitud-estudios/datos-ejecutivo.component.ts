@@ -302,7 +302,7 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit, OnDestroy
     this.jsonExportExcel = this.dataSource.filteredData;
     const exportExc = this.jsonExportExcel.reduce((acc, v) => {
         let arr = [
-          v.sFolio ? v.sFolio : v.iIdSolicitud, 
+          v.iIdSolicitud, 
           v.sNombres, 
           v.sApellidos, 
           v.Nombrecte + ' ' + v.ApellidosCte, 

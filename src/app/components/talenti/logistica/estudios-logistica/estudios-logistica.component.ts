@@ -247,7 +247,7 @@ export class EstudiosLogisticaComponent implements OnInit, AfterViewInit {
 
     const exportExc = data.reduce((acc, v) => {
         let arr = [
-          v.sFolio ? v.sFolio : v.iIdSolicitud,
+          v.iIdSolicitud,
           v.sNombres, 
           v.sApellidos, 
           v.dFechaSolicitud,
