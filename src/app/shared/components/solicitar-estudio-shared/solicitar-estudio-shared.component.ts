@@ -130,6 +130,8 @@ export class SolicitarEstudioSharedComponent
   controlCheckExcel = new FormControl(null);
   controlIdEstudio = new FormControl(null, Validators.required);
 
+  isExecutive: boolean;
+
   constructor(
     private fb: FormBuilder,
     public estudiosService: EstudiosService,
@@ -146,6 +148,7 @@ export class SolicitarEstudioSharedComponent
 
   async ngOnInit() {
     this.formInit();
+    this.isExecutiveFunc();
     this.bTipoFolio = await this.getTipoFolioUsuario();
 
     this.getCatalogoEstudios();
@@ -232,6 +235,11 @@ export class SolicitarEstudioSharedComponent
         }
       }
     });
+  }
+
+  private isExecutiveFunc(): void {
+    const executive = this.encryptService.isProfile("Ejecutivo");
+    if (executive) this.isExecutive = true;
   }
 
   getTipoFolioUsuario() {
@@ -698,7 +706,7 @@ export class SolicitarEstudioSharedComponent
     const forkGroup = this.dataExcel.reduce((acc, curr, id) => {
       let req = this.form.getRawValue();
       delete req.iIdAnalista;
-      req.sService = 'SolicitarEstudioCliente';
+      req.sService = "SolicitarEstudioCliente";
       req.sNombres = curr.Nombre.trim();
       req.sApellidos = `${curr.Paterno.trim()} ${curr.Materno.trim()}`;
       req.sFolio = curr.Folio;

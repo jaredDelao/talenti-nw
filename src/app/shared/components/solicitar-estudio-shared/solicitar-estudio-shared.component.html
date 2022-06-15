@@ -4,7 +4,7 @@
 
 <app-title titulo="SOLICITUD ESTUDIO"></app-title>
 
-<div class="container" *ngIf="esCliente">
+<div class="container" *ngIf="esCliente || isExecutive">
     <mat-checkbox [formControl]="controlCheckExcel">Importar estudios</mat-checkbox>
     <br>
     <br>
