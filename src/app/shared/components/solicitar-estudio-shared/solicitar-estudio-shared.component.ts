@@ -71,7 +71,7 @@ export class SolicitarEstudioSharedComponent
 
   param = {
     sService: "getLstEstudios",
-    iIdEmpresa: 0,
+    iIdEmpresa: '2',
   };
 
   reqTarifasEmpresa = {
@@ -95,7 +95,7 @@ export class SolicitarEstudioSharedComponent
   loading: boolean = false;
   controlCV = new FormControl(null);
   idSolicitud: any;
-  public estudiosData: Array<Object> = [];
+  estudiosData: Array<any> = [];
   form: FormGroup;
   preliminarList = [
     { nombre: "SI", value: "1" },

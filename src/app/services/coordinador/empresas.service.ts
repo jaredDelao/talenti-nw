@@ -33,13 +33,9 @@ export class EmpresasService {
   }
 
   getCatalogoEstudios(p): Observable<CatalogoEstudios> {
-    // let param = {
-    //   sService: "getLstEstudios",
-    //   iIdEmpresa: 0
-    // }
     let body = new HttpParams();
     body = body.set('sService', 'getLstEstudios');
-    body = body.set('iIdEmpresa', '0');
+    body = body.set('iIdEmpresa', '2');
     return this._http.post<CatalogoEstudios>(environment.urlProd, body);
   }
 

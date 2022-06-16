@@ -17,15 +17,15 @@ import {
   filter,
   toArray,
   catchError,
+  takeUntil,
 } from "rxjs/operators";
-import { Subscription, of } from "rxjs";
+import { Subscription, of, Subject } from "rxjs";
 import { EmpleadosService } from "src/app/services/coordinador/empleados.service";
 import { MatDialog } from "@angular/material";
 import { SolicitarCancelacionEjecutivoComponent } from "../modals/solicitar-cancelacion-ejecutivo/solicitar-cancelacion-ejecutivo.component";
 import { EstudiosAnalistaService } from "src/app/services/analista/estudios-analista.service";
 import { AprobarCancelacionModalComponent } from "../modals/aprobar-cancelacion-modal/aprobar-cancelacion-modal.component";
 import Swal from "sweetalert2";
-import { ModaKpiComponent } from "src/app/components/talenti/ejecutivo/modals/moda-kpi/moda-kpi.component";
 
 @Component({
   selector: "app-detalle-estudio-ejecutivo",
@@ -126,10 +126,7 @@ export class DetalleEstudioEjecutivoComponent
     "dictamen",
   ];
   tipoEstudio: any = null;
-
-  subs = new Subscription();
-  subs1 = new Subscription();
-  subs2 = new Subscription();
+  $unsubs = new Subject();
 
   // Cancelacion
   controlComentarioCancel = new FormControl(null);
@@ -146,7 +143,6 @@ export class DetalleEstudioEjecutivoComponent
     private router: Router,
     private fb: FormBuilder,
     public dialog: MatDialog,
-    private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
     private empleadosService: EmpleadosService,
     public estudiosAnalistaService: EstudiosAnalistaService
@@ -164,9 +160,9 @@ export class DetalleEstudioEjecutivoComponent
     this.getCatalogoEstudios();
   }
 
-  ngOnDestroy() {
-    this.subs.unsubscribe();
-    this.subs1.unsubscribe();
+  ngOnDestroy(): void {
+    this.$unsubs.next();
+    this.$unsubs.complete();
   }
 
   ngAfterViewInit() {
@@ -188,10 +184,11 @@ export class DetalleEstudioEjecutivoComponent
     });
   }
 
-  getCatAnalistas() {
-    this.subs = this.empleadosService
+  private getCatAnalistas(): void {
+    this.empleadosService
       .getEmpleados()
       .pipe(
+        takeUntil(this.$unsubs),
         pluck("Empleados"),
         flatMap((r: any) => r),
         filter((val: any) => val.iIdRol == 3),
@@ -203,7 +200,7 @@ export class DetalleEstudioEjecutivoComponent
       });
   }
 
-  getUrlId() {
+  private getUrlId(): Promise<boolean> {
     let idUrl = this.route.snapshot.paramMap.get("id");
     let req = {
       sService: "getSolicitudById",
@@ -211,9 +208,12 @@ export class DetalleEstudioEjecutivoComponent
     };
     if (idUrl) {
       this.loading = true;
-      this.subs = this.estudiosService
+      this.estudiosService
         .getEstudioById(req)
-        .pipe(map((r) => r.resultado))
+        .pipe(
+          takeUntil(this.$unsubs),
+          map((r) => r.resultado)
+        )
         .subscribe(
           (datosUsuario) => {
             this.datosTablaEstatus(datosUsuario[0]);
@@ -300,9 +300,10 @@ export class DetalleEstudioEjecutivoComponent
     ];
   }
 
-  getCatalogoEstudios() {
-    this.subs1 = this.empresasService
+  getCatalogoEstudios(): void {
+    this.empresasService
       .getCatalogoEstudios(this.param)
+      .pipe(takeUntil(this.$unsubs))
       .subscribe((resp: any) => {
         this.catEstudios = resp.LstEstudios;
       });
@@ -320,7 +321,7 @@ export class DetalleEstudioEjecutivoComponent
     this.datosComplemento[0].token = value.sTokenComplemento;
   }
 
-  formInit() {
+  private formInit(): void {
     this.form = this.fb.group({
       iIdSolicitud: new FormControl({ value: "" }),
       dFechaSolicitud: new FormControl({ value: "" }),
