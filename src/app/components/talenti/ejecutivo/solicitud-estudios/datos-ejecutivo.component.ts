@@ -82,7 +82,7 @@ export class DatosEjecutivoComponent implements OnInit, AfterViewInit, OnDestroy
     this.paginator.pageSize = 50;
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.form.get('fechaInicioForm').valueChanges.pipe(takeUntil(this.$unsubscribe)).subscribe((v) => {
       if (v !== '' || v !== null) this.form.get('fechaFinalForm').enable();
       
