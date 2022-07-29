@@ -2,7 +2,7 @@
 <div class="container">
     <div class="header">
         <form [formGroup]="form">
-            <span>Búsqueda por periodo</span>
+            <span>Búsqueda por periodo - (Fecha de solicitud)</span>
             <div class="row col-12">
 
                 <!-- Fecha inicio -->
@@ -56,14 +56,14 @@
     <div class="table-container mat-elevation-z15 mt-4">
 
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-            <ng-container matColumnDef="folio">
+            <ng-container matColumnDef="iIdSolicitud">
                 <th mat-header-cell *matHeaderCellDef style="text-align: center;"> FOLIO </th>
                 <td mat-cell *matCellDef="let element" style="text-align: center;"> 
                     {{element.iIdSolicitud}} 
                 </td>
             </ng-container>
 
-            <ng-container matColumnDef="nombre">
+            <ng-container matColumnDef="sNombres">
                 <th mat-header-cell *matHeaderCellDef> NOMBRE DEL CANDIDATO </th>
                 <td mat-cell *matCellDef="let element">
                     {{element.sNombres}} {{element.sApellidos}}
@@ -91,37 +91,37 @@
                 </td>
             </ng-container>
 
-            <ng-container matColumnDef="fecha_solicitud">
+            <ng-container matColumnDef="dFechaSolicitud">
                 <th mat-header-cell *matHeaderCellDef> FECHA SOLICITUD </th>
                 <td mat-cell *matCellDef="let element"> {{ element.dFechaSolicitud ? (element.dFechaSolicitud | date: 'dd/MMM/yyyy') : 'Pendiente'}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="estatus_agenda">
+            <ng-container matColumnDef="dfechahoraultAgenda">
                 <th mat-header-cell *matHeaderCellDef> ESTATUS AGENDA </th>
                 <td mat-cell *matCellDef="let element"> {{element.dfechahoraultAgenda ? (element.dfechahoraultAgenda | date: 'dd/MMM/yyyy') : 'Pendiente'}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="estatus_aplicacion">
+            <ng-container matColumnDef="dFechaAplicacion">
                 <th mat-header-cell *matHeaderCellDef> FECHA DE APLICACIÓN </th>
                 <td mat-cell *matCellDef="let element"> {{element.dFechaAplicacion ? (element.dFechaAplicacion | date: 'dd/MMM/yyyy') : 'Pendiente'}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="fecha_preliminar">
+            <ng-container matColumnDef="dFechaPreliminar">
                 <th mat-header-cell *matHeaderCellDef> FECHA PRELIMINAR </th>
                 <td mat-cell *matCellDef="let element"> {{element.dFechaPreliminar ? (element.dFechaPreliminar | date: 'dd/MMM/yyyy') : 'Pendiente'}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="fecha_publicacion">
+            <ng-container matColumnDef="dFechaPublicacion">
                 <th mat-header-cell *matHeaderCellDef> FECHA PUBLICACIÓN </th>
                 <td mat-cell *matCellDef="let element"> {{element.dFechaPublicacion ? (element.dFechaPublicacion | date: 'dd/MMM/yyyy') : 'Pendiente'}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="fecha_creacionR">
+            <ng-container matColumnDef="dFechaSolicitud">
                 <th class="bg-light" mat-header-cell *matHeaderCellDef> CREACIÓN DE ESTUDIO <br> REGISTRO </th>
                 <td class="bg-light" mat-cell *matCellDef="let element"> {{ element.dFechaSolicitud ? (element.dFechaSolicitud | date: 'dd/MMM/yyyy') : 'Pendiente'}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="fecha_validacionR">
+            <ng-container matColumnDef="fValidacion">
                 <th class="bg-light" mat-header-cell *matHeaderCellDef> VALIDACIÓN DE ESTUDIO <br> REGISTRO </th>
                 <td class="bg-light" mat-cell *matCellDef="let element"> {{ element.fValidacion ? (element.fValidacion | date: 'dd/MMM/yyyy') : 'Pendiente' }} </td>
             </ng-container>

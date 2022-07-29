@@ -4,7 +4,7 @@
 <div class="container">
     <div class="header">
         <form [formGroup]="form">
-            <span>Búsqueda por periodo</span>
+            <span>Búsqueda por periodo - (Fecha de solicitud)</span>
             <div class="row">
 
                 <!-- Fecha inicio -->
@@ -110,15 +110,8 @@
                     {{element.iContadoAgendas | verificarEstatusAgenda}} 
                 </td>
             </ng-container>
-<!-- 
-            <ng-container matColumnDef="estatus_asignacion">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> ESTATUS ASIGNACIÓN </th>
-                <td mat-cell *matCellDef="let element"> 
-                    {{element.iIdEmpleadoLogistica | verificarEstatusAsignacion : catEmpleados}} 
-                </td>
-            </ng-container> -->
 
-            <ng-container matColumnDef="estatus_aplicacion">
+            <ng-container matColumnDef="iEstatusGeneral">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>ESTATUS APLICACIÓN</th>
                 <td mat-cell *matCellDef="let element">
                     {{element.iEstatusGeneral | verificarEstatusAplicacion : element.bEstatusAsignacion}} 

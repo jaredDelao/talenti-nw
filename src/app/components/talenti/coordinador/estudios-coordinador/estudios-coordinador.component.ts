@@ -25,19 +25,19 @@ import { VerificarEstatusService } from "src/app/services/verificar-estatus.serv
 })
 export class EstudiosCoordinadorComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = [
-    "folio",
-    "nombre",
+    "iIdSolicitud",
+    "sNombres",
     "sNombrecl",
     "sNombreEjec",
     "sNombreAnalista",
-    "fecha_solicitud",
-    "estatus_agenda",
-    "estatus_aplicacion",
-    "fecha_preliminar",
-    "fecha_publicacion",
+    "dFechaSolicitud",
+    "dfechahoraultAgenda",
+    "dFechaAplicacion",
+    "dFechaPreliminar",
+    "dFechaPublicacion",
     
-    "fecha_creacionR",
-    "fecha_validacionR",
+    "dFechaSolicitud",
+    "fValidacion",
     "fecha_validacionRT",
     "fecha_asignacionR",
     "fecha_asignacionRT",

@@ -4,7 +4,7 @@
 <div class="container">
     <div class="header">
         <form [formGroup]="form">
-            <span>Búsqueda por periodo</span>
+            <span>Búsqueda por periodo - (Fecha de solicitud)</span>
             <div class="row col-12">
 
                 <!-- Fecha inicio -->
@@ -71,43 +71,45 @@
     <!-- TABLA -->
     <div class="table-container mat-elevation-z15 mt-4">
 
-        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" *ngIf="this.displayedColumns.length > 0">
-            <ng-container matColumnDef="sFolio" sticky>
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8"
+            *ngIf="this.displayedColumns.length > 0">
+            <ng-container matColumnDef="iIdSolicitud" sticky>
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: center;"> FOLIO </th>
-                <td mat-cell *matCellDef="let element" style="text-align: center;"> 
+                <td mat-cell *matCellDef="let element" style="text-align: center;">
                     {{element.iIdSolicitud }}
                 </td>
-            </ng-container>    
+            </ng-container>
 
             <ng-container matColumnDef="sNombres" sticky>
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="min-width: 250px ;"> NOMBRE DEL CANDIDATO</th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="min-width: 250px ;"> NOMBRE DEL CANDIDATO
+                </th>
                 <td mat-cell *matCellDef="let element" style="min-width: 250px ;">
                     {{element.sNombres}} {{element.sApellidos}}
                 </td>
             </ng-container>
 
-            <ng-container matColumnDef="tipoEstudio">
+            <ng-container matColumnDef="sNombreEstudio">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> TIPO ESTUDIO </th>
                 <td mat-cell *matCellDef="let element">
                     {{element.sNombreEstudio}}
                 </td>
             </ng-container>
 
-            <ng-container matColumnDef="usuario">
+            <ng-container matColumnDef="nombrecte">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> USUARIO </th>
                 <td mat-cell *matCellDef="let element">
                     {{element.nombrecte + ' '+ element.apellidoscte}}
                 </td>
             </ng-container>
 
-            <ng-container matColumnDef="municipio">
+            <ng-container matColumnDef="sMunicipio">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> MUNICIPIO </th>
                 <td mat-cell *matCellDef="let element">
                     {{element.sMunicipio}}
                 </td>
             </ng-container>
 
-            <ng-container matColumnDef="estado">
+            <ng-container matColumnDef="sEstado">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> ESTADO </th>
                 <td mat-cell *matCellDef="let element">
                     {{element.sEstado}}
@@ -129,27 +131,30 @@
                 <th mat-header-cell *matHeaderCellDef> FECHA <br> APLICACIÓN </th>
                 <td mat-cell *matCellDef="let element">
                     <div class="content-estatus">
-                        <span>{{element.dFechaAplicacion ? (element.dFechaAplicacion | date: 'dd/MMM/yyyy') : 'PENDIENTE'}} </span>
+                        <span>{{element.dFechaAplicacion ? (element.dFechaAplicacion | date: 'dd/MMM/yyyy') :
+                            'PENDIENTE'}} </span>
                     </div>
                 </td>
             </ng-container>
 
-              <!-- Fecha preliminar -->
-              <ng-container matColumnDef="dFechaPreliminar">
+            <!-- Fecha preliminar -->
+            <ng-container matColumnDef="dFechaPreliminar">
                 <th mat-header-cell *matHeaderCellDef> FECHA <br> PRELIMINAR </th>
                 <td mat-cell *matCellDef="let element">
                     <div class="content-estatus">
-                        <span>{{element.dFechaPreliminar ? (element.dFechaPreliminar | date: 'dd/MMM/yyyy') : 'PENDIENTE'}} </span>
+                        <span>{{element.dFechaPreliminar ? (element.dFechaPreliminar | date: 'dd/MMM/yyyy') :
+                            'PENDIENTE'}} </span>
                     </div>
                 </td>
             </ng-container>
 
-              <!-- Fecha publicación -->
+            <!-- Fecha publicación -->
             <ng-container matColumnDef="dFechaPublicacion">
                 <th mat-header-cell *matHeaderCellDef> FECHA <br> PUBLICACIÓN </th>
                 <td mat-cell *matCellDef="let element">
                     <div class="content-estatus">
-                        <span>{{element.dFechaPublicacion ? (element.dFechaPublicacion | date: 'dd/MMM/yyyy') : 'PENDIENTE'}} </span>
+                        <span>{{element.dFechaPublicacion ? (element.dFechaPublicacion | date: 'dd/MMM/yyyy') :
+                            'PENDIENTE'}} </span>
                     </div>
                 </td>
             </ng-container>
@@ -172,16 +177,6 @@
                 </td>
             </ng-container>
 
-            <!-- <ng-container matColumnDef="iEstatusGeneral">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> ESTATUS DICTAMEN </th>
-                <td mat-cell *matCellDef="let element"> {{element.iEstatusGeneral | estatusDictamen : element.bPublicarDictamen}} </td>
-            </ng-container> -->
-
-            <!-- <ng-container matColumnDef="dictamen">
-                <th mat-header-cell *matHeaderCellDef> DICTAMEN </th>
-                <td mat-cell *matCellDef="let element"> {{element.iEstatusDictamen | verificarDictamen : element.iEstatusGeneral : estatusDictamenList}} </td>
-            </ng-container> -->
-
             <ng-container matColumnDef="comentarios">
                 <th mat-header-cell *matHeaderCellDef style="text-align: center;"> VER DETALLES </th>
                 <td mat-cell *matCellDef="let element" style="text-align: center;">
@@ -197,5 +192,3 @@
     </div>
     <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 25, 50 ]"> </mat-paginator>
 </div>
-
-<!-- </mat-sidenav-container> -->
