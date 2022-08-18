@@ -33,24 +33,24 @@ $mat-red: (
     A200: white,
     A400: white,
     A700: white,
-  )
+  ),
 );
 
 $mat-blue: (
-  50: #E1F5FE,
-  100: #B3E5FC,
-  200: #81D4FA,
-  300: #060A46,
-  400: #060A46,
-  500: #060A46,
-  600: #060A46,
-  700: #060A46,
-  800: #060A46,
-  900: #060A46,
-  A100: #060A46,
-  A200: #060A46,
-  A400: #060A46,
-  A700: #060A46,
+  50: #e1f5fe,
+  100: #b3e5fc,
+  200: #81d4fa,
+  300: #060a46,
+  400: #060a46,
+  500: #060a46,
+  600: #060a46,
+  700: #060a46,
+  800: #060a46,
+  900: #060a46,
+  A100: #060a46,
+  A200: #060a46,
+  A400: #060a46,
+  A700: #060a46,
   contrast: (
     50: $black-87-opacity,
     100: $black-87-opacity,
@@ -66,21 +66,20 @@ $mat-blue: (
     A200: white,
     A400: white,
     A700: white,
-  )
+  ),
 );
 
 @include mat-core();
 
 $primary: mat-palette($mat-blue);
-$accent:  mat-palette($mat-red);
+$accent: mat-palette($mat-red);
 $theme: mat-light-theme($primary, $accent);
 
 // Include theme styles for Angular Material components.
 @include angular-material-theme($theme);
 
-
 * {
-  font-family: 'Open Sans';
+  font-family: "Open Sans";
 }
 
 body {
@@ -88,24 +87,23 @@ body {
   padding: 0;
 }
 
-
-$success: #28B463;
+$success: #28b463;
 
 button:focus {
   outline: none !important;
 }
 .excel-btn {
-  background-color: #28B463;
+  background-color: #28b463;
   color: white;
 }
 
 .btn-limpiar {
-  background-color: #F39C12;
+  background-color: #f39c12;
   color: white;
 }
 
 .chip-calidad {
-  background-color: #F1C40F;
+  background-color: #f1c40f;
 }
 
 app-tabla-estatus {
@@ -148,7 +146,7 @@ body {
 }
 
 table {
-  border-top: 3px solid #060A46;
+  border-top: 3px solid #060a46;
 }
 
 mat-hint {
@@ -160,5 +158,5 @@ mat-icon {
 }
 
 .detalle-estudio-icon {
-  color: #060A46;
+  color: #060a46;
 }

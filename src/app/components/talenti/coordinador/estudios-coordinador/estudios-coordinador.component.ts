@@ -35,7 +35,7 @@ export class EstudiosCoordinadorComponent implements OnInit, OnDestroy {
     "dFechaAplicacion",
     "dFechaPreliminar",
     "dFechaPublicacion",
-    
+    "estatus_solicitud",
     "dFechaSolicitud",
     "fValidacion",
     "fecha_validacionRT",

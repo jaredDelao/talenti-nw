@@ -56,21 +56,21 @@
     <div class="table-container mat-elevation-z15 mt-4">
 
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-            <ng-container matColumnDef="iIdSolicitud">
+            <ng-container matColumnDef="iIdSolicitud" sticky>
                 <th mat-header-cell *matHeaderCellDef style="text-align: center;"> FOLIO </th>
                 <td mat-cell *matCellDef="let element" style="text-align: center;"> 
                     {{element.iIdSolicitud}} 
                 </td>
             </ng-container>
 
-            <ng-container matColumnDef="sNombres">
+            <ng-container matColumnDef="sNombres" sticky>
                 <th mat-header-cell *matHeaderCellDef> NOMBRE DEL CANDIDATO </th>
                 <td mat-cell *matCellDef="let element">
                     {{element.sNombres}} {{element.sApellidos}}
                 </td>
             </ng-container>
 
-            <ng-container matColumnDef="sNombrecl">
+            <ng-container matColumnDef="sNombrecl" sticky>
                 <th mat-header-cell *matHeaderCellDef> CLIENTE </th>
                 <td mat-cell *matCellDef="let element">
                     {{ element.sNombrecl }}
@@ -116,10 +116,20 @@
                 <td mat-cell *matCellDef="let element"> {{element.dFechaPublicacion ? (element.dFechaPublicacion | date: 'dd/MMM/yyyy') : 'Pendiente'}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="dFechaSolicitud">
+
+            <ng-container matColumnDef="estatus_solicitud">
+                <th mat-header-cell *matHeaderCellDef> ESTATUS </th>
+                <td mat-cell *matCellDef="let element">
+                    <div class="content-estatus">
+                        {{element | estatusSolicitud}}
+                    </div>
+                </td>
+            </ng-container>
+
+            <!-- <ng-container matColumnDef="dFechaSolicitud">
                 <th class="bg-light" mat-header-cell *matHeaderCellDef> CREACIÓN DE ESTUDIO <br> REGISTRO </th>
                 <td class="bg-light" mat-cell *matCellDef="let element"> {{ element.dFechaSolicitud ? (element.dFechaSolicitud | date: 'dd/MMM/yyyy') : 'Pendiente'}} </td>
-            </ng-container>
+            </ng-container> -->
 
             <ng-container matColumnDef="fValidacion">
                 <th class="bg-light" mat-header-cell *matHeaderCellDef> VALIDACIÓN DE ESTUDIO <br> REGISTRO </th>
@@ -127,7 +137,7 @@
             </ng-container>
 
             <ng-container matColumnDef="fecha_validacionRT">
-                <th class="bg-light" mat-header-cell *matHeaderCellDef> CREACIÓN - VALIDACIÓN <br> TIEMPO TRANSCURRIDO </th>
+                <th class="bg-light" mat-header-cell *matHeaderCellDef> CREACIÓN - VALIDACIÓN</th>
                 <td class="bg-light" mat-cell *matCellDef="let element"> {{ element.dFechaSolicitud | tiempoKpisCoordinador: element.fValidacion }} </td>
             </ng-container>
 
@@ -137,7 +147,7 @@
             </ng-container>
 
             <ng-container matColumnDef="fecha_asignacionRT">
-                <th class="bg-light" mat-header-cell *matHeaderCellDef> VALIDACIÓN -  ASIGNACIÓN <br> TIEMPO TRANSCURRIDO </th>
+                <th class="bg-light" mat-header-cell *matHeaderCellDef> VALIDACIÓN -  ASIGNACIÓN</th>
                 <td class="bg-light" mat-cell *matCellDef="let element"> {{ element.fValidacion | tiempoKpisCoordinador: element.fasignacion }} </td>
             </ng-container>
 
@@ -147,7 +157,7 @@
             </ng-container>
 
             <ng-container matColumnDef="fecha_agendaRT">
-                <th class="bg-light" mat-header-cell *matHeaderCellDef> ASIGNACIÓN - AGENDA <br> TIEMPO TRANSCURRIDO </th>
+                <th class="bg-light" mat-header-cell *matHeaderCellDef> ASIGNACIÓN - AGENDA</th>
                 <td class="bg-light" mat-cell *matCellDef="let element"> {{ element.fasignacion | tiempoKpisCoordinador: element.dfechahoraultAgenda }} </td>
             </ng-container>
 
@@ -157,7 +167,7 @@
             </ng-container>
 
             <ng-container matColumnDef="fecha_aplicacionRT">
-                <th class="bg-light" mat-header-cell *matHeaderCellDef> AGENDA - APLICACIÓN <br> TIEMPO TRANSCURRIDO </th>
+                <th class="bg-light" mat-header-cell *matHeaderCellDef> AGENDA - APLICACIÓN</th>
                 <td class="bg-light" mat-cell *matCellDef="let element"> {{ element.dfechahoraultAgenda | tiempoKpisCoordinador: element.dFechaAplicacion }} </td>
             </ng-container>
 
@@ -167,7 +177,7 @@
             </ng-container>
 
             <ng-container matColumnDef="fecha_archivosRT">
-                <th class="bg-light" mat-header-cell *matHeaderCellDef> APLICACIÓN - ARCHIVOS <br> TIEMPO TRANSCURRIDO </th>
+                <th class="bg-light" mat-header-cell *matHeaderCellDef> APLICACIÓN - ARCHIVOS</th>
                 <td class="bg-light" mat-cell *matCellDef="let element"> {{ element.dFechaAplicacion | tiempoKpisCoordinador: element.fdictamen }} </td>
             </ng-container>
 
@@ -177,7 +187,7 @@
             </ng-container>
 
             <ng-container matColumnDef="fecha_publicacionRT">
-                <th class="bg-light" mat-header-cell *matHeaderCellDef> ARCHIVOS - PUBLICACIÓN <br> TIEMPO TRANSCURRIDO </th>
+                <th class="bg-light" mat-header-cell *matHeaderCellDef> ARCHIVOS - PUBLICACIÓN</th>
                 <td class="bg-light" mat-cell *matCellDef="let element"> {{ element.fdictamen | tiempoKpisCoordinador: element.dFechaPublicacion }} </td>
             </ng-container>
 

@@ -1,3 +1,22 @@
 mat-form-field {
-    width: 100%;
+  width: 100%;
+}
+
+.mat-table-sticky {
+  background-color: rgb(235, 235, 235);
+}
+
+.mat-table-sticky:first-child {
+  border-right: 1px solid #e8e8e8;
+}
+.mat-table-sticky:nth-child(2) {
+  border-right: 1px solid #e0e0e0;
+}
+
+.mat-table-sticky:last-child {
+  border-left: 1px solid #e0e0e0;
+}
+
+table th {
+    min-width: 100px;
 }
