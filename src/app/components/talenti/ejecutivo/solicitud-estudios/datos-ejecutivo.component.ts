@@ -352,44 +352,33 @@ export class DatosEjecutivoComponent
 
   exportExcel() {
     this.jsonExportExcel = this.dataSource.filteredData;
-    const exportExc = this.jsonExportExcel.reduce((acc, v) => {
-      let arr = [
-        v.iIdSolicitud,
-        v.sNombres,
-        v.sApellidos,
-        v.Nombrecte + " " + v.ApellidosCte,
-        "",
-        "",
-        v.sUltimoAplicador,
-        v.dFechaSolicitud,
-        v.sNombreEstudio,
-        v.dFechaAplicacion,
-        v.dFechaPreliminar,
-        v.dFechaPublicacion,
-        this.obtenerEstatusDictamen(v.iEstatusGeneral, v.bPublicarDictamen),
-      ];
-      acc.push(arr);
-      return acc;
-    }, []);
+    const exportExc = this.jsonExportExcel.map((v) => [
+      v.iIdSolicitud,
+      `${v.sNombres} ${v.sApellidos}`,
+      v.sNombreEmpresa,
+      v.sNombreEstudio,
+      `${v.Nombrecte} ${v.ApellidosCte}`,
+      v.NombreAnalista,
+      v.dFechaSolicitud,
+      v.dFechaAplicacion,
+      v.dFechaPreliminar,
+      v.dFechaPublicacion,
+    ]);
 
     let headers = [
       "Folio",
-      "Nombre(s)",
-      "Apellidos",
+      "Candidato",
       "Cliente",
+      "Tipo de solicitud",
       "Solicitante",
       "Analista",
-      "Aplicador",
       "Fecha solicitud",
-      "Estudio solicitado",
       "Fecha Aplicación",
       "Fecha Preeliminar",
       "Fecha Publicación",
-      "Estatus Dictamen",
     ];
 
     this.excelGenerate.createExcel("exportExc", headers, exportExc);
-    // this.ngOnInit();
   }
 
   // verificarEstatusSolicitud(element) {
